@@ -58,25 +58,23 @@
                     <p class="text-xs text-gray-500 mt-1">Coordonnées, horaires des cycles, tenues officielles.</p>
                 </a>
 
-                <!-- Card 3: Cycles & Classes (Prochainement Sprint 2) -->
-                <div class="p-6 bg-gray-50 rounded-xl border border-dashed border-gray-300 relative">
-                    <span class="absolute top-3 right-3 text-[10px] bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded">Sprint 2</span>
+                <!-- Card 3: Cycles & Classes -->
+                <a href="{{ route('classes.index') }}" class="block p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-amber-200 transition">
                     <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-lg flex items-center justify-center text-2xl font-bold mb-4">
                         🏫
                     </div>
-                    <h3 class="font-bold text-lg text-gray-700">Cycles & Classes</h3>
-                    <p class="text-xs text-gray-500 mt-1">Maternelle, Primaire, Collège, Lycée & Coefficients.</p>
-                </div>
+                    <h3 class="font-bold text-lg text-gray-900">Cycles & Classes</h3>
+                    <p class="text-xs text-gray-500 mt-1">Maternelle, Primaire, Collège, Lycée & Salles.</p>
+                </a>
 
-                <!-- Card 4: Inscriptions Élèves (Prochainement Sprint 3) -->
-                <div class="p-6 bg-gray-50 rounded-xl border border-dashed border-gray-300 relative">
-                    <span class="absolute top-3 right-3 text-[10px] bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded">Sprint 3</span>
-                    <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-lg flex items-center justify-center text-2xl font-bold mb-4">
-                        🎓
+                <!-- Card 4: Matières & Coefficients -->
+                <a href="{{ route('subjects.index') }}" class="block p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-purple-200 transition">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center text-2xl font-bold mb-4">
+                        📖
                     </div>
-                    <h3 class="font-bold text-lg text-gray-700">Élèves & Inscriptions</h3>
-                    <p class="text-xs text-gray-500 mt-1">Matricules RS-YYYY-XXXX, dossier & tuteurs.</p>
-                </div>
+                    <h3 class="font-bold text-lg text-gray-900">Matières & Coefficients</h3>
+                    <p class="text-xs text-gray-500 mt-1">Catalogue des cours & matrice des coefficients.</p>
+                </a>
 
             </div>
 

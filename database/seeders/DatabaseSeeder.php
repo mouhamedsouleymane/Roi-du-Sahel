@@ -19,6 +19,11 @@ class DatabaseSeeder extends Seeder
             SchoolSettingSeeder::class,
             AcademicYearSeeder::class,
             RolesAndPermissionsSeeder::class,
+            CycleAndLevelSeeder::class,
+            SubjectSeeder::class,
+            ClassSeeder::class,
+            CoefficientSeeder::class,
+            StudentAndGuardianSeeder::class,
         ]);
 
         User::factory()->create([

@@ -18,8 +18,17 @@
                     <x-nav-link :href="route('academic-years.index')" :active="request()->routeIs('academic-years.*')">
                         {{ __('Années Scolaires') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('cycles.index')" :active="request()->routeIs('cycles.*')">
+                        {{ __('Cycles & Niveaux') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
+                        {{ __('Classes') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('subjects.index')" :active="request()->routeIs('subjects.*')">
+                        {{ __('Matières') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('settings.index')" :active="request()->routeIs('settings.*')">
-                        {{ __('Paramètres Établissement') }}
+                        {{ __('Paramètres') }}
                     </x-nav-link>
                 </div>
             </div>
