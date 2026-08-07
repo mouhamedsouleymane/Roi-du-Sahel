@@ -128,6 +128,9 @@
         </main>
 
     </div>
+
+    <!-- Global Confirmation Modal -->
+    <x-confirm-modal />
 </body>
 
 </html>
