@@ -111,6 +111,20 @@
                                         <div class="font-bold text-sm text-gray-900">{{ $slot->subject->name }}</div>
                                         <div class="text-xs text-gray-600 mt-1">👨‍🏫 {{ $slot->teacher->user->name }}</div>
                                         <div class="text-[11px] text-gray-400 mt-1">📍 {{ $slot->room_number ?? 'Salle 1' }}</div>
+                                        <div class="mt-2 flex justify-end gap-1.5">
+                                            <a href="{{ route('schedules.edit', $slot) }}"
+                                               class="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-700 hover:bg-amber-100">
+                                                ✏️ Modifier
+                                            </a>
+                                            <form method="POST" action="{{ route('schedules.destroy', $slot) }}" class="inline"
+                                                  onsubmit="return confirm('Supprimer ce créneau ?')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit"
+                                                        class="text-[11px] font-bold px-2 py-0.5 rounded bg-red-50 text-red-700 hover:bg-red-100">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 @empty
                                     <div class="text-center py-6 text-xs text-gray-400 italic">

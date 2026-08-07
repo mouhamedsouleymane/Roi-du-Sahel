@@ -95,9 +95,16 @@
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('teachers.show', $teacher) }}" class="text-indigo-600 hover:text-indigo-900 font-bold">
-                                            Voir Profil & Planning →
-                                        </a>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ route('teachers.show', $teacher) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                                👁️ Profil
+                                            </a>
+                                            <a href="{{ route('teachers.edit', $teacher) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                                ✏️ Modifier
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

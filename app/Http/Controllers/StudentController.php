@@ -49,4 +49,34 @@ class StudentController extends Controller
 
         return view('students.show', compact('student'));
     }
+
+    /**
+     * Show the form for editing the specified student.
+     */
+    public function edit(Student $student): View
+    {
+        return view('students.edit', compact('student'));
+    }
+
+    /**
+     * Update the specified student in storage.
+     */
+    public function update(Request $request, Student $student)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:125',
+            'last_name' => 'required|string|max:125',
+            'gender' => 'required|in:M,F',
+            'birth_date' => 'required|date',
+            'birth_place' => 'nullable|string|max:125',
+            'nationality' => 'nullable|string|max:100',
+            'address' => 'nullable|string|max:255',
+            'medical_conditions' => 'nullable|string',
+        ]);
+
+        $student->update($validated);
+
+        return redirect()->route('students.show', $student)
+            ->with('status', 'Les informations de l\'élève ont été mises à jour avec succès.');
+    }
 }

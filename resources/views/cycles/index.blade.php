@@ -47,6 +47,16 @@
                                 @endforelse
                             </div>
                         </div>
+                        <div class="p-4 border-t border-gray-100 flex justify-end gap-2 bg-white">
+                            <a href="{{ route('cycles.show', $cycle) }}"
+                               class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                👁️ Voir
+                            </a>
+                            <a href="{{ route('cycles.edit', $cycle) }}"
+                               class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                ✏️ Modifier
+                            </a>
+                        </div>
                     </div>
                 @endforeach
             </div>

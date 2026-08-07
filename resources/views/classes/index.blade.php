@@ -99,6 +99,24 @@
                                     <div><strong>Salle :</strong> {{ $cls->room_number ?? 'Non attribuée' }}</div>
                                     <div><strong>Prof Principal :</strong> {{ $cls->mainTeacher?->name ?? 'Non désigné' }}</div>
                                 </div>
+                                <div class="mt-3 flex justify-end gap-2">
+                                    <a href="{{ route('classes.show', $cls) }}"
+                                       class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                        👁️ Voir
+                                    </a>
+                                    <a href="{{ route('classes.edit', $cls) }}"
+                                       class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                        ✏️ Modifier
+                                    </a>
+                                    <form method="POST" action="{{ route('classes.destroy', $cls) }}" class="inline"
+                                          onsubmit="return confirm('Supprimer cette classe ?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"
+                                                class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                            🗑️ Supprimer
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         @endforeach
                     </div>

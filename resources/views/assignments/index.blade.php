@@ -74,6 +74,7 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matière</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enseignant Attribué</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Matricule</th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -91,6 +92,26 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-xs font-mono font-bold text-indigo-600">
                                         {{ $asn->teacher->matricule }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ route('assignments.show', $asn) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                                👁️ Voir
+                                            </a>
+                                            <a href="{{ route('assignments.edit', $asn) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                                ✏️ Modifier
+                                            </a>
+                                            <form method="POST" action="{{ route('assignments.destroy', $asn) }}" class="inline"
+                                                  onsubmit="return confirm('Supprimer cette affectation ?')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                                    🗑️ Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

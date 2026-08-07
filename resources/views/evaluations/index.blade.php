@@ -125,9 +125,28 @@
                                         <span class="font-bold">{{ $eval->grades->count() }}</span> note(s)
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <a href="{{ route('evaluations.grades', $eval) }}" class="text-indigo-600 hover:text-indigo-900 font-bold">
-                                            Saisir les Notes →
-                                        </a>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ route('evaluations.grades', $eval) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition">
+                                                📝 Notes
+                                            </a>
+                                            <a href="{{ route('evaluations.show', $eval) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                                👁️ Voir
+                                            </a>
+                                            <a href="{{ route('evaluations.edit', $eval) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                                ✏️ Modifier
+                                            </a>
+                                            <form method="POST" action="{{ route('evaluations.destroy', $eval) }}" class="inline"
+                                                  onsubmit="return confirm('Supprimer cette évaluation ?')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty

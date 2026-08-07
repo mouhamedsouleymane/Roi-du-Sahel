@@ -135,4 +135,62 @@ class EvaluationController extends Controller
         return redirect()->route('evaluations.grades', $evaluation)
             ->with('status', 'Les notes ont été enregistrées avec succès.');
     }
+
+    /**
+     * Display the specified evaluation.
+     */
+    public function show(Evaluation $evaluation): View
+    {
+        $evaluation->load(['subject', 'teacher.user', 'schoolClass.level.cycle', 'period', 'grades.student']);
+
+        return view('evaluations.show', compact('evaluation'));
+    }
+
+    /**
+     * Show the form for editing the specified evaluation.
+     */
+    public function edit(Evaluation $evaluation): View
+    {
+        $activeYear = AcademicYear::getActive();
+        $teachers   = Teacher::with('user')->where('status', 'ACTIF')->get();
+        $subjects   = Subject::where('is_active', true)->orderBy('name')->get();
+        $periods    = Period::where('academic_year_id', $activeYear?->id ?? 0)->orderBy('order')->get();
+
+        return view('evaluations.edit', compact('evaluation', 'teachers', 'subjects', 'periods'));
+    }
+
+    /**
+     * Update the specified evaluation in storage.
+     */
+    public function update(Request $request, Evaluation $evaluation): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title'           => 'required|string|max:125',
+            'subject_id'      => 'required|exists:subjects,id',
+            'teacher_id'      => 'required|exists:teachers,id',
+            'type'            => 'required|in:DEVOIR,COMPOSITION,CONTROLE,EXAMEN',
+            'max_score'       => 'required|numeric|min:1|max:100',
+            'coefficient'     => 'required|numeric|min:0.5|max:5',
+            'evaluation_date' => 'required|date',
+        ]);
+
+        $evaluation->update($validated);
+
+        return redirect()->route('evaluations.show', $evaluation)
+            ->with('status', 'L\'évaluation a été mise à jour avec succès.');
+    }
+
+    /**
+     * Remove the specified evaluation from storage.
+     */
+    public function destroy(Evaluation $evaluation): RedirectResponse
+    {
+        $classId  = $evaluation->class_id;
+        $periodId = $evaluation->period_id;
+
+        $evaluation->delete();
+
+        return redirect()->route('evaluations.index', ['class_id' => $classId, 'period_id' => $periodId])
+            ->with('status', 'L\'évaluation a été supprimée.');
+    }
 }

@@ -81,4 +81,44 @@ class TeacherController extends Controller
 
         return view('teachers.show', compact('teacher'));
     }
+
+    /**
+     * Show the form for editing the specified teacher.
+     */
+    public function edit(Teacher $teacher): View
+    {
+        $teacher->load('user');
+
+        return view('teachers.edit', compact('teacher'));
+    }
+
+    /**
+     * Update the specified teacher in storage.
+     */
+    public function update(Request $request, Teacher $teacher): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:125',
+            'email' => 'required|email|max:125|unique:users,email,' . $teacher->user_id,
+            'speciality' => 'required|string|max:125',
+            'qualification' => 'nullable|string|max:125',
+            'employment_type' => 'required|in:PERMANENT,VACATAIRE,CONTRACTUEL',
+            'status' => 'required|in:ACTIF,INACTIF,CONGE',
+        ]);
+
+        $teacher->user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ]);
+
+        $teacher->update([
+            'speciality' => $validated['speciality'],
+            'qualification' => $validated['qualification'] ?? null,
+            'employment_type' => $validated['employment_type'],
+            'status' => $validated['status'],
+        ]);
+
+        return redirect()->route('teachers.show', $teacher)
+            ->with('status', 'Le profil de l\'enseignant a été mis à jour avec succès.');
+    }
 }

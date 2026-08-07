@@ -55,4 +55,58 @@ class SchoolClassController extends Controller
         return redirect()->route('classes.index', ['academic_year_id' => $validated['academic_year_id']])
             ->with('status', 'La classe a été créée avec succès.');
     }
+
+    /**
+     * Display the specified class.
+     */
+    public function show(SchoolClass $schoolClass): View
+    {
+        $schoolClass->load(['level.cycle', 'academicYear', 'mainTeacher', 'enrollments.student', 'assignments.teacher.user', 'assignments.subject']);
+
+        return view('classes.show', compact('schoolClass'));
+    }
+
+    /**
+     * Show the form for editing the specified class.
+     */
+    public function edit(SchoolClass $schoolClass): View
+    {
+        $levels = Level::with('cycle')->orderBy('order_index')->get();
+        $teachers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Enseignant', 'Super Admin', 'Directeur', 'Censeur']);
+        })->get();
+
+        return view('classes.edit', compact('schoolClass', 'levels', 'teachers'));
+    }
+
+    /**
+     * Update the specified class in storage.
+     */
+    public function update(Request $request, SchoolClass $schoolClass): RedirectResponse
+    {
+        $validated = $request->validate([
+            'level_id' => 'required|exists:levels,id',
+            'name' => 'required|string|max:125',
+            'capacity' => 'required|integer|min:1|max:100',
+            'room_number' => 'nullable|string|max:50',
+            'main_teacher_id' => 'nullable|exists:users,id',
+        ]);
+
+        $schoolClass->update($validated);
+
+        return redirect()->route('classes.index', ['academic_year_id' => $schoolClass->academic_year_id])
+            ->with('status', 'La classe a été mise à jour avec succès.');
+    }
+
+    /**
+     * Remove the specified class from storage.
+     */
+    public function destroy(SchoolClass $schoolClass): RedirectResponse
+    {
+        $yearId = $schoolClass->academic_year_id;
+        $schoolClass->delete();
+
+        return redirect()->route('classes.index', ['academic_year_id' => $yearId])
+            ->with('status', 'La classe a été supprimée.');
+    }
 }

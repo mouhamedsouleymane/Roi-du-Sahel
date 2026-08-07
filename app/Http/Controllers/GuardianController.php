@@ -26,4 +26,44 @@ class GuardianController extends Controller
 
         return view('guardians.index', compact('guardians', 'search'));
     }
+
+    /**
+     * Display the specified guardian.
+     */
+    public function show(Guardian $guardian): View
+    {
+        $guardian->load('students.enrollments.schoolClass');
+
+        return view('guardians.show', compact('guardian'));
+    }
+
+    /**
+     * Show the form for editing the specified guardian.
+     */
+    public function edit(Guardian $guardian): View
+    {
+        return view('guardians.edit', compact('guardian'));
+    }
+
+    /**
+     * Update the specified guardian in storage.
+     */
+    public function update(Request $request, Guardian $guardian)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:125',
+            'last_name' => 'required|string|max:125',
+            'relationship' => 'required|string|max:50',
+            'phone_primary' => 'required|string|max:50',
+            'phone_secondary' => 'nullable|string|max:50',
+            'email' => 'nullable|email|max:255',
+            'profession' => 'nullable|string|max:125',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        $guardian->update($validated);
+
+        return redirect()->route('guardians.show', $guardian)
+            ->with('status', 'Le tuteur a été mis à jour avec succès.');
+    }
 }

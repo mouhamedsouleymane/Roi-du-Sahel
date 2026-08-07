@@ -109,4 +109,47 @@ class EnrollmentController extends Controller
         return redirect()->route('students.show', $enrollment->student_id)
             ->with('status', "Inscription de l'élève effectuée avec succès (Matricule: {$enrollment->student->matricule}).");
     }
+
+    /**
+     * Display the specified enrollment.
+     */
+    public function show(Enrollment $enrollment): View
+    {
+        $enrollment->load(['student.guardians', 'schoolClass.level.cycle', 'academicYear']);
+
+        return view('enrollments.show', compact('enrollment'));
+    }
+
+    /**
+     * Show the form for editing the specified enrollment.
+     */
+    public function edit(Enrollment $enrollment): View
+    {
+        $classes = SchoolClass::with('level.cycle')
+            ->where('academic_year_id', $enrollment->academic_year_id)
+            ->get();
+
+        return view('enrollments.edit', compact('enrollment', 'classes'));
+    }
+
+    /**
+     * Update the specified enrollment in storage.
+     */
+    public function update(Request $request, Enrollment $enrollment): RedirectResponse
+    {
+        $validated = $request->validate([
+            'class_id' => 'required|exists:classes,id',
+            'type' => 'required|in:NOUVEAU,REINSCRIPTION,TRANSFERT',
+            'status' => 'required|in:EN_ATTENTE,VALIDE,ANNULE',
+            'is_repeater' => 'nullable|boolean',
+            'notes' => 'nullable|string',
+        ]);
+
+        $validated['is_repeater'] = (bool) ($request->has('is_repeater'));
+
+        $enrollment->update($validated);
+
+        return redirect()->route('enrollments.show', $enrollment)
+            ->with('status', 'L\'inscription a été mise à jour avec succès.');
+    }
 }

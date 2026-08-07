@@ -73,10 +73,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Cycles & Niveaux
     Route::get('/cycles', [CycleController::class, 'index'])->name('cycles.index');
+    Route::get('/cycles/{cycle}', [CycleController::class, 'show'])->name('cycles.show');
+    Route::get('/cycles/{cycle}/edit', [CycleController::class, 'edit'])->name('cycles.edit');
+    Route::match(['PUT', 'PATCH'], '/cycles/{cycle}', [CycleController::class, 'update'])->name('cycles.update');
 
     // Classes
     Route::get('/classes', [SchoolClassController::class, 'index'])->name('classes.index');
     Route::post('/classes', [SchoolClassController::class, 'store'])->name('classes.store');
+    Route::get('/classes/{schoolClass}', [SchoolClassController::class, 'show'])->name('classes.show');
+    Route::get('/classes/{schoolClass}/edit', [SchoolClassController::class, 'edit'])->name('classes.edit');
+    Route::match(['PUT', 'PATCH'], '/classes/{schoolClass}', [SchoolClassController::class, 'update'])->name('classes.update');
+    Route::delete('/classes/{schoolClass}', [SchoolClassController::class, 'destroy'])->name('classes.destroy');
 
     // Matières & Coefficients
     Route::get('/subjects', [SubjectController::class, 'index'])->name('subjects.index');
@@ -85,32 +92,58 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Élèves
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
+    Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
+    Route::post('/students', [StudentController::class, 'store'])->name('students.store');
     Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
+    Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
+    Route::match(['PUT', 'PATCH'], '/students/{student}', [StudentController::class, 'update'])->name('students.update');
 
     // Parents / Tuteurs
     Route::get('/guardians', [GuardianController::class, 'index'])->name('guardians.index');
+    Route::get('/guardians/create', [GuardianController::class, 'create'])->name('guardians.create');
+    Route::post('/guardians', [GuardianController::class, 'store'])->name('guardians.store');
+    Route::get('/guardians/{guardian}', [GuardianController::class, 'show'])->name('guardians.show');
+    Route::get('/guardians/{guardian}/edit', [GuardianController::class, 'edit'])->name('guardians.edit');
+    Route::match(['PUT', 'PATCH'], '/guardians/{guardian}', [GuardianController::class, 'update'])->name('guardians.update');
 
     // Inscriptions & Réinscriptions
     Route::get('/enrollments', [EnrollmentController::class, 'index'])->name('enrollments.index');
     Route::get('/enrollments/create', [EnrollmentController::class, 'create'])->name('enrollments.create');
     Route::post('/enrollments', [EnrollmentController::class, 'store'])->name('enrollments.store');
+    Route::get('/enrollments/{enrollment}', [EnrollmentController::class, 'show'])->name('enrollments.show');
+    Route::get('/enrollments/{enrollment}/edit', [EnrollmentController::class, 'edit'])->name('enrollments.edit');
+    Route::match(['PUT', 'PATCH'], '/enrollments/{enrollment}', [EnrollmentController::class, 'update'])->name('enrollments.update');
 
     // Enseignants
     Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
     Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
     Route::get('/teachers/{teacher}', [TeacherController::class, 'show'])->name('teachers.show');
+    Route::get('/teachers/{teacher}/edit', [TeacherController::class, 'edit'])->name('teachers.edit');
+    Route::match(['PUT', 'PATCH'], '/teachers/{teacher}', [TeacherController::class, 'update'])->name('teachers.update');
 
     // Affectations Cours
     Route::get('/assignments', [TeacherAssignmentController::class, 'index'])->name('assignments.index');
     Route::post('/assignments', [TeacherAssignmentController::class, 'store'])->name('assignments.store');
+    Route::get('/assignments/{assignment}', [TeacherAssignmentController::class, 'show'])->name('assignments.show');
+    Route::get('/assignments/{assignment}/edit', [TeacherAssignmentController::class, 'edit'])->name('assignments.edit');
+    Route::match(['PUT', 'PATCH'], '/assignments/{assignment}', [TeacherAssignmentController::class, 'update'])->name('assignments.update');
+    Route::delete('/assignments/{assignment}', [TeacherAssignmentController::class, 'destroy'])->name('assignments.destroy');
 
     // Emplois du temps
     Route::get('/schedules', [ScheduleController::class, 'index'])->name('schedules.index');
     Route::post('/schedules', [ScheduleController::class, 'store'])->name('schedules.store');
+    Route::get('/schedules/{schedule}', [ScheduleController::class, 'show'])->name('schedules.show');
+    Route::get('/schedules/{schedule}/edit', [ScheduleController::class, 'edit'])->name('schedules.edit');
+    Route::match(['PUT', 'PATCH'], '/schedules/{schedule}', [ScheduleController::class, 'update'])->name('schedules.update');
+    Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
 
     // Évaluations & Saisie de Notes
     Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
     Route::post('/evaluations', [EvaluationController::class, 'store'])->name('evaluations.store');
+    Route::get('/evaluations/{evaluation}', [EvaluationController::class, 'show'])->name('evaluations.show');
+    Route::get('/evaluations/{evaluation}/edit', [EvaluationController::class, 'edit'])->name('evaluations.edit');
+    Route::match(['PUT', 'PATCH'], '/evaluations/{evaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
+    Route::delete('/evaluations/{evaluation}', [EvaluationController::class, 'destroy'])->name('evaluations.destroy');
     Route::get('/evaluations/{evaluation}/grades', [EvaluationController::class, 'grades'])->name('evaluations.grades');
     Route::post('/evaluations/{evaluation}/grades', [EvaluationController::class, 'saveGrades'])->name('evaluations.grades.save');
 
