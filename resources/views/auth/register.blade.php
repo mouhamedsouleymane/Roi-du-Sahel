@@ -1,52 +1,62 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" class="space-y-5">
         @csrf
 
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <label for="name" class="block text-xs font-black text-purple-200 uppercase tracking-wider mb-2">
+                Nom Complet *
+            </label>
+            <input id="name" type="text" name="name" :value="old('name')" required autofocus autocomplete="name"
+                   placeholder="Mamadou TRAORE"
+                   class="w-full text-sm font-bold bg-purple-900/50 border border-purple-700/60 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
         <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+        <div>
+            <label for="email" class="block text-xs font-black text-purple-200 uppercase tracking-wider mb-2">
+                Adresse Email *
+            </label>
+            <input id="email" type="email" name="email" :value="old('email')" required autocomplete="username"
+                   placeholder="votre.email@roisdusahel.edu"
+                   class="w-full text-sm font-bold bg-purple-900/50 border border-purple-700/60 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
+        <div>
+            <label for="password" class="block text-xs font-black text-purple-200 uppercase tracking-wider mb-2">
+                Mot de passe *
+            </label>
+            <input id="password" type="password" name="password" required autocomplete="new-password"
+                   placeholder="••••••••"
+                   class="w-full text-sm font-bold bg-purple-900/50 border border-purple-700/60 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
+        <div>
+            <label for="password_confirmation" class="block text-xs font-black text-purple-200 uppercase tracking-wider mb-2">
+                Confirmer le Mot de passe *
+            </label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required autocomplete="new-password"
+                   placeholder="••••••••"
+                   class="w-full text-sm font-bold bg-purple-900/50 border border-purple-700/60 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400" />
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <div>
+            <button type="submit" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-purple-950 font-black text-sm shadow-xl shadow-amber-500/20 hover:brightness-110 transition flex items-center justify-center gap-2">
+                <span>✨ Créer mon Compte</span>
+            </button>
+        </div>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <div class="text-center pt-2 border-t border-purple-800/60 text-xs text-purple-300">
+            Déjà inscrit ?
+            <a href="{{ route('login') }}" class="font-black text-amber-400 hover:underline ms-1">
+                Se connecter
+            </a>
         </div>
     </form>
 </x-guest-layout>

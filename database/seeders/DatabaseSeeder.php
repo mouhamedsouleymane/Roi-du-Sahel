@@ -24,6 +24,11 @@ class DatabaseSeeder extends Seeder
             ClassSeeder::class,
             CoefficientSeeder::class,
             StudentAndGuardianSeeder::class,
+            TeacherSeeder::class,
+            TeacherAssignmentSeeder::class,
+            ScheduleSeeder::class,
+            PeriodSeeder::class,
+            FeeSeeder::class,
         ]);
 
         User::factory()->create([

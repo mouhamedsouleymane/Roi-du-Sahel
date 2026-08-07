@@ -1,36 +1,133 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <title>{{ config('app.name', 'Rois du Sahel') }}</title>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
-            <!-- Page Heading -->
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="font-sans antialiased bg-slate-50 text-slate-900 min-h-screen" x-data="{
+    sidebarOpen: false,
+    sidebarCollapsed: localStorage.getItem('sidebar_collapsed') === 'true',
+    toggleCollapse() {
+        this.sidebarCollapsed = !this.sidebarCollapsed;
+        localStorage.setItem('sidebar_collapsed', this.sidebarCollapsed);
+    }
+}">
+
+    <!-- Fixed Desktop Sidebar -->
+    @include('layouts.sidebar')
+
+    <!-- Mobile Drawer Overlay -->
+    <div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false"
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 md:hidden" style="display: none;"></div>
+
+    <!-- Mobile Sidebar Drawer -->
+    <div x-show="sidebarOpen" x-transition:enter="transition ease-out duration-300 transform"
+        x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full"
+        class="fixed inset-y-0 left-0 w-54 bg-purple-950 z-50 md:hidden overflow-y-auto" style="display: none;">
+        @include('layouts.sidebar')
+    </div>
+
+    <!-- Main Content Area: Offset by margin-left dynamically (md:ml-64 when expanded, md:ml-20 when collapsed mini-bar) -->
+    <div :class="sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'"
+        class="transition-all duration-300 ease-in-out flex-1 flex flex-col min-w-0 min-h-screen">
+
+        <!-- Top Sticky Navbar -->
+        <header class="bg-white border-b border-slate-200/80 sticky top-0 z-20 shadow-xs flex-shrink-0">
+            <div class="px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+                <!-- Mobile Hamburger Button & Header Title -->
+                <div class="flex items-center gap-3">
+                    <button @click="sidebarOpen = !sidebarOpen"
+                        class="p-2 rounded-lg text-purple-950 hover:bg-purple-50 md:hidden focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Desktop Mini-bar Expand Button (also available in topbar) -->
+
+
+                    @isset($header)
+                        <div class="hidden md:block">
+                            {{ $header }}
+                        </div>
+                    @endisset
+                </div>
+
+                <!-- User Profile Top Dropdown & Brand Tag -->
+                <div class="flex items-center gap-4">
+                    <a href="{{ route('home') }}" target="_blank"
+                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-950 border border-amber-300/60 rounded-full text-xs font-black hover:bg-amber-100 transition">
+                        🌐 Site Web / Vitrine
+                    </a>
+
+                    <span
+                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-950 border border-purple-200/60 rounded-full text-xs font-black">
+                        👑 CSP Les Rois du Sahel
+                    </span>
+
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition text-xs font-bold text-slate-700">
+                                <div
+                                    class="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-400 to-purple-800 text-white font-bold flex items-center justify-center text-xs">
+                                    {{ mb_substr(Auth::user()->name ?? 'U', 0, 1) }}
+                                </div>
+                                <span class="hidden sm:inline">{{ Auth::user()->name }}</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('profile.edit')">
+                                👤 {{ __('Profil') }}
+                            </x-dropdown-link>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                    🚪 {{ __('Se déconnecter') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+            </div>
+
             @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
+                <div class="px-4 py-2 border-t border-slate-100 md:hidden bg-slate-50">
+                    {{ $header }}
+                </div>
             @endisset
+        </header>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+        <!-- Main Page Slot -->
+        <main class="flex-1">
+            {{ $slot }}
+        </main>
+
+    </div>
+</body>
+
 </html>

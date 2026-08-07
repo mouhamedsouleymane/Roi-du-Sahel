@@ -41,7 +41,7 @@ class AcademicYear extends Model
      */
     public function activate(): bool
     {
-        static::query()->update(['is_active' => false]);
+        static::where('id', '!=', $this->id)->update(['is_active' => false]);
         $this->is_active = true;
         return $this->save();
     }

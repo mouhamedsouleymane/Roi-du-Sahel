@@ -21,8 +21,44 @@
                     <x-nav-link :href="route('cycles.index')" :active="request()->routeIs('cycles.*')">
                         {{ __('Cycles & Niveaux') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('classes.index')" :active="request()->routeIs('classes.*')">
-                        {{ __('Classes') }}
+                    <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
+                        {{ __('Élèves') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('teachers.index')" :active="request()->routeIs('teachers.*')">
+                        {{ __('Enseignants') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('assignments.index')" :active="request()->routeIs('assignments.*')">
+                        {{ __('Affectations') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('schedules.index')" :active="request()->routeIs('schedules.*')">
+                        {{ __('Emploi du Temps') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('evaluations.index')" :active="request()->routeIs('evaluations.*')">
+                        {{ __('Évaluations') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('report-cards.index')" :active="request()->routeIs('report-cards.*')">
+                        {{ __('Bulletins') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('stats.index')" :active="request()->routeIs('stats.*')">
+                        {{ __('Statistiques') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('invoices.index')" :active="request()->routeIs('invoices.*') || request()->routeIs('payments.*')">
+                        {{ __('Paiements') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('attendances.index')" :active="request()->routeIs('attendances.*')">
+                        {{ __('Présences') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('portal.parent')" :active="request()->routeIs('portal.parent')">
+                        {{ __('Espace Parent') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('portal.student')" :active="request()->routeIs('portal.student')">
+                        {{ __('Espace Élève') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('guardians.index')" :active="request()->routeIs('guardians.*')">
+                        {{ __('Parents & Tuteurs') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('enrollments.index')" :active="request()->routeIs('enrollments.*')">
+                        {{ __('Inscriptions') }}
                     </x-nav-link>
                     <x-nav-link :href="route('subjects.index')" :active="request()->routeIs('subjects.*')">
                         {{ __('Matières') }}

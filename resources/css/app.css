@@ -1,1 +1,129 @@
 @import "tailwindcss";
+
+@layer base {
+  /* === Augmentation globale de la hauteur des champs de formulaire === */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
+  select,
+  textarea {
+    padding-top: 0.625rem;    /* py-2.5 */
+    padding-bottom: 0.625rem;
+    padding-left: 0.875rem;   /* px-3.5 */
+    padding-right: 0.875rem;
+    min-height: 2.75rem;      /* 44px — hauteur confortable */
+    font-size: 0.9375rem;     /* ~15px */
+    line-height: 1.5;
+    border-radius: 0.5rem;    /* rounded-lg */
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  textarea {
+    min-height: 6rem;         /* hauteur minimale pour les zones de texte */
+    resize: vertical;
+  }
+
+  select {
+    padding-right: 2.5rem;    /* espace pour la flèche native */
+  }
+}
+
+@layer utilities {
+  /* Keyframe Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes floatSlow {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% {
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Custom Utility Classes */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-float {
+    animation: floatSlow 4s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .glass-card-dark {
+    background: rgba(15, 23, 42, 0.85);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-purple-gradient {
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 50%, #4c1d95 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-royal {
+    background: linear-gradient(135deg, #3b0764 0%, #581c87 50%, #1e1b4b 100%);
+  }
+
+  .gradient-sahel-gold {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+  }
+
+  .gradient-emerald-sahel {
+    background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
+  }
+
+  .shadow-royal {
+    box-shadow: 0 10px 30px -10px rgba(88, 28, 135, 0.3);
+  }
+
+  .shadow-gold {
+    box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
+  }
+}
