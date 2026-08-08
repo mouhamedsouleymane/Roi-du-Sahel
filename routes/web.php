@@ -21,6 +21,7 @@ use App\Http\Controllers\StudentPortalController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherAssignmentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,10 +53,10 @@ Route::post('/pre-inscription', function (Request $request) {
 })->name('pre-enrollment.store');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -64,6 +65,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Paramètres Établissement
     Route::get('/settings', [SchoolSettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SchoolSettingController::class, 'update'])->name('settings.update');
+
+    // Utilisateurs & Rôles
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::match(['PUT', 'PATCH'], '/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // Années Scolaires
     Route::get('/academic-years', [AcademicYearController::class, 'index'])->name('academic-years.index');

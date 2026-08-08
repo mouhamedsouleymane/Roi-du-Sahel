@@ -20,7 +20,7 @@
                 <div class="max-w-xl">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">🔗 Attribuer une Matière et une Classe à un Enseignant</h3>
 
-                    <form method="POST" action="{{ route('assignments.store') }}" class="space-y-4">
+                    <form method="POST" action="{{ route('assignments.store') }}" class="space-y-4" data-confirm="Êtes-vous sûr de vouloir enregistrer cette affectation d'enseignant ?">
                         @csrf
 
                         <div>
@@ -104,7 +104,7 @@
                                                 ✏️ Modifier
                                             </a>
                                             <form method="POST" action="{{ route('assignments.destroy', $asn) }}" class="inline"
-                                                  onsubmit="return confirm('Supprimer cette affectation ?')">
+                                                  data-confirm="Voulez-vous supprimer cette affectation d'enseignant ?">
                                                 @csrf @method('DELETE')
                                                 <button type="submit"
                                                         class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">

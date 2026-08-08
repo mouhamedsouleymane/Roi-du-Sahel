@@ -32,7 +32,7 @@
                 <div class="max-w-xl">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">➕ Créer une nouvelle Classe</h3>
 
-                    <form method="POST" action="{{ route('classes.store') }}" class="space-y-4">
+                    <form method="POST" action="{{ route('classes.store') }}" class="space-y-4" data-confirm="Êtes-vous sûr de vouloir créer cette nouvelle classe ?">
                         @csrf
                         <input type="hidden" name="academic_year_id" value="{{ $selectedYearId }}" />
 
@@ -109,7 +109,7 @@
                                         ✏️ Modifier
                                     </a>
                                     <form method="POST" action="{{ route('classes.destroy', $cls) }}" class="inline"
-                                          onsubmit="return confirm('Supprimer cette classe ?')">
+                                          data-confirm="Êtes-vous sûr de vouloir supprimer la classe {{ $cls->name }} ? Cette action affectera l'historique et est irréversible.">
                                         @csrf @method('DELETE')
                                         <button type="submit"
                                                 class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">

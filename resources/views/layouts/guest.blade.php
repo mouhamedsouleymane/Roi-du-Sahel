@@ -7,6 +7,9 @@
 
         <title>{{ config('app.name', 'Rois du Sahel') }} - Connexion & Accès</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/jpeg" href="{{ asset('images/logo_roi.jpeg') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
@@ -32,8 +35,8 @@
 
                 <!-- Logo & Brand Header -->
                 <div class="text-center space-y-3">
-                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-400 via-amber-500 to-purple-600 shadow-xl shadow-amber-500/20 ring-4 ring-amber-400/30 text-3xl animate-float">
-                        👑
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full overflow-hidden shadow-xl shadow-amber-500/30 ring-4 ring-amber-400/40 animate-float bg-white">
+                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo Les Rois du Sahel" class="w-full h-full object-cover">
                     </div>
                     <h1 class="text-2xl font-black text-white tracking-wide">
                         ROIS DU SAHEL

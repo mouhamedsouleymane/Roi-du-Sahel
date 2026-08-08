@@ -8,8 +8,8 @@
             <div class="flex items-center justify-between gap-2">
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3 overflow-hidden">
                     <div
-                        class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-500 to-purple-600 flex items-center justify-center text-2xl shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/40 animate-float flex-shrink-0">
-                        👑
+                        class="w-11 h-11 rounded-full overflow-hidden bg-white shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/40 animate-float flex-shrink-0">
+                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo" class="w-full h-full object-cover">
                     </div>
                     <div x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="truncate">
@@ -234,6 +234,12 @@
                 <div x-show="sidebarCollapsed" class="my-2 border-t border-purple-800/40"></div>
 
                 <div class="space-y-1">
+                    <a href="{{ route('users.index') }}" title="Utilisateurs & Rôles"
+                        :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
+                        class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('users.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
+                        <span class="text-lg transition-transform group-hover:scale-110">🛡️</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">Utilisateurs & Rôles</span>
+                    </a>
                     <a href="{{ route('settings.index') }}" title="Paramètres Établissement"
                         :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
                         class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('settings.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">

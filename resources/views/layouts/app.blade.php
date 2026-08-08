@@ -8,6 +8,9 @@
 
     <title>{{ config('app.name', 'Rois du Sahel') }}</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo_roi.jpeg') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
@@ -77,7 +80,8 @@
 
                     <span
                         class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-950 border border-purple-200/60 rounded-full text-xs font-black">
-                        👑 CSP Les Rois du Sahel
+                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo" class="w-5 h-5 rounded-full object-cover">
+                        CSP Les Rois du Sahel
                     </span>
 
                     <x-dropdown align="right" width="48">

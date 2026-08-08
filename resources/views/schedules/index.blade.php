@@ -32,7 +32,7 @@
                 <div class="max-w-3xl">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">⏱️ Ajouter un Créneau de Cours</h3>
 
-                    <form method="POST" action="{{ route('schedules.store') }}" class="space-y-4">
+                    <form method="POST" action="{{ route('schedules.store') }}" class="space-y-4" data-confirm="Ajouter ce créneau de cours à l'emploi du temps ?">
                         @csrf
                         <input type="hidden" name="class_id" value="{{ $selectedClassId }}" />
 
@@ -117,7 +117,7 @@
                                                 ✏️ Modifier
                                             </a>
                                             <form method="POST" action="{{ route('schedules.destroy', $slot) }}" class="inline"
-                                                  onsubmit="return confirm('Supprimer ce créneau ?')">
+                                                  data-confirm="Supprimer ce créneau horaire du planning ?">
                                                 @csrf @method('DELETE')
                                                 <button type="submit"
                                                         class="text-[11px] font-bold px-2 py-0.5 rounded bg-red-50 text-red-700 hover:bg-red-100">

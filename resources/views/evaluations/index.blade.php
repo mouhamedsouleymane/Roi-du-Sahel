@@ -38,7 +38,7 @@
             <!-- Formulaire Nouvelle Évaluation -->
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">📝 Créer une Évaluation</h3>
-                <form method="POST" action="{{ route('evaluations.store') }}" class="space-y-4">
+                <form method="POST" action="{{ route('evaluations.store') }}" class="space-y-4" data-confirm="Confirmer la création de cette évaluation ?">
                     @csrf
                     <input type="hidden" name="class_id" value="{{ $selectedClassId }}" />
                     <input type="hidden" name="period_id" value="{{ $selectedPeriodId }}" />
@@ -139,7 +139,7 @@
                                                 ✏️ Modifier
                                             </a>
                                             <form method="POST" action="{{ route('evaluations.destroy', $eval) }}" class="inline"
-                                                  onsubmit="return confirm('Supprimer cette évaluation ?')">
+                                                  data-confirm="Voulez-vous supprimer l'évaluation {{ $eval->title }} ? Toutes les notes associées seront supprimées.">
                                                 @csrf @method('DELETE')
                                                 <button type="submit"
                                                         class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">

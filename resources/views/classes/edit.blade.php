@@ -14,7 +14,7 @@
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
 
             <div class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
-                <form method="POST" action="{{ route('classes.update', $schoolClass) }}" class="space-y-6">
+                <form method="POST" action="{{ route('classes.update', $schoolClass) }}" class="space-y-6" data-confirm="Voulez-vous enregistrer les modifications apportées à la classe {{ $schoolClass->name }} ?">
                     @csrf
                     @method('PUT')
 
