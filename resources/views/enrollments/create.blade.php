@@ -121,7 +121,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label for="class_id" class="block font-medium text-sm text-gray-700">Classe d'Affectation</label>
+                                <label for="class_id" class="block font-medium text-sm text-gray-700">Classe d'Affectation *</label>
                                 <select id="class_id" name="class_id" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                     <option value="">-- Choisir la classe --</option>
                                     @foreach ($classes as $cls)
@@ -131,7 +131,7 @@
                             </div>
 
                             <div>
-                                <label for="type" class="block font-medium text-sm text-gray-700">Type d'Inscription</label>
+                                <label for="type" class="block font-medium text-sm text-gray-700">Type d'Inscription *</label>
                                 <select id="type" name="type" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                     <option value="NOUVEAU">Nouvelle Inscription</option>
                                     <option value="REINSCRIPTION">Réinscription</option>
@@ -146,13 +146,48 @@
                         </div>
                     </div>
 
+                    <!-- Section 4: Frais d'Inscription & Règlement (Obligatoire) -->
+                    <div class="p-5 bg-amber-50/80 border border-amber-300/70 rounded-2xl space-y-4">
+                        <div class="flex items-center justify-between border-b border-amber-200 pb-3">
+                            <h3 class="text-base font-extrabold text-amber-950 flex items-center gap-2">
+                                💳 4. Frais d'Inscription & Règlement (Obligatoire)
+                            </h3>
+                            <span class="px-3 py-1 bg-amber-400 text-purple-950 font-black text-xs rounded-full">
+                                Reçu Immédiat
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label for="payment_method" class="block font-bold text-xs text-amber-950 uppercase mb-1">Mode de Règlement *</label>
+                                <select id="payment_method" name="payment_method" required class="w-full text-xs font-bold border-amber-300 rounded-xl focus:ring-purple-500 focus:border-purple-500">
+                                    <option value="ESPECES" {{ old('payment_method') == 'ESPECES' ? 'selected' : '' }}>💵 Espèces (Comptant)</option>
+                                    <option value="MOBILE_MONEY" {{ old('payment_method') == 'MOBILE_MONEY' ? 'selected' : '' }}>📱 Mobile Money (Airtel / Moov / Orange / Flooz)</option>
+                                    <option value="VIREMENT" {{ old('payment_method') == 'VIREMENT' ? 'selected' : '' }}>🏦 Virement Bancaire</option>
+                                    <option value="CHEQUE" {{ old('payment_method') == 'CHEQUE' ? 'selected' : '' }}>📝 Chèque Certifié</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="amount_paid" class="block font-bold text-xs text-amber-950 uppercase mb-1">Montant perçu (FCFA) *</label>
+                                <input type="number" id="amount_paid" name="amount_paid" required value="{{ old('amount_paid', 30000) }}" min="0" step="500" placeholder="30000" class="w-full text-sm font-black border-amber-300 rounded-xl focus:ring-purple-500 focus:border-purple-500" />
+                                <span class="text-[10px] text-amber-800 font-bold block mt-1">Frais d'inscription enregistrés automatiquement</span>
+                            </div>
+
+                            <div>
+                                <label for="payment_reference" class="block font-bold text-xs text-amber-950 uppercase mb-1">Référence / N° de pièce (Optionnel)</label>
+                                <input type="text" id="payment_reference" name="payment_reference" value="{{ old('payment_reference') }}" placeholder="ex: TXN-908123 / CHQ-4029" class="w-full text-xs font-bold border-amber-300 rounded-xl focus:ring-purple-500 focus:border-purple-500" />
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="flex justify-end gap-3 pt-4 border-t">
-                        <a href="{{ route('students.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg text-sm">
+                        <a href="{{ route('students.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2.5 px-5 rounded-xl text-xs transition">
                             Annuler
                         </a>
-                        <x-primary-button>
-                            {{ __('Valider l\'Inscription') }}
-                        </x-primary-button>
+                        <button type="submit" class="bg-purple-950 hover:bg-purple-900 text-white font-black py-2.5 px-6 rounded-xl text-xs shadow-lg transition flex items-center gap-2">
+                            <span>💾 Valider l'Inscription & Générer le Reçu</span>
+                        </button>
                     </div>
 
                 </form>

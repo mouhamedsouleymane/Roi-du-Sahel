@@ -58,12 +58,17 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ route('enrollments.receipt', $enrollment) }}"
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition"
+                                               title="Imprimer / Exporter le Reçu D'Inscription PDF">
+                                                📄 Reçu
+                                            </a>
                                             <a href="{{ route('enrollments.show', $enrollment) }}"
                                                class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
                                                 👁️ Voir
                                             </a>
                                             <a href="{{ route('enrollments.edit', $enrollment) }}"
-                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                               class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
                                                 ✏️ Modifier
                                             </a>
                                         </div>

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AcademicYear;
+use App\Models\Enrollment;
 use App\Models\Student;
 
 class StudentMatriculeGenerator
@@ -51,9 +52,17 @@ class StudentMatriculeGenerator
             $yearPrefix = $parts[0] ?? '2025';
         }
 
-        $timestamp = now()->format('Ymd');
-        $random = rand(1000, 9999);
+        $latestEnrollment = Enrollment::where('enrollment_number', 'LIKE', "INS-{$yearPrefix}-%")
+            ->orderBy('id', 'desc')
+            ->first();
 
-        return "INS-{$yearPrefix}-{$timestamp}-{$random}";
+        $nextNumber = 1;
+        if ($latestEnrollment) {
+            $parts = explode('-', $latestEnrollment->enrollment_number);
+            $lastNum = isset($parts[2]) ? (int) $parts[2] : 0;
+            $nextNumber = $lastNum + 1;
+        }
+
+        return sprintf('INS-%s-%04d', $yearPrefix, $nextNumber);
     }
 }

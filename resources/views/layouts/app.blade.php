@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Rois du Sahel') }}</title>
+    <title>{{ config('app.name', 'Les Rois du Sahel') }}</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('images/logo_roi.jpeg') }}">
@@ -49,9 +49,9 @@
         class="transition-all duration-300 ease-in-out flex-1 flex flex-col min-w-0 min-h-screen">
 
         <!-- Top Sticky Navbar -->
-        <header class="bg-white border-b border-slate-200/80 sticky top-0 z-20 shadow-xs flex-shrink-0">
+        <header class="bg-yellow-500 border-b border-slate-200/80 sticky top-0 z-20 shadow-xs flex-shrink-0">
             <div class="px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-                <!-- Mobile Hamburger Button & Header Title -->
+                <!-- Mobile Hamburger Button & Brand Logo -->
                 <div class="flex items-center gap-3">
                     <button @click="sidebarOpen = !sidebarOpen"
                         class="p-2 rounded-lg text-purple-950 hover:bg-purple-50 md:hidden focus:outline-none">
@@ -61,14 +61,12 @@
                         </svg>
                     </button>
 
-                    <!-- Desktop Mini-bar Expand Button (also available in topbar) -->
-
-
-                    @isset($header)
-                        <div class="hidden md:block">
-                            {{ $header }}
-                        </div>
-                    @endisset
+                    <div class="flex items-center gap-2">
+                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo"
+                            class="w-7 h-7 rounded-full object-cover ring-2 ring-amber-400">
+                        <span class="font-extrabold text-sm text-purple-950 tracking-wide hidden sm:inline">CSP Les Rois
+                            du Sahel</span>
+                    </div>
                 </div>
 
                 <!-- User Profile Top Dropdown & Brand Tag -->
@@ -77,12 +75,6 @@
                         class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-950 border border-amber-300/60 rounded-full text-xs font-black hover:bg-amber-100 transition">
                         🌐 Site Web / Vitrine
                     </a>
-
-                    <span
-                        class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-950 border border-purple-200/60 rounded-full text-xs font-black">
-                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo" class="w-5 h-5 rounded-full object-cover">
-                        CSP Les Rois du Sahel
-                    </span>
 
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
@@ -118,16 +110,18 @@
                     </x-dropdown>
                 </div>
             </div>
-
-            @isset($header)
-                <div class="px-4 py-2 border-t border-slate-100 md:hidden bg-slate-50">
-                    {{ $header }}
-                </div>
-            @endisset
         </header>
 
         <!-- Main Page Slot -->
-        <main class="flex-1">
+        <main class="flex-1 bg-slate-50">
+            @isset($header)
+                <header class="bg-white border-b border-slate-200/80 shadow-xs">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+
             {{ $slot }}
         </main>
 

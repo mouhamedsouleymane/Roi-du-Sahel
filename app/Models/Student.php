@@ -52,6 +52,11 @@ class Student extends Model
         return $this->hasMany(Enrollment::class);
     }
 
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
     public function currentEnrollment(): HasOne
     {
         $activeYear = AcademicYear::getActive();

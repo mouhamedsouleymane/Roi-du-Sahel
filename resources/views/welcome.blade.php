@@ -10,6 +10,9 @@
     <meta name="description"
         content="Site officiel et portail de pré-inscription en ligne du Complexe Scolaire Privé Les Rois du Sahel. Enseignement Préscolaire, Primaire, Collège et Lycée.">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ asset('images/logo_roi.jpeg') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
@@ -27,8 +30,8 @@
             <!-- Brand Header -->
             <a href="{{ route('home') }}" class="flex items-center gap-3 group">
                 <div
-                    class="w-11 h-11 rounded-2xl bg-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-amber-400/30 group-hover:scale-105 transition duration-300">
-                    👑
+                    class="w-11 h-11 rounded-full overflow-hidden bg-white shadow-lg shadow-amber-400/30 ring-2 ring-amber-400/40 group-hover:scale-105 transition duration-300">
+                    <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo Les Rois du Sahel" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h1
@@ -438,6 +441,30 @@
             </div>
 
             <div class="bg-purple-950 p-8 sm:p-10 rounded-3xl border-2 border-amber-400/60 shadow-2xl">
+
+                {{-- Notification de succès de pré-inscription --}}
+                @if (session('preinscription_success'))
+                    <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-emerald-900 via-emerald-950 to-purple-950 border-2 border-emerald-400 shadow-2xl text-white space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">🎉</span>
+                                <div>
+                                    <h3 class="text-base font-black text-emerald-300">Demande de Pré-inscription Transmise avec Succès !</h3>
+                                    <p class="text-xs text-emerald-100 font-medium">Le secrétariat du CSP Les Rois du Sahel traitera votre dossier sous 48h.</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-emerald-400 text-purple-950 font-black text-xs rounded-full">
+                                Reçu
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-emerald-800/80 text-xs font-bold">
+                            <div>Référence : <span class="text-amber-300 font-mono font-black">{{ session('preinscription_success')['ref'] }}</span></div>
+                            <div>Candidat : <span class="text-white font-extrabold uppercase">{{ session('preinscription_success')['name'] }}</span></div>
+                            <div>Cycle : <span class="text-emerald-200">{{ session('preinscription_success')['cycle'] }}</span></div>
+                        </div>
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('pre-enrollment.store') }}" class="space-y-8">
                     @csrf
 

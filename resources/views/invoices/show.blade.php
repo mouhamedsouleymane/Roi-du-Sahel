@@ -9,9 +9,21 @@
                     {{ $invoice->feeType->name }} &nbsp;•&nbsp; {{ $invoice->academicYear->name ?? '–' }}
                 </p>
             </div>
-            <a href="{{ route('invoices.index') }}" class="text-sm font-bold text-purple-900 hover:text-purple-700">
-                ← Retour aux factures
-            </a>
+            <div class="flex items-center gap-3">
+                @if ($invoice->enrollment)
+                    <a href="{{ route('enrollments.receipt', $invoice->enrollment) }}"
+                       class="px-4 py-2 bg-amber-400 text-purple-950 font-black rounded-xl text-xs hover:bg-amber-300 transition shadow-sm flex items-center gap-1">
+                        📄 Reçu d'Inscription
+                    </a>
+                @endif
+                <button onclick="window.print()"
+                        class="px-4 py-2 bg-purple-950 text-white font-black rounded-xl text-xs hover:bg-purple-900 transition flex items-center gap-1">
+                    🖨️ Imprimer
+                </button>
+                <a href="{{ route('invoices.index') }}" class="text-xs font-bold text-purple-900 hover:underline">
+                    ← Retour
+                </a>
+            </div>
         </div>
     </x-slot>
 

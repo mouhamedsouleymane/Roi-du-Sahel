@@ -75,9 +75,15 @@
                                     <div class="text-xs text-gray-600">Classe : {{ $enrollment->schoolClass->name }} ({{ $enrollment->schoolClass->level->cycle->name }})</div>
                                     <div class="text-[11px] text-gray-400 mt-1">Inscrit le {{ $enrollment->enrollment_date->format('d/m/Y') }} • {{ $enrollment->type }}</div>
                                 </div>
-                                <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
-                                    {{ $enrollment->status }}
-                                </span>
+                                <div class="flex items-center gap-2">
+                                    <a href="{{ route('enrollments.receipt', $enrollment) }}"
+                                       class="px-3 py-1 bg-amber-400 text-purple-950 rounded-lg text-xs font-black hover:bg-amber-300 transition shadow-xs">
+                                        📄 Reçu
+                                    </a>
+                                    <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
+                                        {{ $enrollment->status }}
+                                    </span>
+                                </div>
                             </div>
                         @empty
                             <p class="text-sm text-gray-500 italic">Aucune inscription enregistrée.</p>

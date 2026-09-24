@@ -26,13 +26,25 @@
                         @error('name') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
-                    <div>
-                        <label for="email" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
-                            Adresse Email (Identifiant de Connexion) *
-                        </label>
-                        <input type="email" id="email" name="email" required value="{{ old('email') }}" placeholder="utilisateur@roisdusahel.ne"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
-                        @error('email') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="email" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
+                                Adresse Email *
+                            </label>
+                            <input type="email" id="email" name="email" required value="{{ old('email') }}" placeholder="utilisateur@roisdusahel.ne"
+                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                            @error('email') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
+                                Numéro de Téléphone (Connexion) *
+                            </label>
+                            <input type="tel" id="phone" name="phone" required value="{{ old('phone') }}" placeholder="12345678"
+                                   maxlength="8" pattern="[0-9]{8}"
+                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                            @error('phone') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

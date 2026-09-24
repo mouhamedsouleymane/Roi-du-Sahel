@@ -24,24 +24,44 @@ class ScheduleSeeder extends Seeder
             ->get();
 
         $days = ['LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI'];
-        $index = 0;
+        $timeSlots = [
+            ['start' => '08:00:00', 'end' => '09:00:00'],
+            ['start' => '09:00:00', 'end' => '10:00:00'],
+            ['start' => '10:00:00', 'end' => '11:00:00'],
+            ['start' => '11:00:00', 'end' => '12:00:00'],
+            ['start' => '14:00:00', 'end' => '15:00:00'],
+            ['start' => '15:00:00', 'end' => '16:00:00'],
+        ];
 
-        foreach ($assignments as $asn) {
-            $day = $days[$index % count($days)];
+        // Grouper les affectations par classe
+        $byClass = $assignments->groupBy('class_id');
 
-            Schedule::firstOrCreate([
-                'academic_year_id' => $activeYear->id,
-                'class_id' => $asn->class_id,
-                'day_of_week' => $day,
-                'start_time' => '08:00:00',
-            ], [
-                'subject_id' => $asn->subject_id,
-                'teacher_id' => $asn->teacher_id,
-                'end_time' => '10:00:00',
-                'room_number' => $asn->schoolClass->room_number ?? 'Salle 1',
-            ]);
+        foreach ($byClass as $classId => $classAssignments) {
+            $dayIndex = 0;
+            $slotIndex = 0;
 
-            $index++;
+            foreach ($classAssignments as $asn) {
+                $day = $days[$dayIndex % count($days)];
+                $slot = $timeSlots[$slotIndex % count($timeSlots)];
+
+                Schedule::firstOrCreate(
+                    [
+                        'academic_year_id' => $activeYear->id,
+                        'class_id' => $classId,
+                        'day_of_week' => $day,
+                        'start_time' => $slot['start'],
+                    ],
+                    [
+                        'subject_id' => $asn->subject_id,
+                        'teacher_id' => $asn->teacher_id,
+                        'end_time' => $slot['end'],
+                        'room_number' => $asn->schoolClass->room_number ?? 'Salle '.rand(1, 20),
+                    ]
+                );
+
+                $dayIndex++;
+                $slotIndex++;
+            }
         }
     }
 }

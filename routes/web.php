@@ -120,6 +120,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/enrollments/create', [EnrollmentController::class, 'create'])->name('enrollments.create');
     Route::post('/enrollments', [EnrollmentController::class, 'store'])->name('enrollments.store');
     Route::get('/enrollments/{enrollment}', [EnrollmentController::class, 'show'])->name('enrollments.show');
+    Route::get('/enrollments/{enrollment}/receipt', [EnrollmentController::class, 'receipt'])->name('enrollments.receipt');
     Route::get('/enrollments/{enrollment}/edit', [EnrollmentController::class, 'edit'])->name('enrollments.edit');
     Route::match(['PUT', 'PATCH'], '/enrollments/{enrollment}', [EnrollmentController::class, 'update'])->name('enrollments.update');
 

@@ -74,6 +74,11 @@ class EnrollmentController extends Controller
             'type' => 'required|in:NOUVEAU,REINSCRIPTION,TRANSFERT',
             'is_repeater' => 'nullable|boolean',
             'notes' => 'nullable|string',
+
+            // Payment data
+            'payment_method' => 'required|string|in:ESPECES,MOBILE_MONEY,VIREMENT,CHEQUE',
+            'amount_paid' => 'nullable|numeric|min:0',
+            'payment_reference' => 'nullable|string|max:100',
         ]);
 
         $studentData = [
@@ -100,14 +105,31 @@ class EnrollmentController extends Controller
         $enrollment = $enrollmentService->enrollNewStudent(
             studentData: $studentData,
             guardianData: $guardianData,
-            classId: $validated['class_id'],
+            classId: (int) $validated['class_id'],
             type: $validated['type'],
             isRepeater: (bool) ($validated['is_repeater'] ?? false),
-            notes: $validated['notes'] ?? null
+            notes: $validated['notes'] ?? null,
+            paymentMethod: $validated['payment_method'],
+            customAmountPaid: isset($validated['amount_paid']) ? (float) $validated['amount_paid'] : null,
+            paymentReference: $validated['payment_reference'] ?? null
         );
 
-        return redirect()->route('students.show', $enrollment->student_id)
-            ->with('status', "Inscription de l'élève effectuée avec succès (Matricule: {$enrollment->student->matricule}).");
+        return redirect()->route('enrollments.receipt', $enrollment->id)
+            ->with('status', "Inscription de l'élève effectuée avec succès (Matricule: {$enrollment->student->matricule}). Reçu d'inscription généré.");
+    }
+
+    /**
+     * Display official enrollment receipt.
+     */
+    public function receipt(Enrollment $enrollment): View
+    {
+        $enrollment->load(['student.guardians', 'schoolClass.level.cycle', 'academicYear']);
+
+        $invoices = \App\Models\Invoice::with(['feeType', 'payments'])
+            ->where('enrollment_id', $enrollment->id)
+            ->get();
+
+        return view('enrollments.receipt', compact('enrollment', 'invoices'));
     }
 
     /**
