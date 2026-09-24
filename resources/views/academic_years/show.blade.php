@@ -2,14 +2,14 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-black text-2xl text-purple-950 leading-tight">
-                📅 Fiche Année Scolaire {{ $academicYear->name }}
+                📅 {{ $academicYear->name }}
             </h2>
             <div class="flex items-center gap-3">
                 <a href="{{ route('academic-years.edit', $academicYear) }}" class="px-4 py-2 text-xs font-black bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition shadow-sm">
                     ✏️ Modifier
                 </a>
                 <a href="{{ route('academic-years.index') }}" class="text-xs font-black text-purple-900 hover:underline">
-                    ← Retour à la liste
+                    ← Retour
                 </a>
             </div>
         </div>
@@ -18,7 +18,12 @@
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
 
-            <!-- Fiche Année -->
+            @if(session('status'))
+                <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm font-semibold">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             <div class="bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-200/80">
                 <div class="p-8 bg-gradient-to-r from-purple-950 via-purple-900 to-indigo-950 text-white flex justify-between items-center">
                     <div>
@@ -27,9 +32,12 @@
                         <p class="text-xs text-purple-200 mt-1">
                             Du {{ $academicYear->start_date->format('d/m/Y') }} au {{ $academicYear->end_date->format('d/m/Y') }}
                         </p>
+                        @if($academicYear->description)
+                            <p class="text-purple-300 text-sm mt-2">{{ $academicYear->description }}</p>
+                        @endif
                     </div>
-                    <div>
-                        @if ($academicYear->is_active)
+                    <div class="flex flex-col items-end gap-2">
+                        @if($academicYear->is_active)
                             <span class="px-4 py-2 rounded-full text-xs font-black bg-emerald-500 text-white shadow-lg">
                                 ✨ Année Active
                             </span>
@@ -38,13 +46,17 @@
                                 Inactive
                             </span>
                         @endif
+                        @if($academicYear->is_closed)
+                            <span class="px-4 py-2 rounded-full text-xs font-black bg-red-500 text-white shadow-lg">
+                                🔒 Clôturée
+                            </span>
+                        @endif
                     </div>
                 </div>
 
-                <!-- Trimestres / Périodes rattachés -->
                 <div class="p-8 space-y-6">
-                    <h3 class="text-base font-black text-slate-900 flex items-center gap-2">
-                        📌 Trimestres & Périodes Découpées
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">
+                        📌 Trimestres & Périodes ({{ $academicYear->periods->count() }})
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">

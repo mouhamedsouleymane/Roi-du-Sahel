@@ -1,0 +1,123 @@
+name: CI — Tests & Qualité
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # ─────────────────────────────────────────────
+  # JOB 1 : Lint PHP (Laravel Pint)
+  # ─────────────────────────────────────────────
+  lint:
+    name: 🎨 Lint (Pint)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configurer PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, xml, ctype, json, bcmath
+          coverage: none
+
+      - name: Cache des dépendances Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Installer les dépendances PHP
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Vérifier le style du code avec Pint
+        run: vendor/bin/pint --test
+
+  # ─────────────────────────────────────────────
+  # JOB 2 : Tests PHPUnit
+  # ─────────────────────────────────────────────
+  test:
+    name: 🧪 Tests (PHPUnit)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configurer PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, xml, ctype, json, bcmath, pdo, pdo_sqlite, sqlite3
+          coverage: xdebug
+
+      - name: Cache des dépendances Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Installer les dépendances PHP
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Copier le fichier .env pour les tests
+        run: cp .env.example .env
+
+      - name: Générer la clé d'application
+        run: php artisan key:generate
+
+      - name: Lancer les migrations (SQLite en mémoire)
+        run: php artisan migrate --force
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+
+      - name: Exécuter les tests PHPUnit
+        run: php artisan test --parallel --coverage-clover=coverage.xml
+        env:
+          APP_ENV: testing
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+
+      - name: Uploader le rapport de couverture (Codecov)
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
+
+  # ─────────────────────────────────────────────
+  # JOB 3 : Build Frontend (Vite + TailwindCSS)
+  # ─────────────────────────────────────────────
+  build:
+    name: 🏗️ Build Frontend (Vite)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configurer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Installer les dépendances NPM
+        run: npm ci
+
+      - name: Compiler les assets avec Vite
+        run: npm run build
+
+      - name: Archiver les assets compilés
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: public/build/
+          retention-days: 1

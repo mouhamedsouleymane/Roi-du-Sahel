@@ -1,129 +1,114 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestion des Années Scolaires') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-black text-2xl text-purple-950 leading-tight">
+                📅 Années Scolaires
+            </h2>
+            <a href="{{ route('academic-years.create') }}" class="px-4 py-2 text-xs font-black bg-purple-900 hover:bg-purple-800 text-white rounded-xl transition shadow-sm">
+                ➕ Nouvelle Année
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            @if (session('status'))
-                <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">Succès ! </strong>
-                    <span class="block sm:inline">{{ session('status') }}</span>
+    <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 space-y-6">
+
+            @if(session('status'))
+                <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm font-semibold">
+                    {{ session('status') }}
                 </div>
             @endif
 
-            <!-- Formulaire de création -->
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">➕ Nouvelle Année Scolaire</h3>
-                    
-                    <form method="POST" action="{{ route('academic-years.store') }}" class="space-y-4">
-                        @csrf
-                        <div>
-                            <label for="name" class="block font-medium text-sm text-gray-700">Libellé (ex: 2026-2027)</label>
-                            <input type="text" id="name" name="name" required placeholder="2026-2027" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
-                            @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="start_date" class="block font-medium text-sm text-gray-700">Date de Début</label>
-                                <input type="date" id="start_date" name="start_date" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
-                            </div>
-                            <div>
-                                <label for="end_date" class="block font-medium text-sm text-gray-700">Date de Fin</label>
-                                <input type="date" id="end_date" name="end_date" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="description" class="block font-medium text-sm text-gray-700">Description / Remarques</label>
-                            <textarea id="description" name="description" rows="2" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"></textarea>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" id="is_active" name="is_active" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
-                            <label for="is_active" class="text-sm text-gray-700 font-medium">Définir immédiatement comme Année Active</label>
-                        </div>
-
-                        <x-primary-button>
-                            {{ __('Créer l\'Année Scolaire') }}
-                        </x-primary-button>
-                    </form>
+            @if(session('error'))
+                <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm font-semibold">
+                    {{ session('error') }}
                 </div>
-            </div>
+            @endif
 
-            <!-- Liste des Années Scolaires -->
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">📅 Historique des Années Scolaires</h3>
-                
+            <div class="bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-200/80">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-slate-100">
+                        <thead class="bg-slate-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Année Scolaire</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Période</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut Actif</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">État Clôture</th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="px-6 py-4 text-left text-xs font-black text-slate-500 uppercase tracking-wider">Année Scolaire</th>
+                                <th class="px-6 py-4 text-left text-xs font-black text-slate-500 uppercase tracking-wider">Période</th>
+                                <th class="px-6 py-4 text-left text-xs font-black text-slate-500 uppercase tracking-wider">Statut</th>
+                                <th class="px-6 py-4 text-left text-xs font-black text-slate-500 uppercase tracking-wider">Clôture</th>
+                                <th class="px-6 py-4 text-right text-xs font-black text-slate-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white divide-y divide-slate-100">
                             @forelse ($academicYears as $year)
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                        {{ $year->name }}
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="font-black text-slate-900 text-sm">{{ $year->name }}</div>
+                                        @if($year->description)
+                                            <div class="text-xs text-slate-400 mt-0.5">{{ $year->description }}</div>
+                                        @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        Du {{ $year->start_date->format('d/m/Y') }} au {{ $year->end_date->format('d/m/Y') }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                                        {{ $year->start_date->format('d/m/Y') }} → {{ $year->end_date->format('d/m/Y') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        @if ($year->is_active)
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($year->is_active)
                                             <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800">
-                                                ✅ Année Active
+                                                ✅ Active
                                             </span>
                                         @else
-                                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-500">
                                                 Inactive
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                        @if ($year->is_closed)
-                                            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-100 text-red-800">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($year->is_closed)
+                                            <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-red-100 text-red-700">
                                                 🔒 Clôturée
                                             </span>
                                         @else
-                                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
                                                 Ouverte
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        @if (! $year->is_active)
-                                            <form method="POST" action="{{ route('academic-years.activate', $year) }}" class="inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1 px-3 rounded">
-                                                    Activer
+                                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ route('academic-years.show', $year) }}"
+                                               class="text-xs font-bold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                                👁️ Voir
+                                            </a>
+                                            <a href="{{ route('academic-years.edit', $year) }}"
+                                               class="text-xs font-bold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                                ✏️ Modifier
+                                            </a>
+                                            @if(! $year->is_active)
+                                                <form method="POST" action="{{ route('academic-years.activate', $year) }}" class="inline">
+                                                    @csrf @method('PATCH')
+                                                    <button type="submit" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition">
+                                                        ▶️ Activer
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            <form method="POST" action="{{ route('academic-years.toggle-close', $year) }}" class="inline">
+                                                @csrf @method('PATCH')
+                                                <button type="submit" class="text-xs font-bold px-3 py-1.5 rounded-lg {{ $year->is_closed ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : 'bg-gray-50 text-gray-700 hover:bg-gray-100' }} transition">
+                                                    {{ $year->is_closed ? '🔓 Réouvrir' : '🔒 Clôturer' }}
                                                 </button>
                                             </form>
-                                        @endif
-
-                                        <form method="POST" action="{{ route('academic-years.toggle-close', $year) }}" class="inline">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-xs bg-gray-600 hover:bg-gray-700 text-white font-bold py-1 px-3 rounded">
-                                                {{ $year->is_closed ? 'Réouvrir' : 'Clôturer' }}
-                                            </button>
-                                        </form>
+                                            @if(! $year->is_active)
+                                                <form method="POST" action="{{ route('academic-years.destroy', $year) }}" class="inline">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                                        🗑️
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    <td colspan="5" class="px-6 py-12 text-center text-sm text-slate-400 italic">
                                         Aucune année scolaire enregistrée.
                                     </td>
                                 </tr>
@@ -132,6 +117,7 @@
                     </table>
                 </div>
             </div>
+
         </div>
     </div>
 </x-app-layout>

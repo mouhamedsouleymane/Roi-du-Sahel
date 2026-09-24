@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AcademicYear extends Model
 {
@@ -26,6 +27,16 @@ class AcademicYear extends Model
             'is_active' => 'boolean',
             'is_closed' => 'boolean',
         ];
+    }
+
+    public function periods(): HasMany
+    {
+        return $this->hasMany(Period::class)->orderBy('order');
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
     }
 
     /**

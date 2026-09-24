@@ -10,6 +10,7 @@ use App\Http\Controllers\GuardianController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ParentPortalController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PreEnrollmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportCardController;
 use App\Http\Controllers\ScheduleController;
@@ -22,42 +23,41 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherAssignmentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\WhatsAppBroadcastController;
+use App\Http\Controllers\WhatsAppWebhookController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes & Espace Public
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
 // Soumission de demande de pré-inscription en ligne depuis le site web public
-Route::post('/pre-inscription', function (Request $request) {
-    $validated = $request->validate([
-        'student_last_name' => 'required|string|max:255',
-        'student_first_name' => 'required|string|max:255',
-        'birth_date' => 'required|date',
-        'gender' => 'required|in:M,F',
-        'requested_cycle' => 'required|string',
-        'guardian_name' => 'required|string|max:255',
-        'guardian_phone' => 'required|string|max:50',
-        'guardian_email' => 'nullable|email|max:255',
-        'notes' => 'nullable|string|max:1000',
-    ]);
+Route::post('/pre-inscription', [PreEnrollmentController::class, 'store'])->name('pre-enrollment.store');
 
-    $ref = 'PRE-' . date('Y') . '-' . strtoupper(substr(md5(uniqid()), 0, 5));
+// ─────────────────────────────────────────────
+// WhatsApp Webhook & Chatbot Meta (Public)
+// ─────────────────────────────────────────────
+Route::get('/whatsapp/webhook', [WhatsAppWebhookController::class, 'verify'])->name('whatsapp.webhook.verify');
+Route::post('/whatsapp/webhook', [WhatsAppWebhookController::class, 'handle'])->name('whatsapp.webhook.handle');
 
-    return back()->with('preinscription_success', [
-        'ref' => $ref,
-        'name' => $validated['student_first_name'] . ' ' . $validated['student_last_name'],
-        'cycle' => $validated['requested_cycle'],
-    ]);
-})->name('pre-enrollment.store');
+/*
+|--------------------------------------------------------------------------
+| Espace Authentifié (Administration, Enseignants, Portails)
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth'])
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
-    // Profile
+    // Profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -76,15 +76,27 @@ Route::middleware(['auth'])->group(function () {
 
     // Années Scolaires
     Route::get('/academic-years', [AcademicYearController::class, 'index'])->name('academic-years.index');
+    Route::get('/academic-years/create', [AcademicYearController::class, 'create'])->name('academic-years.create');
     Route::post('/academic-years', [AcademicYearController::class, 'store'])->name('academic-years.store');
+    Route::get('/academic-years/{academicYear}', [AcademicYearController::class, 'show'])->name('academic-years.show');
+    Route::get('/academic-years/{academicYear}/edit', [AcademicYearController::class, 'edit'])->name('academic-years.edit');
+    Route::match(['PUT', 'PATCH'], '/academic-years/{academicYear}', [AcademicYearController::class, 'update'])->name('academic-years.update');
+    Route::delete('/academic-years/{academicYear}', [AcademicYearController::class, 'destroy'])->name('academic-years.destroy');
     Route::patch('/academic-years/{academicYear}/activate', [AcademicYearController::class, 'activate'])->name('academic-years.activate');
     Route::patch('/academic-years/{academicYear}/toggle-close', [AcademicYearController::class, 'toggleClose'])->name('academic-years.toggle-close');
 
     // Cycles & Niveaux
     Route::get('/cycles', [CycleController::class, 'index'])->name('cycles.index');
+    Route::get('/cycles/create', [CycleController::class, 'create'])->name('cycles.create');
+    Route::post('/cycles', [CycleController::class, 'store'])->name('cycles.store');
     Route::get('/cycles/{cycle}', [CycleController::class, 'show'])->name('cycles.show');
     Route::get('/cycles/{cycle}/edit', [CycleController::class, 'edit'])->name('cycles.edit');
     Route::match(['PUT', 'PATCH'], '/cycles/{cycle}', [CycleController::class, 'update'])->name('cycles.update');
+    Route::patch('/cycles/{cycle}/toggle-active', [CycleController::class, 'toggleActive'])->name('cycles.toggle-active');
+    Route::delete('/cycles/{cycle}', [CycleController::class, 'destroy'])->name('cycles.destroy');
+    Route::post('/cycles/{cycle}/levels', [CycleController::class, 'storeLevel'])->name('cycles.levels.store');
+    Route::match(['PUT', 'PATCH'], '/cycles/{cycle}/levels/{level}', [CycleController::class, 'updateLevel'])->name('cycles.levels.update');
+    Route::delete('/cycles/{cycle}/levels/{level}', [CycleController::class, 'destroyLevel'])->name('cycles.levels.destroy');
 
     // Classes
     Route::get('/classes', [SchoolClassController::class, 'index'])->name('classes.index');
@@ -181,6 +193,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/attendances/report', [AttendanceController::class, 'report'])->name('attendances.report');
     Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
     Route::post('/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
+
+    // Communication Institutionnelle WhatsApp
+    Route::post('/whatsapp/announcements/send', [WhatsAppBroadcastController::class, 'sendAnnouncement'])
+        ->name('whatsapp.announcements.send');
 
     // Portails Parents & Élèves
     Route::get('/parent-portal', [ParentPortalController::class, 'index'])->name('portal.parent');

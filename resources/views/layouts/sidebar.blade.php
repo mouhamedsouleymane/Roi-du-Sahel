@@ -252,7 +252,7 @@
         </nav>
     </div>
 
-    <!-- User Profile Footer -->
+    <!-- User Profile Footer
     <div :class="sidebarCollapsed ? 'justify-center px-2 py-4' : 'justify-between p-4'"
         class="bg-purple-950 border-t border-purple-800/60 flex items-center transition-all duration-300">
         <div class="flex items-center gap-3 overflow-hidden">
@@ -272,5 +272,5 @@
                 🚪
             </button>
         </form>
-    </div>
+    </div>-->
 </aside>

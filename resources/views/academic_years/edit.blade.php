@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-black text-2xl text-purple-950 leading-tight">
-                ✏️ Modifier l'Année Scolaire {{ $academicYear->name }}
+                ✏️ Modifier — {{ $academicYear->name }}
             </h2>
             <a href="{{ route('academic-years.index') }}" class="text-xs font-black text-purple-900 hover:underline">
                 ← Retour à la liste
@@ -36,7 +36,6 @@
                                    class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('start_date') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
-
                         <div>
                             <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
                                 Date de Fin
@@ -45,6 +44,14 @@
                                    class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('end_date') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
+                            Description (optionnel)
+                        </label>
+                        <textarea name="description" rows="2"
+                                  class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description', $academicYear->description) }}</textarea>
                     </div>
 
                     <div class="p-4 bg-purple-50 rounded-2xl border border-purple-100 flex items-center justify-between">

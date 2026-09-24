@@ -13,8 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Exclure le webhook WhatsApp de la vérification CSRF pour autoriser les requêtes POST de Meta
+        $middleware->validateCsrfTokens(except: [
+            'whatsapp/webhook',
+        ]);
     })
+    ->withCommands([
+        __DIR__.'/../app/Console/Commands',
+    ])
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
