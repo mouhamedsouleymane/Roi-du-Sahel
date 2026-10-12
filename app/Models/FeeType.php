@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @mixin Builder
+ */
 class FeeType extends Model
 {
     use HasFactory;
@@ -22,7 +26,7 @@ class FeeType extends Model
     {
         return [
             'is_recurring' => 'boolean',
-            'is_active'    => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 

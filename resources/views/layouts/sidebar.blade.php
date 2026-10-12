@@ -6,10 +6,10 @@
         <div
             class="px-4 py-4 bg-purple-950/90 border-b border-purple-800/50 flex flex-col gap-2 flex-shrink-0 transition-all duration-300">
             <div class="flex items-center justify-between gap-2">
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 overflow-hidden">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 min-w-0">
                     <div
-                        class="w-11 h-11 rounded-full overflow-hidden bg-white shadow-lg shadow-amber-500/20 ring-2 ring-amber-400/40 animate-float flex-shrink-0">
-                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo" class="w-full h-full object-cover">
+                        class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-md shadow-amber-500/20 ring-2 ring-amber-400/60 flex-shrink-0">
+                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo CSP Les Rois du Sahel" class="w-full h-full object-cover">
                     </div>
                     <div x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="truncate">
@@ -126,6 +126,12 @@
                         <span class="text-lg transition-transform group-hover:scale-110">📋</span>
                         <span x-show="!sidebarCollapsed" class="truncate">Inscriptions</span>
                     </a>
+                    <a href="{{ route('pre-enrollments.index') }}" title="Demandes de Pré-inscriptions en Ligne"
+                        :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
+                        class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('pre-enrollments.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
+                        <span class="text-lg transition-transform group-hover:scale-110">🌐</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">Pré-inscriptions Web</span>
+                    </a>
                     <a href="{{ route('guardians.index') }}" title="Parents & Tuteurs Légaux"
                         :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
                         class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('guardians.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
@@ -198,6 +204,12 @@
                         <span class="text-lg transition-transform group-hover:scale-110">💳</span>
                         <span x-show="!sidebarCollapsed" class="truncate">Factures & Paiements</span>
                     </a>
+                    <a href="{{ route('expenses.index') }}" title="Dépenses & Sorties"
+                        :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
+                        class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('expenses.*') || request()->routeIs('expense-categories.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
+                        <span class="text-lg transition-transform group-hover:scale-110">💸</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">Dépenses & Sorties</span>
+                    </a>
                 </div>
             </div>
 
@@ -234,11 +246,17 @@
                 <div x-show="sidebarCollapsed" class="my-2 border-t border-purple-800/40"></div>
 
                 <div class="space-y-1">
-                    <a href="{{ route('users.index') }}" title="Utilisateurs & Rôles"
+                    <a href="{{ route('users.index') }}" title="Comptes Utilisateurs"
                         :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
                         class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('users.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
+                        <span class="text-lg transition-transform group-hover:scale-110">👥</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">Utilisateurs</span>
+                    </a>
+                    <a href="{{ route('roles.index') }}" title="Rôles & Habilitations"
+                        :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
+                        class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('roles.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
                         <span class="text-lg transition-transform group-hover:scale-110">🛡️</span>
-                        <span x-show="!sidebarCollapsed" class="truncate">Utilisateurs & Rôles</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">Rôles & Habilitations</span>
                     </a>
                     <a href="{{ route('settings.index') }}" title="Paramètres Établissement"
                         :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"

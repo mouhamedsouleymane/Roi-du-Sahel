@@ -11,12 +11,20 @@
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('images/logo_roi.jpeg') }}">
 
+    {{-- PWA : manifest, icônes, service worker + proposition d’installation --}}
+    @include('layouts.partials.pwa')
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Alpine.js Cloak to prevent flash of modals/elements on load -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
 
 <body class="font-sans antialiased bg-slate-50 text-slate-900 min-h-screen" x-data="{
@@ -28,24 +36,37 @@
     }
 }">
 
-    <!-- Fixed Desktop Sidebar -->
+    <!-- Fixed Desktop Sidebar (desktop only) -->
     @include('layouts.sidebar')
 
     <!-- Mobile Drawer Overlay -->
-    <div x-show="sidebarOpen" x-transition.opacity @click="sidebarOpen = false"
-        class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 md:hidden" style="display: none;"></div>
-
-    <!-- Mobile Sidebar Drawer -->
-    <div x-show="sidebarOpen" x-transition:enter="transition ease-out duration-300 transform"
-        x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
-        x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="-translate-x-full"
-        class="fixed inset-y-0 left-0 w-54 bg-purple-950 z-50 md:hidden overflow-y-auto" style="display: none;">
-        @include('layouts.sidebar')
+    <div x-show="sidebarOpen"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click="sidebarOpen = false"
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-40 md:hidden"
+        style="display: none;">
     </div>
 
-    <!-- Main Content Area: Offset by margin-left dynamically (md:ml-64 when expanded, md:ml-20 when collapsed mini-bar) -->
-    <div :class="sidebarCollapsed ? 'md:ml-20' : 'md:ml-64'"
+    <!-- Mobile Sidebar Drawer (mobile only, visible when sidebarOpen = true) -->
+    <div x-show="sidebarOpen"
+        x-transition:enter="transition ease-out duration-300 transform"
+        x-transition:enter-start="-translate-x-full"
+        x-transition:enter-end="translate-x-0"
+        x-transition:leave="transition ease-in duration-200 transform"
+        x-transition:leave-start="translate-x-0"
+        x-transition:leave-end="-translate-x-full"
+        class="fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-gradient-to-b from-purple-950 via-purple-900 to-slate-950 z-50 md:hidden overflow-y-auto flex flex-col shadow-2xl"
+        style="display: none;">
+        @include('layouts.sidebar-mobile')
+    </div>
+
+    <!-- Main Content Area: Offset by margin-left dynamically (md:ml-64 when expanded, md:ml-16 when collapsed mini-bar) -->
+    <div :class="sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'"
         class="transition-all duration-300 ease-in-out flex-1 flex flex-col min-w-0 min-h-screen">
 
         <!-- Top Sticky Navbar -->
@@ -116,7 +137,7 @@
         <main class="flex-1 bg-slate-50">
             @isset($header)
                 <header class="bg-white border-b border-slate-200/80 shadow-xs">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+                    <div class="w-full px-4 sm:px-6 lg:px-8 py-5">
                         {{ $header }}
                     </div>
                 </header>
@@ -129,6 +150,11 @@
 
     <!-- Global Confirmation Modal -->
     <x-confirm-modal />
+
+    {{-- PWA : bannière de proposition d’installation --}}
+    @include('layouts.partials.pwa-install-banner')
+
+    @stack('scripts')
 </body>
 
 </html>

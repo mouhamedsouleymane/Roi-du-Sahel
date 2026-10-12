@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\AcademicYear;
-use App\Models\Attendance;
 use App\Models\Cycle;
 use App\Models\Enrollment;
 use App\Models\Level;
@@ -20,28 +19,31 @@ class AttendanceTest extends TestCase
     private function createBaseData(): array
     {
         $year = AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
-            'is_active'  => true,
+            'end_date' => '2026-06-30',
+            'is_active' => true,
         ]);
         $cycle = Cycle::create(['code' => 'COLLEGE', 'name' => 'Collège']);
         $level = Level::create(['cycle_id' => $cycle->id, 'code' => '6EME', 'name' => 'Sixième']);
         $class = SchoolClass::create(['academic_year_id' => $year->id, 'level_id' => $level->id, 'name' => '6ème A']);
 
         $student = Student::create([
-            'matricule'  => 'RS-2025-0001',
+            'matricule' => 'RS-2025-0001',
             'first_name' => 'Ibrahim',
-            'last_name'  => 'Sani',
+            'last_name' => 'Sani',
             'birth_date' => '2010-01-01',
-            'gender'     => 'M',
+            'birth_place' => 'Niamey',
+            'gender' => 'M',
         ]);
 
         Enrollment::create([
-            'student_id'       => $student->id,
+            'student_id' => $student->id,
             'academic_year_id' => $year->id,
-            'class_id'         => $class->id,
-            'status'           => 'VALIDE',
+            'class_id' => $class->id,
+            'enrollment_number' => 'INS-2025-0001',
+            'enrollment_date' => '2025-09-15',
+            'status' => 'VALIDE',
         ]);
 
         return compact('year', 'class', 'student');
@@ -69,26 +71,25 @@ class AttendanceTest extends TestCase
         $data = $this->createBaseData();
 
         $response = $this->actingAs($user)->post('/attendances', [
-            'class_id'        => $data['class']->id,
+            'class_id' => $data['class']->id,
             'attendance_date' => '2025-10-20',
-            'session'         => 'MATIN',
-            'attendances'     => [
+            'session' => 'MATIN',
+            'attendances' => [
                 [
                     'student_id' => $data['student']->id,
-                    'status'     => 'ABSENT',
-                    'reason'     => 'Maladie',
+                    'status' => 'ABSENT',
+                    'reason' => 'Maladie',
                 ],
             ],
         ]);
 
         $response->assertRedirect();
         $this->assertDatabaseHas('attendances', [
-            'student_id'      => $data['student']->id,
-            'class_id'        => $data['class']->id,
-            'attendance_date' => '2025-10-20',
-            'session'         => 'MATIN',
-            'status'          => 'ABSENT',
-            'reason'          => 'Maladie',
+            'student_id' => $data['student']->id,
+            'class_id' => $data['class']->id,
+            'session' => 'MATIN',
+            'status' => 'ABSENT',
+            'reason' => 'Maladie',
         ]);
     }
 

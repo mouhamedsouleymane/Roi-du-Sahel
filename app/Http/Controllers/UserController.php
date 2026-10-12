@@ -27,7 +27,8 @@ class UserController extends Controller
         $users = User::with('roles')
             ->when($search, function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%");
+                    ->orWhere('email', 'LIKE', "%{$search}%")
+                    ->orWhere('phone', 'LIKE', "%{$search}%");
             })
             ->when($roleFilter, function ($q) use ($roleFilter) {
                 $q->whereHas('roles', function ($rq) use ($roleFilter) {
@@ -35,7 +36,8 @@ class UserController extends Controller
                 });
             })
             ->orderBy('id', 'desc')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
 
         $totalRolesCount = Role::count();
         $totalPermissionsCount = Permission::count();

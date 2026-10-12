@@ -13,6 +13,7 @@ class UserPhoneSeeder extends Seeder
 
         if ($users->isEmpty()) {
             $this->command->info('ℹ️  Tous les utilisateurs ont déjà un numéro de téléphone.');
+
             return;
         }
 

@@ -33,27 +33,27 @@ class AcademicYearController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name'        => 'required|string|unique:academic_years,name|max:125',
-            'start_date'  => 'required|date',
-            'end_date'    => 'required|date|after:start_date',
+            'name' => 'required|string|unique:academic_years,name|max:125',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
-            'is_active'   => 'boolean',
+            'is_active' => 'boolean',
         ]);
 
         $year = AcademicYear::create([
-            'name'        => $validated['name'],
-            'start_date'  => $validated['start_date'],
-            'end_date'    => $validated['end_date'],
+            'name' => $validated['name'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
             'description' => $validated['description'] ?? null,
-            'is_active'   => $request->boolean('is_active'),
-            'is_closed'   => false,
+            'is_active' => $request->boolean('is_active'),
+            'is_closed' => false,
         ]);
 
         if ($year->is_active) {
             $year->activate();
         }
 
-        return redirect()->route('academic-years.index')
+        return redirect()->route('academic-years.show', $year)
             ->with('status', 'Année scolaire créée avec succès.');
     }
 
@@ -81,17 +81,17 @@ class AcademicYearController extends Controller
     public function update(Request $request, AcademicYear $academicYear): RedirectResponse
     {
         $validated = $request->validate([
-            'name'        => 'required|string|max:125|unique:academic_years,name,'.$academicYear->id,
-            'start_date'  => 'required|date',
-            'end_date'    => 'required|date|after:start_date',
+            'name' => 'required|string|max:125|unique:academic_years,name,'.$academicYear->id,
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
             'description' => 'nullable|string',
-            'is_active'   => 'boolean',
+            'is_active' => 'boolean',
         ]);
 
         $academicYear->update([
-            'name'        => $validated['name'],
-            'start_date'  => $validated['start_date'],
-            'end_date'    => $validated['end_date'],
+            'name' => $validated['name'],
+            'start_date' => $validated['start_date'],
+            'end_date' => $validated['end_date'],
             'description' => $validated['description'] ?? null,
         ]);
 
@@ -105,12 +105,20 @@ class AcademicYearController extends Controller
 
     /**
      * Remove the specified academic year from storage.
+     *
+     * Seule une année inactive, sans inscription et dont la date de fin prévue
+     * est dépassée peut être supprimée.
      */
     public function destroy(AcademicYear $academicYear): RedirectResponse
     {
         if ($academicYear->is_active) {
             return redirect()->route('academic-years.index')
                 ->with('error', 'Impossible de supprimer l\'année scolaire active.');
+        }
+
+        if (! $academicYear->hasEnded()) {
+            return redirect()->route('academic-years.index')
+                ->with('error', "Impossible de supprimer l'année scolaire {$academicYear->name} : la date de fin prévue ({$academicYear->end_date->format('d/m/Y')}) n'est pas encore dépassée. Suppression possible à partir du {$academicYear->end_date->copy()->addDay()->format('d/m/Y')}.");
         }
 
         if ($academicYear->enrollments()->exists()) {
@@ -137,12 +145,20 @@ class AcademicYearController extends Controller
 
     /**
      * Toggle close status for academic year.
+     *
+     * Une année ne peut être clôturée qu'après sa date de fin prévue et uniquement
+     * si elle n'est plus l'année active. Sa réouverture reste toujours possible.
      */
     public function toggleClose(AcademicYear $academicYear): RedirectResponse
     {
         if (! $academicYear->is_closed && $academicYear->is_active) {
             return redirect()->route('academic-years.index')
                 ->with('error', 'Impossible de clôturer l\'année scolaire active. Activez d\'abord une autre année.');
+        }
+
+        if (! $academicYear->is_closed && ! $academicYear->hasEnded()) {
+            return redirect()->route('academic-years.index')
+                ->with('error', "Impossible de clôturer l'année scolaire {$academicYear->name} : la date de fin prévue ({$academicYear->end_date->format('d/m/Y')}) n'est pas encore dépassée. Clôture possible à partir du {$academicYear->end_date->copy()->addDay()->format('d/m/Y')}.");
         }
 
         $academicYear->update(['is_closed' => ! $academicYear->is_closed]);

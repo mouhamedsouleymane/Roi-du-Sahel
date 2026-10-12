@@ -8,16 +8,15 @@ use App\Models\Evaluation;
 use App\Models\Grade;
 use App\Models\Period;
 use App\Models\ReportCard;
+use App\Models\SchoolClass;
 use App\Models\Student;
-use Illuminate\Support\Collection;
 
 class ReportCardService
 {
     /**
-     * Calculate average for a student in a given subject for a period,
-     * taking into account each evaluation's individual coefficient.
+     * Calculate average for a student in a given subject for a period.
      *
-     * @return float|null  Null if no grades exist
+     * @return float|null Null if no grades exist
      */
     public function calculateSubjectAverage(Student $student, int $subjectId, Period $period): ?float
     {
@@ -28,8 +27,8 @@ class ReportCardService
             }])
             ->get();
 
-        $weightedSum = 0.0;
-        $totalWeight = 0.0;
+        $sum = 0.0;
+        $count = 0;
 
         foreach ($evaluations as $eval) {
             /** @var Grade|null $grade */
@@ -39,18 +38,17 @@ class ReportCardService
                 continue;
             }
 
-            $normalized  = ($grade->score / $eval->max_score) * 20;
-            $coefficient = (float) $eval->coefficient;
+            $normalized = ($grade->score / $eval->max_score) * 20;
 
-            $weightedSum += $normalized * $coefficient;
-            $totalWeight += $coefficient;
+            $sum += $normalized;
+            $count++;
         }
 
-        if ($totalWeight === 0.0) {
+        if ($count === 0) {
             return null;
         }
 
-        return round($weightedSum / $totalWeight, 2);
+        return round($sum / $count, 2);
     }
 
     /**
@@ -61,13 +59,17 @@ class ReportCardService
      */
     public function calculateGeneralAverage(Student $student, Period $period, int $classId): array
     {
-        $subjectCoefficients = ClassSubjectCoefficient::where('class_id', $classId)
+        // Resolve the level_id from the class, since coefficients are defined per level, not per class
+        $schoolClass = SchoolClass::find($classId);
+        $levelId = $schoolClass?->level_id ?? 0;
+
+        $subjectCoefficients = ClassSubjectCoefficient::where('level_id', $levelId)
             ->with('subject')
             ->get()
             ->keyBy('subject_id');
 
-        $weightedSum   = 0.0;
-        $totalWeight   = 0.0;
+        $weightedSum = 0.0;
+        $totalWeight = 0.0;
         $subjectDetail = [];
 
         foreach ($subjectCoefficients as $subjectId => $coeff) {
@@ -83,8 +85,8 @@ class ReportCardService
             $totalWeight += $subjectWeight;
 
             $subjectDetail[] = [
-                'subject'     => $coeff->subject->name,
-                'average'     => $avg,
+                'subject' => $coeff->subject->name,
+                'average' => $avg,
                 'coefficient' => $subjectWeight,
             ];
         }
@@ -109,7 +111,7 @@ class ReportCardService
             ->get();
 
         $totalStudents = $enrollments->count();
-        $averages      = [];
+        $averages = [];
 
         foreach ($enrollments as $enrollment) {
             $result = $this->calculateGeneralAverage($enrollment->student, $period, $classId);
@@ -117,22 +119,31 @@ class ReportCardService
             $averages[$enrollment->student_id] = $result['average'];
         }
 
-        // Sort descending to assign ranks
+        // Sort descending to assign ranks (with ex-aequo support)
         arsort($averages);
         $rank = 1;
+        $prevAvg = null;
+        $prevRank = 1;
+        $position = 0;
 
         foreach ($averages as $studentId => $avg) {
+            $position++;
+
+            // Ex-aequo: same average keeps the same rank
+            $assignedRank = ($avg === $prevAvg) ? $prevRank : $position;
+            $prevAvg = $avg;
+            $prevRank = $assignedRank;
+
             ReportCard::updateOrCreate(
                 ['student_id' => $studentId, 'period_id' => $period->id],
                 [
-                    'class_id'        => $classId,
+                    'class_id' => $classId,
                     'general_average' => $avg,
-                    'rank'            => $rank,
-                    'total_students'  => $totalStudents,
-                    'is_published'    => false,
+                    'rank' => $assignedRank,
+                    'total_students' => $totalStudents,
+                    'is_published' => false,
                 ]
             );
-            $rank++;
         }
 
         return $totalStudents;

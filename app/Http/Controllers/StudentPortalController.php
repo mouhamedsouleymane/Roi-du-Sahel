@@ -18,7 +18,7 @@ class StudentPortalController extends Controller
      */
     public function index(Request $request): View
     {
-        $user       = auth()->user();
+        $user = auth()->user();
         $activeYear = AcademicYear::getActive();
 
         // Find linked Student by user_id

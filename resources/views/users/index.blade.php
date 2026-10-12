@@ -4,15 +4,21 @@
             <h2 class="font-black text-2xl text-purple-950 leading-tight flex items-center gap-2">
                 👥 {{ __('Gestion des Utilisateurs & Habilitations') }}
             </h2>
-            <a href="{{ route('users.create') }}"
-                class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-purple-950 font-black py-2.5 px-4 rounded-xl text-xs shadow-lg transition transform hover:scale-105">
-                ➕ Créer un Utilisateur
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('roles.index') }}"
+                    class="inline-flex items-center gap-1.5 bg-white hover:bg-slate-100 text-purple-950 font-extrabold py-2.5 px-4 rounded-xl text-xs border border-slate-200 shadow-sm transition">
+                    🛡️ Gérer les Rôles
+                </a>
+                <a href="{{ route('users.create') }}"
+                    class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-purple-950 font-black py-2.5 px-4 rounded-xl text-xs shadow-lg transition transform hover:scale-105">
+                    ➕ Créer un Utilisateur
+                </a>
+            </div>
         </div>
     </x-slot>
 
     <div class="py-8 bg-slate-50 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             <!-- Alerts -->
             @if (session('status'))
@@ -43,17 +49,21 @@
                     </div>
                 </div>
 
-                <div class="p-6 bg-white rounded-3xl shadow-sm border border-slate-200/80 flex items-center gap-4">
-                    <div
-                        class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 font-black flex items-center justify-center text-2xl">
-                        🛡️
-                    </div>
-                    <div>
-                        <div class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Rôles Configuration
+                <a href="{{ route('roles.index') }}"
+                    class="p-6 bg-white hover:bg-amber-50/50 transition rounded-3xl shadow-sm border border-slate-200/80 flex items-center justify-between group">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 font-black flex items-center justify-center text-2xl group-hover:scale-110 transition">
+                            🛡️
                         </div>
-                        <div class="text-2xl font-black text-amber-900">{{ $totalRolesCount }} Rôles Défini(s)</div>
+                        <div>
+                            <div class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Rôles Configuration
+                            </div>
+                            <div class="text-2xl font-black text-amber-900">{{ $totalRolesCount }} Rôles Défini(s)</div>
+                        </div>
                     </div>
-                </div>
+                    <span class="text-xs font-extrabold text-amber-600 group-hover:translate-x-1 transition">Configurer →</span>
+                </a>
 
                 <div class="p-6 bg-white rounded-3xl shadow-sm border border-slate-200/80 flex items-center gap-4">
                     <div
@@ -76,10 +86,10 @@
                     <div>
                         <label for="search"
                             class="block font-black text-xs text-slate-600 uppercase tracking-wider mb-1">
-                            Recherche (Nom, Email)
+                            Recherche (Nom, Email, Téléphone)
                         </label>
                         <input type="text" id="search" name="search" value="{{ $search }}"
-                            placeholder="Rechercher un nom ou email..."
+                            placeholder="Nom, email ou téléphone (ex: 90123456)..."
                             class="w-full text-sm font-bold rounded-xl border-slate-300 shadow-xs focus:border-purple-500 focus:ring-purple-500" />
                     </div>
 
@@ -122,7 +132,7 @@
                                     Utilisateur</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-black text-slate-500 uppercase tracking-wider">
-                                    Email</th>
+                                    Identifiants / Contact</th>
                                 <th
                                     class="px-6 py-4 text-left text-xs font-black text-slate-500 uppercase tracking-wider">
                                     Rôle(s) Attribué(s)</th>
@@ -152,8 +162,13 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-700 font-medium">
-                                        {{ $u->email }}
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                        <div class="text-slate-800 font-bold text-xs flex items-center gap-1">
+                                            ✉️ {{ $u->email }}
+                                        </div>
+                                        <div class="text-slate-500 font-semibold text-xs flex items-center gap-1 mt-0.5">
+                                            📱 {{ $u->phone ?? 'Non renseigné' }}
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <div class="flex flex-wrap gap-1">

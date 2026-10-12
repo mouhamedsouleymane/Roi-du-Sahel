@@ -43,24 +43,24 @@ class RolesAndPermissionsSeeder extends Seeder
             ['name' => 'manage-settings', 'group' => 'administration', 'display_name' => 'Gérer les Paramètres Établissement'],
             ['name' => 'manage-academic-years', 'group' => 'administration', 'display_name' => 'Gérer les Années Scolaires'],
             ['name' => 'manage-users', 'group' => 'iam', 'display_name' => 'Gérer les Utilisateurs et Rôles'],
-            
+
             // Academic Structure
             ['name' => 'manage-cycles-levels', 'group' => 'academique', 'display_name' => 'Gérer les Cycles et Niveaux'],
             ['name' => 'manage-classes', 'group' => 'academique', 'display_name' => 'Gérer les Classes'],
             ['name' => 'manage-subjects', 'group' => 'academique', 'display_name' => 'Gérer les Matières et Coefficients'],
-            
+
             // Students & Enrollment
             ['name' => 'view-students', 'group' => 'scolarite', 'display_name' => 'Consulter les Fiches Élèves'],
             ['name' => 'enroll-students', 'group' => 'scolarite', 'display_name' => 'Inscrire et Réinscrire les Élèves'],
-            
+
             // Grades & Evaluation
             ['name' => 'enter-grades', 'group' => 'pedagogie', 'display_name' => 'Saisir les Notes d\'Évaluations'],
             ['name' => 'generate-report-cards', 'group' => 'pedagogie', 'display_name' => 'Générer les Bulletins Scolaires'],
-            
+
             // Finance
             ['name' => 'manage-payments', 'group' => 'finance', 'display_name' => 'Enregistrer les Paiements'],
             ['name' => 'view-financial-reports', 'group' => 'finance', 'display_name' => 'Consulter les Rapports Financiers'],
-            
+
             // Discipline & Attendance
             ['name' => 'record-attendance', 'group' => 'discipline', 'display_name' => 'Saisir l\'Appel et les Absences'],
             ['name' => 'manage-discipline', 'group' => 'discipline', 'display_name' => 'Gérer les Sanctions Disciplinaires'],

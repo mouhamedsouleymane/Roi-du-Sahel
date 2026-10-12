@@ -1,3 +1,9 @@
+# PWA — le manifest doit être servi avec son vrai type MIME pour l'installabilité.
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+    AddType application/javascript .js
+</IfModule>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes

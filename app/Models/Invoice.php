@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @mixin Builder
+ */
 class Invoice extends Model
 {
     use HasFactory;
@@ -27,9 +31,9 @@ class Invoice extends Model
     protected function casts(): array
     {
         return [
-            'amount_due'  => 'decimal:2',
+            'amount_due' => 'decimal:2',
             'amount_paid' => 'decimal:2',
-            'due_date'    => 'date',
+            'due_date' => 'date',
         ];
     }
 
@@ -74,7 +78,7 @@ class Invoice extends Model
     public function recalculateStatus(): void
     {
         $paid = (float) $this->amount_paid;
-        $due  = (float) $this->amount_due;
+        $due = (float) $this->amount_due;
 
         if ($paid <= 0) {
             $this->status = 'IMPAYEE';

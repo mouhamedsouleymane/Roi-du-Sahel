@@ -1,12 +1,12 @@
 @php
-$colorClasses = [
-    'Violet' => 'bg-purple-600',
-    'Jaune' => 'bg-amber-500',
-    'Vert' => 'bg-green-600',
-    'Bleu' => 'bg-blue-600',
-    'Rouge' => 'bg-red-600',
-];
-$colorClass = $colorClasses[$cycle->uniform_tshirt_color] ?? 'bg-gray-500';
+    $colorClasses = [
+        'Violet' => 'bg-purple-600',
+        'Jaune' => 'bg-amber-500',
+        'Vert' => 'bg-green-600',
+        'Bleu' => 'bg-blue-600',
+        'Rouge' => 'bg-red-600',
+    ];
+    $colorClass = $colorClasses[$cycle->uniform_tshirt_color] ?? 'bg-gray-500';
 @endphp
 
 <x-app-layout>
@@ -14,7 +14,7 @@ $colorClass = $colorClasses[$cycle->uniform_tshirt_color] ?? 'bg-gray-500';
         <div class="flex justify-between items-center">
             <h2 class="font-black text-2xl text-purple-950 leading-tight">
                 🏛️ Fiche Cycle — {{ $cycle->name }}
-                @if(! $cycle->is_active)
+                @if (! $cycle->is_active)
                     <span class="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-gray-200 text-gray-600 ml-2">
                         Inactif
                     </span>
@@ -32,15 +32,15 @@ $colorClass = $colorClasses[$cycle->uniform_tshirt_color] ?? 'bg-gray-500';
     </x-slot>
 
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
 
-            @if(session('status'))
+            @if (session('status'))
                 <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm font-semibold">
                     {{ session('status') }}
                 </div>
             @endif
 
-            @if(session('error'))
+            @if (session('error'))
                 <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm font-semibold">
                     {{ session('error') }}
                 </div>
@@ -114,22 +114,53 @@ $colorClass = $colorClasses[$cycle->uniform_tshirt_color] ?? 'bg-gray-500';
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         @forelse ($cycle->levels as $level)
-                            <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-purple-50/50 hover:border-purple-200 transition relative group">
-                                <div class="font-black text-slate-900 text-sm">{{ $level->name }}</div>
-                                <div class="text-xs text-slate-500 mt-1 font-semibold">
-                                    {{ $level->classes->count() }} classe(s) &bull;
-                                    {{ $level->classes->sum('enrollments_count') }} élèves
+                            <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-purple-50/50 hover:border-purple-200 transition relative group flex flex-col justify-between">
+                                <div>
+                                    <div class="flex justify-between items-start mb-1">
+                                        <a href="{{ route('cycles.levels.show', [$cycle, $level]) }}" class="font-black text-slate-900 text-sm hover:text-purple-900 transition">
+                                            {{ $level->name }}
+                                        </a>
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-900 uppercase">
+                                            {{ $level->code }}
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-slate-500 mt-1 font-semibold">
+                                        {{ $level->classes->count() }} classe(s) &bull;
+                                        {{ $level->classes->sum('enrollments_count') }} élèves
+                                    </div>
+                                    <div class="mt-3 flex flex-wrap gap-1">
+                                        @foreach ($level->classes as $class)
+                                            <span class="px-2 py-0.5 text-[10px] font-bold bg-purple-100 text-purple-900 rounded-full">{{ $class->name }}</span>
+                                        @endforeach
+                                    </div>
                                 </div>
-                                <div class="mt-3 flex flex-wrap gap-1">
-                                    @foreach ($level->classes as $class)
-                                        <span class="px-2 py-0.5 text-[10px] font-bold bg-purple-100 text-purple-900 rounded-full">{{ $class->name }}</span>
-                                    @endforeach
-                                </div>
-                                <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition flex gap-1">
-                                    <form method="POST" action="{{ route('cycles.levels.destroy', [$cycle, $level]) }}" onsubmit="return confirm('Supprimer ce niveau ?')">
-                                        @csrf @method('DELETE')
-                                        <button type="submit" class="text-xs text-red-500 hover:text-red-700 font-bold">🗑️</button>
-                                    </form>
+                                <div class="mt-4 pt-3 border-t border-slate-200/80 flex items-center justify-between">
+                                    <a href="{{ route('cycles.levels.show', [$cycle, $level]) }}" 
+                                       class="text-xs font-bold text-purple-900 hover:text-purple-700 flex items-center gap-1">
+                                        <span>⚖️ Matières & Coefficients →</span>
+                                    </a>
+                                    @if($level->classes->isEmpty() && $level->coefficients->isEmpty())
+                                        <form method="POST" action="{{ route('cycles.levels.destroy', [$cycle, $level]) }}" onsubmit="return confirm('Supprimer ce niveau ?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit"
+                                                    class="flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
+                                                    title="Supprimer le niveau">
+                                                🗑️ Supprimer
+                                            </button>
+                                        </form>
+                                    @else
+                                        @php
+                                            $levelBlockedReason = $level->coefficients->count().' coefficient(s) y sont associés';
+                                            if ($level->classes->isNotEmpty()) {
+                                                $levelBlockedReason = 'ce niveau contient '.$level->classes->count().' classe(s)';
+                                            }
+                                        @endphp
+                                        <button type="button" disabled
+                                                title="Impossible de supprimer : {{ $levelBlockedReason }}"
+                                                class="flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed">
+                                            🗑️ Supprimer
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         @empty

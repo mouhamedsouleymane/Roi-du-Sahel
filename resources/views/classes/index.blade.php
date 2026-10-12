@@ -1,127 +1,103 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Gestion des Classes') }}
-            </h2>
-            <form method="GET" action="{{ route('classes.index') }}" class="flex items-center gap-2">
-                <label for="academic_year_id" class="text-xs font-semibold text-gray-600">Année Scolaire :</label>
-                <select id="academic_year_id" name="academic_year_id" onchange="this.form.submit()" class="text-xs rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    @foreach ($academicYears as $year)
-                        <option value="{{ $year->id }}" {{ $selectedYearId == $year->id ? 'selected' : '' }}>
-                            {{ $year->name }} {{ $year->is_active ? '(Active)' : '' }}
-                        </option>
-                    @endforeach
-                </select>
-            </form>
+            <div class="flex items-center gap-4">
+                <h2 class="font-black text-2xl text-purple-950 leading-tight">🏫 Classes</h2>
+                <form method="GET" action="{{ route('classes.index') }}" data-no-confirm="true">
+                    <select name="academic_year_id" onchange="this.form.submit()"
+                            class="text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                        @foreach ($academicYears as $year)
+                            <option value="{{ $year->id }}" {{ $selectedYearId == $year->id ? 'selected' : '' }}>
+                                {{ $year->name }}{{ $year->is_active ? ' ✅' : '' }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+            <a href="{{ route('classes.create') }}" class="px-4 py-2 text-xs font-black bg-purple-900 hover:bg-purple-800 text-white rounded-xl transition shadow-sm">
+                ➕ Nouvelle Classe
+            </a>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+    <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
-            @if (session('status'))
-                <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">Succès ! </strong>
-                    <span class="block sm:inline">{{ session('status') }}</span>
+            @if(session('status'))
+                <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm font-semibold">
+                    {{ session('status') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl text-sm font-semibold">
+                    {{ session('error') }}
                 </div>
             @endif
 
-            <!-- Formulaire de création -->
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">➕ Créer une nouvelle Classe</h3>
-
-                    <form method="POST" action="{{ route('classes.store') }}" class="space-y-4" data-confirm="Êtes-vous sûr de vouloir créer cette nouvelle classe ?">
-                        @csrf
-                        <input type="hidden" name="academic_year_id" value="{{ $selectedYearId }}" />
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="level_id" class="block font-medium text-sm text-gray-700">Niveau Scolaire</label>
-                                <select id="level_id" name="level_id" required class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                    <option value="">-- Sélectionner --</option>
-                                    @foreach ($levels as $lvl)
-                                        <option value="{{ $lvl->id }}">{{ $lvl->cycle->name }} - {{ $lvl->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div>
-                                <label for="name" class="block font-medium text-sm text-gray-700">Nom de la Classe (ex: 6ème A)</label>
-                                <input type="text" id="name" name="name" required placeholder="6ème A" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="capacity" class="block font-medium text-sm text-gray-700">Capacité d'accueil</label>
-                                <input type="number" id="capacity" name="capacity" value="40" required min="1" max="100" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
-                            </div>
-                            <div>
-                                <label for="room_number" class="block font-medium text-sm text-gray-700">Salle de Classe / Batiment</label>
-                                <input type="text" id="room_number" name="room_number" placeholder="Salle 12" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="main_teacher_id" class="block font-medium text-sm text-gray-700">Professeur Titulaire / Principal</label>
-                            <select id="main_teacher_id" name="main_teacher_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                <option value="">-- Aucun attribué --</option>
-                                @foreach ($teachers as $teacher)
-                                    <option value="{{ $teacher->id }}">{{ $teacher->name }} ({{ $teacher->email }})</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <x-primary-button>
-                            {{ __('Créer la Classe') }}
-                        </x-primary-button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Liste des Classes par Cycle -->
-            @foreach ($classes as $cycleName => $classList)
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <h3 class="text-lg font-bold text-gray-900 border-b pb-2 mb-4">🏫 Cycle {{ $cycleName }}</h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            @forelse ($classes as $cycleName => $classList)
+                <div class="bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-200/80">
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
+                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">🏫 {{ $cycleName }}</h3>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         @foreach ($classList as $cls)
-                            <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl hover:shadow-sm transition">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-base font-extrabold text-gray-900">{{ $cls->name }}</span>
-                                    <span class="text-xs bg-indigo-100 text-indigo-800 font-semibold px-2.5 py-0.5 rounded-full">
-                                        Capacité : {{ $cls->capacity }}
+                            <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl hover:border-purple-200 hover:bg-purple-50/40 transition">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-base font-black text-slate-900">{{ $cls->name }}</span>
+                                    <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700">
+                                        {{ $cls->enrollments_count ?? 0 }}/{{ $cls->capacity }}
                                     </span>
                                 </div>
-                                <div class="text-xs text-gray-600 space-y-1">
-                                    <div><strong>Niveau :</strong> {{ $cls->level->name }}</div>
-                                    <div><strong>Salle :</strong> {{ $cls->room_number ?? 'Non attribuée' }}</div>
-                                    <div><strong>Prof Principal :</strong> {{ $cls->mainTeacher?->name ?? 'Non désigné' }}</div>
+                                <div class="text-xs text-slate-500 space-y-0.5 font-semibold">
+                                    <div>📚 {{ $cls->level->name }}</div>
+                                    <div>📍 {{ $cls->room_number ?? 'Salle non attribuée' }}</div>
+                                    <div>👤 {{ $cls->mainTeacher?->name ?? 'Sans prof principal' }}</div>
                                 </div>
-                                <div class="mt-3 flex justify-end gap-2">
+                                <div class="mt-3 grid grid-cols-2 gap-1.5">
                                     <a href="{{ route('classes.show', $cls) }}"
-                                       class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                       title="Fiche détaillée"
+                                       class="flex items-center justify-center gap-1 text-[11px] font-bold px-2 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
                                         👁️ Voir
                                     </a>
+                                    <a href="{{ route('schedules.index', ['class_id' => $cls->id]) }}"
+                                       title="Emploi du temps"
+                                       class="flex items-center justify-center gap-1 text-[11px] font-bold px-2 py-1.5 rounded-lg bg-purple-50 text-purple-700 hover:bg-purple-100 transition">
+                                        📅 Emploi du temps
+                                    </a>
                                     <a href="{{ route('classes.edit', $cls) }}"
-                                       class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
+                                       title="Modifier"
+                                       class="flex items-center justify-center gap-1 text-[11px] font-bold px-2 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition">
                                         ✏️ Modifier
                                     </a>
-                                    <form method="POST" action="{{ route('classes.destroy', $cls) }}" class="inline"
-                                          data-confirm="Êtes-vous sûr de vouloir supprimer la classe {{ $cls->name }} ? Cette action affectera l'historique et est irréversible.">
-                                        @csrf @method('DELETE')
-                                        <button type="submit"
-                                                class="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                    @if(($cls->all_enrollments_count ?? 0) > 0)
+                                        <button type="button" disabled
+                                                title="Impossible de supprimer : {{ $cls->all_enrollments_count }} inscription(s) rattachée(s)"
+                                                class="w-full flex items-center justify-center gap-1 text-[11px] font-bold px-2 py-1.5 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed">
                                             🗑️ Supprimer
                                         </button>
-                                    </form>
+                                    @else
+                                        <form method="POST" action="{{ route('classes.destroy', $cls) }}" class="inline" onsubmit="return confirm('Supprimer la classe {{ $cls->name }} ?');">
+                                            @csrf @method('DELETE')
+                                            <button type="submit"
+                                                    title="Supprimer"
+                                                    class="w-full flex items-center justify-center gap-1 text-[11px] font-bold px-2 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                                🗑️ Supprimer
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="bg-white shadow-xl rounded-3xl p-12 text-center border border-slate-200/80">
+                    <p class="text-slate-400 italic text-sm">Aucune classe définie pour cette année scolaire.</p>
+                    <a href="{{ route('classes.create') }}" class="mt-4 inline-block px-5 py-2.5 text-xs font-black bg-purple-900 text-white rounded-xl hover:bg-purple-800 transition">
+                        ➕ Créer la première classe
+                    </a>
+                </div>
+            @endforelse
 
         </div>
     </div>

@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             PaymentSeeder::class,
             AttendanceSeeder::class,
+            ExpenseCategorySeeder::class,
+            ExpenseSeeder::class,
         ]);
 
         User::factory()->create([

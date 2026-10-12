@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
 
             @if (session('status'))
                 <div class="bg-emerald-100 border border-emerald-400 text-emerald-800 px-4 py-3 rounded-2xl shadow-xs">

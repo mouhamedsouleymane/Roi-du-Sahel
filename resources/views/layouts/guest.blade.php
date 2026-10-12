@@ -10,6 +10,9 @@
         <!-- Favicon -->
         <link rel="icon" type="image/jpeg" href="{{ asset('images/logo_roi.jpeg') }}">
 
+        {{-- PWA : manifest, icônes, service worker + proposition d’installation --}}
+        @include('layouts.partials.pwa')
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
@@ -58,6 +61,9 @@
         <div class="py-4 text-center text-[11px] text-purple-300/80 font-bold">
             &copy; {{ date('Y') }} Complexe Scolaire Privé Les Rois du Sahel. Tous droits réservés.
         </div>
+
+        {{-- PWA : bannière de proposition d’installation --}}
+        @include('layouts.partials.pwa-install-banner')
 
     </body>
 </html>

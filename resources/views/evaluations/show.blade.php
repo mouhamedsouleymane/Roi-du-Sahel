@@ -19,7 +19,7 @@
     </x-slot>
 
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
 
             <!-- En-tête Évaluation -->
             <div class="bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-200/80">
@@ -38,12 +38,12 @@
                                 <div class="text-base font-black text-white mt-1">{{ $evaluation->evaluation_date->format('d/m/Y') }}</div>
                             </div>
                             <div class="bg-white/10 rounded-2xl p-4">
-                                <div class="text-xs text-purple-300 font-bold">Sur</div>
-                                <div class="text-base font-black text-white mt-1">{{ $evaluation->max_score }}</div>
+                                <div class="text-xs text-purple-300 font-bold">Type</div>
+                                <div class="text-base font-black text-white mt-1">{{ $evaluation->type }}</div>
                             </div>
                             <div class="bg-white/10 rounded-2xl p-4">
-                                <div class="text-xs text-purple-300 font-bold">Coeff.</div>
-                                <div class="text-base font-black text-white mt-1">{{ $evaluation->coefficient }}</div>
+                                <div class="text-xs text-purple-300 font-bold">Barème Max</div>
+                                <div class="text-base font-black text-white mt-1">/ {{ number_format($evaluation->max_score, 0) }}</div>
                             </div>
                         </div>
                     </div>
@@ -68,20 +68,37 @@
                                 <thead class="bg-slate-50">
                                     <tr>
                                         <th class="px-6 py-3 text-left text-xs font-black text-slate-600 uppercase tracking-widest">Élève</th>
-                                        <th class="px-6 py-3 text-center text-xs font-black text-slate-600 uppercase tracking-widest">Note / {{ $evaluation->max_score }}</th>
+                                        <th class="px-6 py-3 text-center text-xs font-black text-slate-600 uppercase tracking-widest">Note / {{ number_format($evaluation->max_score, 0) }}</th>
                                         <th class="px-6 py-3 text-center text-xs font-black text-slate-600 uppercase tracking-widest">Appréciation</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-slate-100">
-                                    @foreach ($evaluation->grades->sortBy(fn($g) => $g->enrollment->student->last_name) as $grade)
+                                    @foreach ($evaluation->grades->sortBy(fn($g) => ($g->student?->last_name ?? '') . ' ' . ($g->student?->first_name ?? '')) as $grade)
                                         <tr class="hover:bg-purple-50/30 transition">
                                             <td class="px-6 py-3 text-sm font-bold text-slate-900">
-                                                {{ $grade->enrollment->student->last_name }} {{ $grade->enrollment->student->first_name }}
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-slate-800 font-black">
+                                                        {{ $grade->student?->last_name }} {{ $grade->student?->first_name }}
+                                                    </span>
+                                                    @if ($grade->student?->matricule)
+                                                        <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
+                                                            {{ $grade->student->matricule }}
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </td>
                                             <td class="px-6 py-3 text-center">
-                                                <span class="text-base font-black {{ $grade->score >= ($evaluation->max_score * 0.5) ? 'text-emerald-700' : 'text-red-600' }}">
-                                                    {{ $grade->score }}
-                                                </span>
+                                                @if ($grade->is_absent)
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black bg-rose-100 text-rose-800">
+                                                        Absent
+                                                    </span>
+                                                @elseif ($grade->score !== null)
+                                                    <span class="text-base font-black {{ $grade->score >= ($evaluation->max_score * 0.5) ? 'text-emerald-700' : 'text-red-600' }}">
+                                                        {{ number_format($grade->score, 2) }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-slate-400 text-xs">—</span>
+                                                @endif
                                             </td>
                                             <td class="px-6 py-3 text-center text-xs text-slate-500 font-semibold">
                                                 {{ $grade->comment ?? '—' }}

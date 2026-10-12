@@ -20,10 +20,6 @@ jobs:
     # Ne déployer que si le CI a réussi
     if: ${{ github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
 
-    environment:
-      name: production
-      url: ${{ vars.APP_URL }}
-
     steps:
       # ──────────────────────────────────────────
       # 1. Checkout
@@ -97,4 +93,3 @@ jobs:
           echo "❌ Déploiement échoué sur la branche ${{ github.ref_name }}"
           echo "Commit: ${{ github.sha }}"
           echo "Auteur: ${{ github.actor }}"
-          # Ajoutez ici une notification Slack/Email/SMS si nécessaire

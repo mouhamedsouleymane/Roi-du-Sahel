@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @layer base {
+  [x-cloak] {
+    display: none !important;
+  }
+
   /* === Augmentation globale de la hauteur des champs de formulaire === */
   input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
   select,
@@ -125,5 +129,50 @@
 
   .shadow-gold {
     box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
+  }
+
+  /* === Custom Sidebar Scrollbar === */
+  aside nav,
+  aside,
+  .scrollbar-sidebar,
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 85, 247, 0.4) transparent;
+  }
+
+  aside nav::-webkit-scrollbar,
+  aside::-webkit-scrollbar,
+  .scrollbar-sidebar::-webkit-scrollbar,
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  aside nav::-webkit-scrollbar-track,
+  aside::-webkit-scrollbar-track,
+  .scrollbar-sidebar::-webkit-scrollbar-track,
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  aside nav::-webkit-scrollbar-thumb,
+  aside::-webkit-scrollbar-thumb,
+  .scrollbar-sidebar::-webkit-scrollbar-thumb,
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.35);
+    border-radius: 9999px;
+    transition: background-color 0.2s ease;
+  }
+
+  aside nav::-webkit-scrollbar-thumb:hover,
+  aside::-webkit-scrollbar-thumb:hover,
+  .scrollbar-sidebar::-webkit-scrollbar-thumb:hover,
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(251, 191, 36, 0.65);
+  }
+
+  aside nav::-webkit-scrollbar-corner,
+  aside::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }

@@ -22,6 +22,7 @@ class WhatsAppWebhookController extends Controller
 
         if ($mode === 'subscribe' && $token === $verifyToken) {
             Log::info('WhatsApp Webhook vérifié avec succès par Meta.');
+
             return response($challenge, 200);
         }
 

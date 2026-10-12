@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\AcademicYear;
 use App\Models\Enrollment;
 use App\Models\Evaluation;
+use App\Models\Expense;
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\Period;
+use App\Models\PreEnrollment;
 use App\Models\ReportCard;
 use App\Models\SchoolClass;
 use App\Models\Student;
@@ -23,7 +26,7 @@ class DashboardController extends Controller
         $activeYear = AcademicYear::getActive();
         $activeYearId = $activeYear?->id ?? 0;
 
-        // ── KPIs principaux ──────────────────────────────────────────────
+        // ── KPIs principaux Scolarité ─────────────────────────────────────
         $totalStudents = Student::count();
         $totalTeachers = Teacher::where('status', 'ACTIF')->count();
         $totalClasses = SchoolClass::where('academic_year_id', $activeYearId)->count();
@@ -80,10 +83,41 @@ class DashboardController extends Controller
             ->limit(6)
             ->get();
 
-        // ── Résumé Financier ─────────────────────────────────────────────
-        $totalRevenueDue = Invoice::where('academic_year_id', $activeYearId)->sum('amount_due');
-        $totalRevenuePaid = Invoice::where('academic_year_id', $activeYearId)->sum('amount_paid');
+        // ── Bilan Financier Consolidé (Recettes vs Dépenses vs Trésorerie) ─
+        $totalRevenueDue = (float) Invoice::where('academic_year_id', $activeYearId)->sum('amount_due');
+        $totalRevenuePaid = (float) Invoice::where('academic_year_id', $activeYearId)->sum('amount_paid');
         $totalUnpaid = max(0, $totalRevenueDue - $totalRevenuePaid);
+        $totalExpenses = (float) Expense::where('academic_year_id', $activeYearId)->sum('amount');
+        $netCashBalance = $totalRevenuePaid - $totalExpenses;
+        $recoveryRate = $totalRevenueDue > 0 ? round(($totalRevenuePaid / $totalRevenueDue) * 100, 1) : 0;
+
+        // ── Répartition des dépenses par catégorie ────────────────────────
+        $topExpenseCategories = Expense::selectRaw('expense_categories.name, expense_categories.color, SUM(expenses.amount) as total')
+            ->join('expense_categories', 'expenses.expense_category_id', '=', 'expense_categories.id')
+            ->where('expenses.academic_year_id', $activeYearId)
+            ->groupBy('expense_categories.name', 'expense_categories.color')
+            ->orderByDesc('total')
+            ->limit(4)
+            ->get();
+
+        // ── Flux financiers récents ───────────────────────────────────────
+        $recentPayments = Payment::with(['student', 'invoice.feeType'])
+            ->whereHas('invoice', fn ($q) => $q->where('academic_year_id', $activeYearId))
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        $recentExpenses = Expense::with('category')
+            ->where('academic_year_id', $activeYearId)
+            ->latest('expense_date')
+            ->limit(5)
+            ->get();
+
+        // ── Alertes & Actions requises ────────────────────────────────────
+        $pendingPreEnrollments = PreEnrollment::where('status', 'EN_ATTENTE')->count();
+        $unpaidInvoicesCount = Invoice::where('academic_year_id', $activeYearId)
+            ->whereIn('status', ['IMPAYEE', 'PARTIELLE'])
+            ->count();
 
         return view('dashboard', compact(
             'activeYear',
@@ -101,7 +135,15 @@ class DashboardController extends Controller
             'recentEnrollments',
             'totalRevenueDue',
             'totalRevenuePaid',
-            'totalUnpaid'
+            'totalUnpaid',
+            'totalExpenses',
+            'netCashBalance',
+            'recoveryRate',
+            'topExpenseCategories',
+            'recentPayments',
+            'recentExpenses',
+            'pendingPreEnrollments',
+            'unpaidInvoicesCount'
         ));
     }
 }

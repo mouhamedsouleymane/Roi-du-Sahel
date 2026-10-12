@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
             @if (session('status'))
                 <div class="bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded relative" role="alert">
                     <strong class="font-bold">Succès ! </strong>
@@ -19,7 +19,7 @@
 
                 @foreach ($settings as $group => $items)
                     <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg mb-6">
-                        <div class="max-w-3xl">
+                        <div class="w-full">
                             <h3 class="text-lg font-medium text-gray-900 capitalize border-b pb-2 mb-4">
                                 @switch($group)
                                     @case('general')

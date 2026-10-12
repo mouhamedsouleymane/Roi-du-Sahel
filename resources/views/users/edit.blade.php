@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-8 bg-slate-50 min-h-screen">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             <div class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
                 <form method="POST" action="{{ route('users.update', $user) }}" class="space-y-6">
@@ -76,20 +76,7 @@
                         </div>
                     </div>
 
-                    {{-- Danger Zone: Delete account --}}
-                    <div class="mt-8 p-4 rounded-2xl bg-red-50 border border-red-200">
-                        <p class="text-xs font-extrabold text-red-700 uppercase tracking-wider mb-3">⚠️ Zone Dangereuse</p>
-                        <p class="text-xs text-red-600 mb-3">La suppression est irréversible. Toutes les données associées à ce compte seront perdues.</p>
-                        <form method="POST" action="{{ route('users.destroy', $user) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-black rounded-xl shadow-md transition">
-                                🗑️ Supprimer ce compte
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                    <div class="flex justify-end gap-3 pt-6 border-t border-slate-100">
                         <a href="{{ route('users.index') }}" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">
                             Annuler
                         </a>
@@ -99,6 +86,24 @@
                     </div>
                 </form>
             </div>
+
+            {{-- Danger Zone: Delete account (Separate card) --}}
+            @if ($user->id !== auth()->id())
+                <div class="bg-red-50/70 border border-red-200 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h4 class="text-xs font-black text-red-800 uppercase tracking-wider mb-1">⚠️ Zone Dangereuse</h4>
+                        <p class="text-xs text-red-600 font-medium">La suppression de ce compte utilisateur est définitive.</p>
+                    </div>
+                    <form method="POST" action="{{ route('users.destroy', $user) }}"
+                          data-confirm="Êtes-vous absolument sûr de vouloir supprimer le compte de {{ $user->name }} ?">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-black rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+                            🗑️ Supprimer ce compte
+                        </button>
+                    </form>
+                </div>
+            @endif
 
         </div>
     </div>

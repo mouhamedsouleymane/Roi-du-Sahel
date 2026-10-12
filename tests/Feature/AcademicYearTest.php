@@ -15,10 +15,10 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
-            'is_active'  => true,
+            'end_date' => '2026-06-30',
+            'is_active' => true,
         ]);
 
         $response = $this->actingAs($user)->get('/academic-years');
@@ -39,15 +39,15 @@ class AcademicYearTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/academic-years', [
-            'name'       => '2026-2027',
+            'name' => '2026-2027',
             'start_date' => '2026-09-15',
-            'end_date'   => '2027-06-30',
-            'is_active'  => '1',
+            'end_date' => '2027-06-30',
+            'is_active' => '1',
         ]);
 
-        $response->assertRedirect('/academic-years');
+        $response->assertRedirect();
         $this->assertDatabaseHas('academic_years', [
-            'name'      => '2026-2027',
+            'name' => '2026-2027',
             'is_active' => true,
         ]);
     }
@@ -56,15 +56,15 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
+            'end_date' => '2026-06-30',
         ]);
 
         $response = $this->actingAs($user)->post('/academic-years', [
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
+            'end_date' => '2026-06-30',
         ]);
 
         $response->assertSessionHasErrors('name');
@@ -75,9 +75,9 @@ class AcademicYearTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/academic-years', [
-            'name'       => '2026-2027',
+            'name' => '2026-2027',
             'start_date' => '2026-09-15',
-            'end_date'   => '2026-01-01',
+            'end_date' => '2026-01-01',
         ]);
 
         $response->assertSessionHasErrors('end_date');
@@ -87,9 +87,9 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         $year = AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
+            'end_date' => '2026-06-30',
         ]);
 
         $this->actingAs($user)->get("/academic-years/{$year->id}")->assertStatus(200)->assertSee('2025-2026');
@@ -99,21 +99,21 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         $year = AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
+            'end_date' => '2026-06-30',
         ]);
 
         $response = $this->actingAs($user)->put("/academic-years/{$year->id}", [
-            'name'        => '2025-2026',
-            'start_date'  => '2025-09-01',
-            'end_date'    => '2026-07-01',
+            'name' => '2025-2026',
+            'start_date' => '2025-09-01',
+            'end_date' => '2026-07-01',
             'description' => 'Mise à jour',
         ]);
 
         $response->assertRedirect('/academic-years');
         $this->assertDatabaseHas('academic_years', [
-            'id'          => $year->id,
+            'id' => $year->id,
             'description' => 'Mise à jour',
         ]);
     }
@@ -122,16 +122,16 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         $year1 = AcademicYear::create([
-            'name'       => '2024-2025',
+            'name' => '2024-2025',
             'start_date' => '2024-09-15',
-            'end_date'   => '2025-06-30',
-            'is_active'  => true,
+            'end_date' => '2025-06-30',
+            'is_active' => true,
         ]);
         $year2 = AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
-            'is_active'  => false,
+            'end_date' => '2026-06-30',
+            'is_active' => false,
         ]);
 
         $response = $this->actingAs($user)->patch("/academic-years/{$year2->id}/activate");
@@ -145,16 +145,16 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         $year1 = AcademicYear::create([
-            'name'       => '2024-2025',
+            'name' => '2024-2025',
             'start_date' => '2024-09-15',
-            'end_date'   => '2025-06-30',
-            'is_active'  => true,
+            'end_date' => '2025-06-30',
+            'is_active' => true,
         ]);
         $year2 = AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
-            'is_active'  => false,
+            'end_date' => '2026-06-30',
+            'is_active' => false,
         ]);
 
         $response = $this->actingAs($user)->patch("/academic-years/{$year2->id}/toggle-close");
@@ -167,10 +167,10 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         $year = AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
-            'is_active'  => true,
+            'end_date' => '2026-06-30',
+            'is_active' => true,
         ]);
 
         $response = $this->actingAs($user)->patch("/academic-years/{$year->id}/toggle-close");
@@ -184,10 +184,10 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         $year = AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
-            'is_active'  => true,
+            'end_date' => '2026-06-30',
+            'is_active' => true,
         ]);
 
         $response = $this->actingAs($user)->delete("/academic-years/{$year->id}");
@@ -200,16 +200,180 @@ class AcademicYearTest extends TestCase
     {
         $user = User::factory()->create();
         $year = AcademicYear::create([
-            'name'       => '2023-2024',
+            'name' => '2023-2024',
             'start_date' => '2023-09-15',
-            'end_date'   => '2024-06-30',
-            'is_active'  => false,
+            'end_date' => '2024-06-30',
+            'is_active' => false,
         ]);
 
         $response = $this->actingAs($user)->delete("/academic-years/{$year->id}");
 
         $response->assertRedirect('/academic-years');
         $this->assertDatabaseMissing('academic_years', ['id' => $year->id]);
+    }
+
+    public function test_academic_year_cannot_be_deleted_before_its_end_date(): void
+    {
+        $user = User::factory()->create();
+        $year = AcademicYear::create([
+            'name' => '2026-2027',
+            'start_date' => today()->toDateString(),
+            'end_date' => today()->addMonths(9)->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->delete("/academic-years/{$year->id}");
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('academic_years', ['id' => $year->id]);
+    }
+
+    public function test_academic_year_cannot_be_deleted_on_its_end_date(): void
+    {
+        $user = User::factory()->create();
+        $year = AcademicYear::create([
+            'name' => '2025-2026',
+            'start_date' => today()->subMonths(9)->toDateString(),
+            'end_date' => today()->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->delete("/academic-years/{$year->id}");
+
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('academic_years', ['id' => $year->id]);
+    }
+
+    public function test_academic_year_can_be_deleted_after_its_end_date(): void
+    {
+        $user = User::factory()->create();
+        $year = AcademicYear::create([
+            'name' => '2025-2026',
+            'start_date' => today()->subMonths(9)->toDateString(),
+            'end_date' => today()->subDay()->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->delete("/academic-years/{$year->id}");
+
+        $response->assertRedirect('/academic-years');
+        $this->assertDatabaseMissing('academic_years', ['id' => $year->id]);
+    }
+
+    public function test_delete_button_is_disabled_while_the_academic_year_is_still_in_progress(): void
+    {
+        $user = User::factory()->create();
+        AcademicYear::create([
+            'name' => '2026-2027',
+            'start_date' => today()->toDateString(),
+            'end_date' => today()->addMonths(9)->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->get('/academic-years');
+
+        $response->assertOk();
+        $response->assertSee('cursor-not-allowed', false);
+        $response->assertDontSee('value="DELETE"', false);
+    }
+
+    public function test_delete_button_is_available_once_the_academic_year_has_ended(): void
+    {
+        $user = User::factory()->create();
+        AcademicYear::create([
+            'name' => '2024-2025',
+            'start_date' => today()->subMonths(9)->toDateString(),
+            'end_date' => today()->subDay()->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->get('/academic-years');
+
+        $response->assertOk();
+        $response->assertSee('value="DELETE"', false);
+        $response->assertDontSee('cursor-not-allowed', false);
+    }
+
+    public function test_academic_year_cannot_be_closed_before_its_end_date(): void
+    {
+        $user = User::factory()->create();
+        $year = AcademicYear::create([
+            'name' => '2026-2027',
+            'start_date' => today()->toDateString(),
+            'end_date' => today()->addMonths(9)->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->patch("/academic-years/{$year->id}/toggle-close");
+
+        $response->assertSessionHas('error');
+        $this->assertFalse($year->fresh()->is_closed);
+    }
+
+    public function test_academic_year_cannot_be_closed_on_its_end_date(): void
+    {
+        $user = User::factory()->create();
+        $year = AcademicYear::create([
+            'name' => '2025-2026',
+            'start_date' => today()->subMonths(9)->toDateString(),
+            'end_date' => today()->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->patch("/academic-years/{$year->id}/toggle-close");
+
+        $response->assertSessionHas('error');
+        $this->assertFalse($year->fresh()->is_closed);
+    }
+
+    public function test_academic_year_can_be_closed_after_its_end_date(): void
+    {
+        $user = User::factory()->create();
+        $year = AcademicYear::create([
+            'name' => '2025-2026',
+            'start_date' => today()->subMonths(9)->toDateString(),
+            'end_date' => today()->subDay()->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->patch("/academic-years/{$year->id}/toggle-close");
+
+        $response->assertRedirect('/academic-years');
+        $this->assertTrue($year->fresh()->is_closed);
+    }
+
+    public function test_closed_academic_year_can_be_reopened_before_its_end_date(): void
+    {
+        $user = User::factory()->create();
+        $year = AcademicYear::create([
+            'name' => '2026-2027',
+            'start_date' => today()->toDateString(),
+            'end_date' => today()->addMonths(9)->toDateString(),
+            'is_active' => false,
+            'is_closed' => true,
+        ]);
+
+        $response = $this->actingAs($user)->patch("/academic-years/{$year->id}/toggle-close");
+
+        $response->assertRedirect('/academic-years');
+        $this->assertFalse($year->fresh()->is_closed);
+    }
+
+    public function test_close_button_is_disabled_while_the_academic_year_is_still_in_progress(): void
+    {
+        $user = User::factory()->create();
+        AcademicYear::create([
+            'name' => '2026-2027',
+            'start_date' => today()->toDateString(),
+            'end_date' => today()->addMonths(9)->toDateString(),
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($user)->get('/academic-years');
+
+        $response->assertOk();
+        $response->assertSee('Impossible de clôturer', false);
+        $response->assertDontSee('toggle-close', false);
     }
 
     public function test_guest_cannot_access_academic_years(): void

@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
 
             <div class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
                 <form method="POST" action="{{ route('evaluations.update', $evaluation) }}" class="space-y-6">
@@ -39,11 +39,28 @@
                         <div>
                             <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Période *</label>
                             <select name="period_id" required class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
-                                @foreach ($periods as $period)
-                                    <option value="{{ $period->id }}" {{ old('period_id', $evaluation->period_id) == $period->id ? 'selected' : '' }}>
-                                        {{ $period->name }}
-                                    </option>
-                                @endforeach
+                                @php
+                                    $trimestres = $periods->where('type', 'TRIMESTRE')->sortBy('order');
+                                    $semestres = $periods->where('type', 'SEMESTRE')->sortBy('order');
+                                @endphp
+                                @if ($trimestres->isNotEmpty())
+                                    <optgroup label="── TRIMESTRES (Maternelle & Primaire) ──">
+                                        @foreach ($trimestres as $period)
+                                            <option value="{{ $period->id }}" {{ old('period_id', $evaluation->period_id) == $period->id ? 'selected' : '' }}>
+                                                {{ $period->name }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
+                                @endif
+                                @if ($semestres->isNotEmpty())
+                                    <optgroup label="── SEMESTRES (Collège & Lycée) ──">
+                                        @foreach ($semestres as $period)
+                                            <option value="{{ $period->id }}" {{ old('period_id', $evaluation->period_id) == $period->id ? 'selected' : '' }}>
+                                                {{ $period->name }}
+                                            </option>
+                                        @endforeach
+                                    </optgroup>
+                                @endif
                             </select>
                         </div>
                         <div>
@@ -73,11 +90,6 @@
                         <div>
                             <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Note Maximale</label>
                             <input type="number" name="max_score" min="1" max="100" value="{{ old('max_score', $evaluation->max_score) }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
-                        </div>
-                        <div>
-                            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Coefficient</label>
-                            <input type="number" name="coefficient" min="1" max="10" value="{{ old('coefficient', $evaluation->coefficient) }}"
                                    class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
                     </div>

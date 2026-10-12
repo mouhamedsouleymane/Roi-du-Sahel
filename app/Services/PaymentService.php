@@ -17,7 +17,7 @@ class PaymentService
      */
     public function generateInvoiceNumber(): string
     {
-        $year  = date('Y');
+        $year = date('Y');
         $count = Invoice::whereYear('created_at', $year)->count() + 1;
 
         return sprintf('FACT-%s-%05d', $year, $count);
@@ -28,7 +28,7 @@ class PaymentService
      */
     public function generateReceiptNumber(): string
     {
-        $year  = date('Y');
+        $year = date('Y');
         $count = Payment::whereYear('created_at', $year)->count() + 1;
 
         return sprintf('RECU-%s-%05d', $year, $count);
@@ -73,7 +73,7 @@ class PaymentService
     /**
      * Generate invoices for a specific fee type for all active enrollments.
      *
-     * @return int  Number of invoices created (skips already existing ones)
+     * @return int Number of invoices created (skips already existing ones)
      */
     public function generateInvoicesForYear(FeeType $feeType, AcademicYear $year): int
     {
@@ -101,14 +101,14 @@ class PaymentService
                 }
 
                 Invoice::create([
-                    'invoice_number'   => $this->generateInvoiceNumber(),
-                    'student_id'       => $enrollment->student_id,
-                    'enrollment_id'    => $enrollment->id,
+                    'invoice_number' => $this->generateInvoiceNumber(),
+                    'student_id' => $enrollment->student_id,
+                    'enrollment_id' => $enrollment->id,
                     'academic_year_id' => $year->id,
-                    'fee_type_id'      => $feeType->id,
-                    'amount_due'       => $amount,
-                    'amount_paid'      => 0,
-                    'status'           => 'IMPAYEE',
+                    'fee_type_id' => $feeType->id,
+                    'amount_due' => $amount,
+                    'amount_paid' => 0,
+                    'status' => 'IMPAYEE',
                 ]);
 
                 $created++;
@@ -136,14 +136,14 @@ class PaymentService
         return DB::transaction(function () use ($invoice, $data, $amount) {
             $payment = Payment::create([
                 'receipt_number' => $this->generateReceiptNumber(),
-                'invoice_id'     => $invoice->id,
-                'student_id'     => $invoice->student_id,
-                'amount'         => $amount,
+                'invoice_id' => $invoice->id,
+                'student_id' => $invoice->student_id,
+                'amount' => $amount,
                 'payment_method' => $data['payment_method'],
-                'payment_date'   => $data['payment_date'],
-                'reference'      => $data['reference'] ?? null,
-                'recorded_by'    => $data['recorded_by'] ?? null,
-                'notes'          => $data['notes'] ?? null,
+                'payment_date' => $data['payment_date'],
+                'reference' => $data['reference'] ?? null,
+                'recorded_by' => $data['recorded_by'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             // Update invoice totals

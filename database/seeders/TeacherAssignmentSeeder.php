@@ -31,6 +31,16 @@ class TeacherAssignmentSeeder extends Seeder
         foreach ($classes as $class) {
             $levelCode = $class->level?->code;
 
+            // Maternelle : éducatrices / enseignants
+            if (in_array($levelCode, ['PS', 'MS', 'GS'])) {
+                $educatrice = Teacher::where('cycle_id', 1)->first() ?? $teachers['Primaire'] ?? null;
+                if ($educatrice) {
+                    $assignments[] = ['teacher' => $educatrice, 'class' => $class, 'subject' => $subjects['FRAN'] ?? null];
+                    $assignments[] = ['teacher' => $educatrice, 'class' => $class, 'subject' => $subjects['MATH'] ?? null];
+                    $assignments[] = ['teacher' => $educatrice, 'class' => $class, 'subject' => $subjects['ECM'] ?? null];
+                }
+            }
+
             // Primaire : instituteurs pour toutes les matières de base
             if (in_array($levelCode, ['CI', 'CP', 'CE1', 'CE2', 'CM1', 'CM2'])) {
                 $instituteur = $teachers['Primaire'] ?? null;

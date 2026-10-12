@@ -21,12 +21,12 @@ class PaymentController extends Controller
         }
 
         $validated = $request->validate([
-            'amount'         => 'required|numeric|min:1|max:' . $invoice->amount_remaining,
+            'amount' => 'required|numeric|min:1|max:'.$invoice->amount_remaining,
             'payment_method' => 'required|in:ESPECES,VIREMENT,CHEQUE,MOBILE_MONEY',
-            'payment_date'   => 'required|date|before_or_equal:today',
-            'reference'      => 'nullable|string|max:125',
-            'recorded_by'    => 'nullable|string|max:125',
-            'notes'          => 'nullable|string|max:500',
+            'payment_date' => 'required|date|before_or_equal:today',
+            'reference' => 'nullable|string|max:125',
+            'recorded_by' => 'nullable|string|max:125',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         try {

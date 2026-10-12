@@ -21,7 +21,7 @@ class Grade extends Model
     protected function casts(): array
     {
         return [
-            'score'     => 'decimal:2',
+            'score' => 'decimal:2',
             'is_absent' => 'boolean',
         ];
     }

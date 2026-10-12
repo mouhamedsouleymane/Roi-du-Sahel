@@ -40,23 +40,23 @@ class ReportCardTest extends TestCase
             'name' => 'Trimestre 1', 'type' => 'TRIMESTRE', 'order' => 1,
             'start_date' => '2025-09-15', 'end_date' => '2025-12-14',
         ]);
-        $cycle   = Cycle::create(['code' => 'COLLEGE', 'name' => 'Collège']);
-        $level   = Level::create(['cycle_id' => $cycle->id, 'code' => '6EME', 'name' => 'Sixième']);
-        $class   = SchoolClass::create(['academic_year_id' => $year->id, 'level_id' => $level->id, 'name' => '6ème A']);
+        $cycle = Cycle::create(['code' => 'COLLEGE', 'name' => 'Collège']);
+        $level = Level::create(['cycle_id' => $cycle->id, 'code' => '6EME', 'name' => 'Sixième']);
+        $class = SchoolClass::create(['academic_year_id' => $year->id, 'level_id' => $level->id, 'name' => '6ème A']);
 
         $student = Student::create([
             'matricule' => 'RS-2025-0001', 'first_name' => 'Mariam', 'last_name' => 'Diallo',
-            'birth_date' => '2010-01-01', 'gender' => 'F',
+            'birth_date' => '2010-01-01', 'birth_place' => 'Niamey', 'gender' => 'F',
         ]);
 
         $reportCard = ReportCard::create([
-            'student_id'      => $student->id,
-            'period_id'       => $period->id,
-            'class_id'        => $class->id,
+            'student_id' => $student->id,
+            'period_id' => $period->id,
+            'class_id' => $class->id,
             'general_average' => 15.50,
-            'rank'            => 1,
-            'total_students'  => 30,
-            'is_published'    => true,
+            'rank' => 1,
+            'total_students' => 30,
+            'is_published' => true,
         ]);
 
         $response = $this->actingAs($user)->get("/report-cards/{$reportCard->id}");
@@ -64,5 +64,69 @@ class ReportCardTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Mariam');
         $response->assertSee('15.50');
+    }
+
+    public function test_report_card_can_be_downloaded_as_pdf(): void
+    {
+        $user = User::factory()->create();
+
+        $year = AcademicYear::create([
+            'name' => '2025-2026', 'start_date' => '2025-09-15',
+            'end_date' => '2026-06-30', 'is_active' => true,
+        ]);
+        $period = Period::create([
+            'academic_year_id' => $year->id,
+            'name' => 'Trimestre 1', 'type' => 'TRIMESTRE', 'order' => 1,
+            'start_date' => '2025-09-15', 'end_date' => '2025-12-14',
+        ]);
+        $cycle = Cycle::create(['code' => 'PRIMAIRE', 'name' => 'Primaire']);
+        $level = Level::create(['cycle_id' => $cycle->id, 'code' => 'CM2', 'name' => 'CM2']);
+        $class = SchoolClass::create(['academic_year_id' => $year->id, 'level_id' => $level->id, 'name' => 'CM2 A']);
+
+        $student = Student::create([
+            'matricule' => 'RS-2025-0001', 'first_name' => 'Mariam', 'last_name' => 'Diallo',
+            'birth_date' => '2010-01-01', 'birth_place' => 'Niamey', 'gender' => 'F',
+        ]);
+
+        $reportCard = ReportCard::create([
+            'student_id' => $student->id,
+            'period_id' => $period->id,
+            'class_id' => $class->id,
+            'general_average' => 15.50,
+            'rank' => 1,
+            'total_students' => 30,
+            'is_published' => true,
+        ]);
+
+        $response = $this->actingAs($user)->get("/report-cards/{$reportCard->id}/pdf");
+
+        $response->assertStatus(200);
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_report_card_generation_fails_when_period_mismatches_class_cycle(): void
+    {
+        $user = User::factory()->create();
+
+        $year = AcademicYear::create([
+            'name' => '2025-2026', 'start_date' => '2025-09-15',
+            'end_date' => '2026-06-30', 'is_active' => true,
+        ]);
+        $semesterPeriod = Period::create([
+            'academic_year_id' => $year->id,
+            'name' => 'Semestre 1', 'type' => 'SEMESTRE', 'order' => 1,
+            'start_date' => '2025-09-15', 'end_date' => '2026-01-31',
+        ]);
+        $primaireCycle = Cycle::create(['code' => 'PRIMAIRE', 'name' => 'Primaire']);
+        $primaireLevel = Level::create(['cycle_id' => $primaireCycle->id, 'code' => 'CM1', 'name' => 'CM1']);
+        $primaireClass = SchoolClass::create(['academic_year_id' => $year->id, 'level_id' => $primaireLevel->id, 'name' => 'CM1 A']);
+
+        // Attempting to generate report cards for a Primaire class with a Semestre period
+        $response = $this->actingAs($user)->post('/report-cards/generate', [
+            'class_id' => $primaireClass->id,
+            'period_id' => $semesterPeriod->id,
+        ]);
+
+        $response->assertSessionHas('error');
     }
 }

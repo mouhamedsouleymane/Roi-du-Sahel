@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-8 bg-gray-50 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             {{-- Filtres de période et classe --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

@@ -66,4 +66,28 @@ class SchoolClass extends Model
     {
         return $this->hasMany(Attendance::class, 'class_id');
     }
+
+    /**
+     * Get the expected period type for this class ('TRIMESTRE' or 'SEMESTRE').
+     */
+    public function expectedPeriodType(): string
+    {
+        return $this->level?->cycle?->expectedPeriodType() ?? 'TRIMESTRE';
+    }
+
+    /**
+     * Determine if this class is trimester-based.
+     */
+    public function isTrimesterBased(): bool
+    {
+        return $this->expectedPeriodType() === 'TRIMESTRE';
+    }
+
+    /**
+     * Determine if this class is semester-based.
+     */
+    public function isSemesterBased(): bool
+    {
+        return $this->expectedPeriodType() === 'SEMESTRE';
+    }
 }

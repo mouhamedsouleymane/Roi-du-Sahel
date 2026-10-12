@@ -13,6 +13,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('images/logo_roi.jpeg') }}">
 
+    {{-- PWA : manifest, icônes, service worker + proposition d’installation --}}
+    @include('layouts.partials.pwa')
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
@@ -28,10 +31,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
 
             <!-- Brand Header -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
+            <a href="{{ route('login') }}" class="flex items-center gap-3 group">
                 <div
                     class="w-11 h-11 rounded-full overflow-hidden bg-white shadow-lg shadow-amber-400/30 ring-2 ring-amber-400/40 group-hover:scale-105 transition duration-300">
-                    <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo Les Rois du Sahel" class="w-full h-full object-cover">
+                    <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo Les Rois du Sahel"
+                        class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h1
@@ -66,10 +70,6 @@
                         </svg>
                     </a>
                 @else
-                    <a href="{{ route('login') }}"
-                        class="px-4 py-2.5 rounded-xl bg-purple-900 text-white text-xs font-black hover:bg-purple-800 transition border border-purple-700">
-                        Se Connecter
-                    </a>
                     <a href="#preinscription"
                         class="hidden sm:inline-flex px-5 py-2.5 rounded-xl bg-amber-400 text-purple-950 text-xs font-black shadow-lg hover:bg-amber-300 transition">
                         S'inscrire en Ligne
@@ -444,23 +444,33 @@
 
                 {{-- Notification de succès de pré-inscription --}}
                 @if (session('preinscription_success'))
-                    <div class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-emerald-900 via-emerald-950 to-purple-950 border-2 border-emerald-400 shadow-2xl text-white space-y-3">
+                    <div
+                        class="mb-8 p-6 rounded-2xl bg-gradient-to-r from-emerald-900 via-emerald-950 to-purple-950 border-2 border-emerald-400 shadow-2xl text-white space-y-3">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-3">
                                 <span class="text-3xl">🎉</span>
                                 <div>
-                                    <h3 class="text-base font-black text-emerald-300">Demande de Pré-inscription Transmise avec Succès !</h3>
-                                    <p class="text-xs text-emerald-100 font-medium">Le secrétariat du CSP Les Rois du Sahel traitera votre dossier sous 48h.</p>
+                                    <h3 class="text-base font-black text-emerald-300">Demande de Pré-inscription
+                                        Transmise avec Succès !</h3>
+                                    <p class="text-xs text-emerald-100 font-medium">Le secrétariat du CSP Les Rois du
+                                        Sahel traitera votre dossier sous 48h.</p>
                                 </div>
                             </div>
                             <span class="px-3 py-1 bg-emerald-400 text-purple-950 font-black text-xs rounded-full">
                                 Reçu
                             </span>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-emerald-800/80 text-xs font-bold">
-                            <div>Référence : <span class="text-amber-300 font-mono font-black">{{ session('preinscription_success')['ref'] }}</span></div>
-                            <div>Candidat : <span class="text-white font-extrabold uppercase">{{ session('preinscription_success')['name'] }}</span></div>
-                            <div>Cycle : <span class="text-emerald-200">{{ session('preinscription_success')['cycle'] }}</span></div>
+                        <div
+                            class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-emerald-800/80 text-xs font-bold">
+                            <div>Référence : <span
+                                    class="text-amber-300 font-mono font-black">{{ session('preinscription_success')['ref'] }}</span>
+                            </div>
+                            <div>Candidat : <span
+                                    class="text-white font-extrabold uppercase">{{ session('preinscription_success')['name'] }}</span>
+                            </div>
+                            <div>Cycle : <span
+                                    class="text-emerald-200">{{ session('preinscription_success')['cycle'] }}</span>
+                            </div>
                         </div>
                     </div>
                 @endif
@@ -468,100 +478,190 @@
                 <form method="POST" action="{{ route('pre-enrollment.store') }}" class="space-y-8">
                     @csrf
 
-                    <!-- Section Élève -->
+                    <!-- 1. État Civil & Identité de l'Élève -->
                     <div>
                         <h3
                             class="text-sm font-black text-amber-300 uppercase tracking-widest mb-4 flex items-center gap-2">
                             <span
                                 class="w-6 h-6 rounded-full bg-amber-400 text-purple-950 flex items-center justify-center text-xs font-black">1</span>
-                            IDENTITÉ DU FUTUR ÉLÈVE
+                            IDENTITÉ & ÉTAT CIVIL DU FUTUR ÉLÈVE
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label
                                     class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">NOM
-                                    DE L'ÉLÈVE *</label>
-                                <input type="text" name="student_last_name" required placeholder="ex: KEITA"
+                                    DE FAMILLE *</label>
+                                <input type="text" name="student_last_name" required placeholder="ex: SOULEY"
                                     value="{{ old('student_last_name') }}"
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-300 px-4 py-3" />
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                                @error('student_last_name')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div>
                                 <label
                                     class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">PRÉNOM(S)
-                                    DE L'ÉLÈVE *</label>
+                                    *</label>
                                 <input type="text" name="student_first_name" required placeholder="ex: Mamadou"
                                     value="{{ old('student_first_name') }}"
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-300 px-4 py-3" />
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                                @error('student_first_name')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">GENRE
+                                    / SEXE
+                                    *</label>
+                                <select name="gender" required
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3">
+                                    <option value="" class="bg-slate-900 text-white">-- Choisir le genre --
+                                    </option>
+                                    <option value="M" {{ old('gender', 'M') === 'M' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Masculin (Garçon)</option>
+                                    <option value="F" {{ old('gender') === 'F' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Féminin (Fille)</option>
+                                </select>
+                                @error('gender')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div>
                                 <label
                                     class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">DATE
                                     DE NAISSANCE *</label>
                                 <input type="date" name="birth_date" required value="{{ old('birth_date') }}"
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3" />
-                            </div>
-                            <div>
-                                <label
-                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">GENRE
-                                    *</label>
-                                <select name="gender" required
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3">
-                                    <option value="" class="bg-slate-900 text-white">-- Choisir --</option>
-                                    <option value="M" class="bg-slate-900 text-white">Masculin</option>
-                                    <option value="F" class="bg-slate-900 text-white">Féminin</option>
-                                </select>
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3" />
+                                @error('birth_date')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="md:col-span-2">
                                 <label
-                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">CYCLE
-                                    & NIVEAU SOUHAITÉ *</label>
-                                <select name="requested_cycle" required
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3">
-                                    <option value="" class="bg-slate-900 text-white">-- Sélectionner le cycle et
-                                        niveau --</option>
-                                    <option value="Maternelle Petite Section" class="bg-slate-900 text-white">
-                                        Maternelle - Petite Section</option>
-                                    <option value="Maternelle Moyenne Section" class="bg-slate-900 text-white">
-                                        Maternelle - Moyenne Section</option>
-                                    <option value="Maternelle Grande Section" class="bg-slate-900 text-white">
-                                        Maternelle - Grande Section</option>
-                                    <option value="Primaire (CI - CM2)" class="bg-slate-900 text-white">Primaire (CI,
-                                        CP, CE1, CE2, CM1, CM2)</option>
-                                    <option value="Collège (7ème - 9ème)" class="bg-slate-900 text-white">Collège
-                                        (7ème, 8ème, 9ème / 6ème - 3ème)</option>
-                                    <option value="Lycée Scientifique (TSE / TSECO)" class="bg-slate-900 text-white">
-                                        Lycée - Séries Scientifiques (TSE / TSECO)</option>
-                                    <option value="Lycée Littéraire (TSS / LSH)" class="bg-slate-900 text-white">Lycée
-                                        - Séries Littéraires (TSS / LSH)</option>
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">LIEU
+                                    DE NAISSANCE *</label>
+                                <input type="text" name="birth_place" required placeholder="ex: Niamey, Commune 1"
+                                    value="{{ old('birth_place', 'Niamey') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                                @error('birth_place')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">GROUPE
+                                    SANGUIN</label>
+                                <select name="blood_group"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3">
+                                    <option value="" class="bg-slate-900 text-white">-- Non renseigné --
+                                    </option>
+                                    @foreach (['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bg)
+                                        <option value="{{ $bg }}"
+                                            {{ old('blood_group') === $bg ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">{{ $bg }}</option>
+                                    @endforeach
                                 </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">ÉCOLE
+                                    DE PROVENANCE</label>
+                                <input type="text" name="previous_school"
+                                    placeholder="ex: CSP Les Champions, École Publique…"
+                                    value="{{ old('previous_school') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                            </div>
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">NOTES
+                                    MÉDICALES & ALLERGIES (Optionnel)</label>
+                                <textarea name="medical_notes" rows="2" placeholder="ex: Asthme, allergies alimentaires, restriction sportive…"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3">{{ old('medical_notes') }}</textarea>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Section Parent / Tuteur -->
+                    <!-- 2. Parent / Tuteur Légal Responsable -->
                     <div class="border-t border-purple-800/80 pt-6">
                         <h3
                             class="text-sm font-black text-amber-300 uppercase tracking-widest mb-4 flex items-center gap-2">
                             <span
                                 class="w-6 h-6 rounded-full bg-amber-400 text-purple-950 flex items-center justify-center text-xs font-black">2</span>
-                            COORDONNÉES DU PARENT OU TUTEUR LÉGAL
+                            PARENT / TUTEUR LÉGAL RESPONSABLE
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label
                                     class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">NOM
-                                    COMPLET DU TUTEUR *</label>
-                                <input type="text" name="guardian_name" required
-                                    placeholder="ex: Souleymane KEITA" value="{{ old('guardian_name') }}"
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-300 px-4 py-3" />
+                                    DU TUTEUR *</label>
+                                <input type="text" name="guardian_last_name" required placeholder="ex: SOULEY"
+                                    value="{{ old('guardian_last_name') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                                @error('guardian_last_name')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">PRÉNOM(S)
+                                    DU TUTEUR *</label>
+                                <input type="text" name="guardian_first_name" required placeholder="ex: Moussa"
+                                    value="{{ old('guardian_first_name') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                                @error('guardian_first_name')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">LIEN
+                                    DE PARENTÉ *</label>
+                                <select name="relationship" required
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3">
+                                    <option value="PERE" {{ old('relationship') === 'PERE' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Père</option>
+                                    <option value="MERE" {{ old('relationship') === 'MERE' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Mère</option>
+                                    <option value="TUTEUR_LEGAL"
+                                        {{ old('relationship') === 'TUTEUR_LEGAL' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Tuteur Légal</option>
+                                    <option value="ONCLE" {{ old('relationship') === 'ONCLE' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Oncle / Tante</option>
+                                    <option value="AUTRE" {{ old('relationship') === 'AUTRE' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Autre proche</option>
+                                </select>
+                                @error('relationship')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">PROFESSION
+                                    DU TUTEUR</label>
+                                <input type="text" name="guardian_profession"
+                                    placeholder="ex: Commerçant, Enseignant, Cadre…"
+                                    value="{{ old('guardian_profession') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
                             </div>
                             <div>
                                 <label
                                     class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">TÉLÉPHONE
-                                    JOIGNABLE *</label>
+                                    PRINCIPAL (WhatsApp) *</label>
                                 <input type="text" name="guardian_phone" required
-                                    placeholder="ex: +223 70 00 00 00" value="{{ old('guardian_phone') }}"
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-300 px-4 py-3" />
+                                    placeholder="ex: +227 90 12 34 56" value="{{ old('guardian_phone') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                                @error('guardian_phone')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">TÉLÉPHONE
+                                    SECONDAIRE</label>
+                                <input type="text" name="guardian_phone_secondary"
+                                    placeholder="ex: +227 96 12 34 56" value="{{ old('guardian_phone_secondary') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
                             </div>
                             <div>
                                 <label
@@ -569,16 +669,119 @@
                                     EMAIL</label>
                                 <input type="email" name="guardian_email" placeholder="parent@email.com"
                                     value="{{ old('guardian_email') }}"
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-300 px-4 py-3" />
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                                @error('guardian_email')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div>
                                 <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">VILLE
+                                    DE RÉSIDENCE</label>
+                                <input type="text" name="guardian_city" placeholder="Niamey"
+                                    value="{{ old('guardian_city', 'Niamey') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                            </div>
+                            <div class="md:col-span-2">
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">ADRESSE
+                                    COMPLÈTE / QUARTIER</label>
+                                <input type="text" name="guardian_address" placeholder="Quartier Plateau, Rue..."
+                                    value="{{ old('guardian_address') }}"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Souhait d'Admission & Cycle -->
+                    <div class="border-t border-purple-800/80 pt-6">
+                        <h3
+                            class="text-sm font-black text-amber-300 uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <span
+                                class="w-6 h-6 rounded-full bg-amber-400 text-purple-950 flex items-center justify-center text-xs font-black">3</span>
+                            SOUHAIT D'ADMISSION & CYCLE SCOLAIRE
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">TYPE
+                                    D'ADMISSION *</label>
+                                <select name="type" required
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3">
+                                    <option value="NOUVEAU"
+                                        {{ old('type', 'NOUVEAU') === 'NOUVEAU' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Nouvelle Inscription (Nouvel Élève)</option>
+                                    <option value="TRANSFERT" {{ old('type') === 'TRANSFERT' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Transfert d'établissement</option>
+                                    <option value="REINSCRIPTION"
+                                        {{ old('type') === 'REINSCRIPTION' ? 'selected' : '' }}
+                                        class="bg-slate-900 text-white">Réinscription</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">CYCLE
+                                    & NIVEAU SOUHAITÉ *</label>
+                                <select name="requested_cycle" required
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 px-4 py-3">
+                                    <option value="" class="bg-slate-900 text-white">-- Sélectionner le cycle et
+                                        niveau --</option>
+                                    @if (isset($cycles) && $cycles->isNotEmpty())
+                                        @foreach ($cycles as $cycle)
+                                            <optgroup label="Cycle {{ $cycle->name }}"
+                                                class="bg-purple-950 font-black text-amber-300">
+                                                @forelse($cycle->levels as $level)
+                                                    <option value="{{ $cycle->name }} - {{ $level->name }}"
+                                                        {{ old('requested_cycle') == "{$cycle->name} - {$level->name}" ? 'selected' : '' }}
+                                                        class="bg-slate-900 text-white font-normal">
+                                                        {{ $level->name }} ({{ $cycle->name }})
+                                                    </option>
+                                                @empty
+                                                    <option value="{{ $cycle->name }}"
+                                                        {{ old('requested_cycle') == $cycle->name ? 'selected' : '' }}
+                                                        class="bg-slate-900 text-white font-normal">
+                                                        {{ $cycle->name }}
+                                                    </option>
+                                                @endforelse
+                                            </optgroup>
+                                        @endforeach
+                                    @else
+                                        <option value="Maternelle - Petite Section"
+                                            {{ old('requested_cycle') === 'Maternelle - Petite Section' ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">Maternelle - Petite Section</option>
+                                        <option value="Maternelle - Moyenne Section"
+                                            {{ old('requested_cycle') === 'Maternelle - Moyenne Section' ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">Maternelle - Moyenne Section</option>
+                                        <option value="Maternelle - Grande Section"
+                                            {{ old('requested_cycle') === 'Maternelle - Grande Section' ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">Maternelle - Grande Section</option>
+                                        <option value="Primaire (CI - CM2)"
+                                            {{ old('requested_cycle') === 'Primaire (CI - CM2)' ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">Primaire (CI, CP, CE1, CE2, CM1, CM2)
+                                        </option>
+                                        <option value="Collège (6ème - 3ème)"
+                                            {{ old('requested_cycle') === 'Collège (6ème - 3ème)' ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">Collège (6ème, 5ème, 4ème, 3ème)</option>
+                                        <option value="Lycée Scientifique"
+                                            {{ old('requested_cycle') === 'Lycée Scientifique' ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">Lycée - Séries Scientifiques (C, D)
+                                        </option>
+                                        <option value="Lycée Littéraire"
+                                            {{ old('requested_cycle') === 'Lycée Littéraire' ? 'selected' : '' }}
+                                            class="bg-slate-900 text-white">Lycée - Séries Littéraires (A)</option>
+                                    @endif
+                                </select>
+                                @error('requested_cycle')
+                                    <span class="text-xs text-red-400 mt-1 block font-bold">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="md:col-span-2">
+                                <label
                                     class="block text-xs font-black text-amber-300 uppercase tracking-wider mb-2">REMARQUES
-                                    OU BESOINS PARTICULIERS</label>
-                                <input type="text" name="notes"
-                                    placeholder="ex: Élève transféré de l'établissement X"
-                                    value="{{ old('notes') }}"
-                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-300 px-4 py-3" />
+                                    OU PRÉCISIONS COMPLÉMENTAIRES (Optionnel)</label>
+                                <textarea name="notes" rows="2"
+                                    placeholder="ex: Demande spécifique, besoins particuliers, fratrie dans l'établissement…"
+                                    class="w-full text-sm font-bold bg-slate-900 border-2 border-purple-700 text-white rounded-2xl focus:ring-amber-400 focus:border-amber-400 placeholder-purple-400/60 px-4 py-3">{{ old('notes') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -626,7 +829,8 @@
                     <div class="flex items-center gap-2"><span class="text-amber-400">📞</span> <span>+223 20 00 00 00
                             / +223 76 00 00 00</span></div>
                     <div class="flex items-center gap-2"><span class="text-amber-400">✉️</span>
-                        <span>contact@roisdusahel.edu</span></div>
+                        <span>contact@roisdusahel.edu</span>
+                    </div>
                     <div class="flex items-center gap-2"><span class="text-amber-400">📍</span> <span>Quartier
                             Résidentiel, Sahel</span></div>
                 </div>
@@ -654,6 +858,9 @@
             </div>
         </div>
     </footer>
+
+    {{-- PWA : bannière de proposition d’installation --}}
+    @include('layouts.partials.pwa-install-banner')
 
 </body>
 

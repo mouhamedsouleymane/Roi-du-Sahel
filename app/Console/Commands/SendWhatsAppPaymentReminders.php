@@ -28,41 +28,49 @@ class SendWhatsAppPaymentReminders extends Command
         $this->info("🚀 Démarrage de l'envoi des rappels WhatsApp de paiement...");
 
         // Vérification de la présence des tables nécessaires
-        if (!Schema::hasTable('invoices') || !Schema::hasTable('guardians')) {
-            $this->warn("⚠️ Les tables nécessaires (invoices / guardians) ne sont pas encore présentes ou configurées.");
+        if (! Schema::hasTable('invoices') || ! Schema::hasTable('guardians')) {
+            $this->warn('⚠️ Les tables nécessaires (invoices / guardians) ne sont pas encore présentes ou configurées.');
+
             return Command::SUCCESS;
         }
 
-        // Récupérer les factures en attente / impayées
+        // Récupérer les factures impayées ou partielles avec le contact du tuteur principal
         $unpaidInvoices = DB::table('invoices')
             ->join('students', 'invoices.student_id', '=', 'students.id')
-            ->join('guardians', 'students.guardian_id', '=', 'guardians.id')
-            ->whereIn('invoices.status', ['pending', 'unpaid', 'partial'])
-            ->whereNotNull('guardians.phone')
+            ->join('fee_types', 'invoices.fee_type_id', '=', 'fee_types.id')
+            ->join('student_guardian', 'students.id', '=', 'student_guardian.student_id')
+            ->join('guardians', 'student_guardian.guardian_id', '=', 'guardians.id')
+            ->whereIn('invoices.status', ['IMPAYEE', 'PARTIELLE'])
+            ->where('student_guardian.is_primary_contact', true)
+            ->whereNotNull('guardians.phone_primary')
+            ->whereRaw('(invoices.amount_due - invoices.amount_paid) > 0')
             ->select(
                 'invoices.id',
-                'invoices.title',
-                'invoices.amount',
+                'invoices.invoice_number',
+                'invoices.amount_due',
+                'invoices.amount_paid',
                 'invoices.due_date',
+                'fee_types.name as fee_type_name',
                 'students.first_name as student_first_name',
                 'students.last_name as student_last_name',
-                'guardians.phone as guardian_phone'
+                'guardians.phone_primary as guardian_phone'
             )
             ->get();
 
         $count = 0;
         foreach ($unpaidInvoices as $inv) {
             $studentName = "{$inv->student_first_name} {$inv->student_last_name}";
-            $dueDate = $inv->due_date ? date('d/m/Y', strtotime($inv->due_date)) : 'Fin du mois en cours';
-            $title = $inv->title ?? 'Frais de scolarité / Inscription';
+            $remaining = (float) $inv->amount_due - (float) $inv->amount_paid;
+            $dueDate = $inv->due_date ? date('d/m/Y', strtotime($inv->due_date)) : 'Échéance en cours';
+            $title = "Facture {$inv->invoice_number} ({$inv->fee_type_name})";
 
-            $this->line("Envoi du rappel à {$inv->guardian_phone} pour {$studentName} ({$inv->amount} FCFA)...");
+            $this->line("Envoi du rappel à {$inv->guardian_phone} pour {$studentName} ({$remaining} FCFA restant)...");
 
             $whatsapp->sendPaymentReminder(
                 parentPhone: $inv->guardian_phone,
                 studentName: $studentName,
                 invoiceTitle: $title,
-                amountDue: $inv->amount,
+                amountDue: $remaining,
                 dueDate: $dueDate
             );
 
@@ -71,6 +79,7 @@ class SendWhatsAppPaymentReminders extends Command
         }
 
         $this->info("✅ {$count} rappels de paiement envoyés avec succès.");
+
         return Command::SUCCESS;
     }
 }

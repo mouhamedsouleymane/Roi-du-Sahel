@@ -1,12 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-wrap justify-between items-center gap-3">
             <h2 class="font-extrabold text-xl text-purple-950 leading-tight">
                 📄 Bulletin de Notes — {{ $reportCard->period->name }}
             </h2>
-            <a href="{{ route('report-cards.index', ['class_id' => $reportCard->class_id, 'period_id' => $reportCard->period_id]) }}" class="text-sm font-bold text-purple-900 hover:text-purple-700">
-                ← Retour aux bulletins
-            </a>
+            <div class="flex items-center gap-2 print:hidden">
+                <a href="{{ route('report-cards.pdf', $reportCard) }}"
+                   class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-black rounded-xl shadow-sm transition active:scale-95">
+                    📥 Télécharger PDF
+                </a>
+                <button type="button" onclick="window.print()"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-purple-900 hover:bg-purple-800 text-white text-xs font-black rounded-xl shadow-sm transition active:scale-95">
+                    🖨️ Imprimer
+                </button>
+                <a href="{{ route('report-cards.index', ['class_id' => $reportCard->class_id, 'period_id' => $reportCard->period_id]) }}" class="text-xs font-bold text-purple-900 hover:text-purple-700 bg-purple-50 px-3 py-2 rounded-xl">
+                    ← Retour
+                </a>
+            </div>
         </div>
     </x-slot>
 

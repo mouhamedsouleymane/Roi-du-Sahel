@@ -25,9 +25,9 @@ class ReportCard extends Model
     {
         return [
             'general_average' => 'decimal:2',
-            'rank'            => 'integer',
-            'total_students'  => 'integer',
-            'is_published'    => 'boolean',
+            'rank' => 'integer',
+            'total_students' => 'integer',
+            'is_published' => 'boolean',
         ];
     }
 
@@ -59,7 +59,7 @@ class ReportCard extends Model
             $avg >= 14 => 'Bien',
             $avg >= 12 => 'Assez Bien',
             $avg >= 10 => 'Passable',
-            default    => 'Insuffisant',
+            default => 'Insuffisant',
         };
     }
 }

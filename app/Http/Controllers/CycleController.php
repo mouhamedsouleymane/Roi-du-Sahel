@@ -63,7 +63,10 @@ class CycleController extends Controller
      */
     public function show(Cycle $cycle): View
     {
-        $cycle->load(['levels.classes' => fn ($q) => $q->withCount('enrollments')]);
+        $cycle->load([
+            'levels.classes' => fn ($q) => $q->withCount('enrollments'),
+            'levels.coefficients',
+        ]);
 
         return view('cycles.show', compact('cycle'));
     }
@@ -119,7 +122,7 @@ class CycleController extends Controller
     {
         if ($cycle->levels()->exists()) {
             return redirect()->route('cycles.index')
-                ->with('error', 'Impossible de supprimer un cycle contenant des niveaux.');
+                ->with('error', "Impossible de supprimer le cycle {$cycle->name} : {$cycle->levels()->count()} niveau(x) y sont rattachés.");
         }
 
         $cycle->delete();
@@ -187,7 +190,12 @@ class CycleController extends Controller
     {
         if ($level->classes()->exists()) {
             return redirect()->route('cycles.show', $cycle)
-                ->with('error', 'Impossible de supprimer un niveau contenant des classes.');
+                ->with('error', "Impossible de supprimer le niveau {$level->name} : {$level->classes()->count()} classe(s) y sont rattachées.");
+        }
+
+        if ($level->coefficients()->exists()) {
+            return redirect()->route('cycles.show', $cycle)
+                ->with('error', "Impossible de supprimer le niveau {$level->name} : {$level->coefficients()->count()} coefficient(s) y sont associés.");
         }
 
         $level->delete();

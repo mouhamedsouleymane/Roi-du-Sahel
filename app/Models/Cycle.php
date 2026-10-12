@@ -31,4 +31,36 @@ class Cycle extends Model
     {
         return $this->hasMany(Level::class)->orderBy('order_index');
     }
+
+    /**
+     * Determine if this cycle is organized by trimesters (Maternelle & Primaire).
+     */
+    public function isTrimesterBased(): bool
+    {
+        $code = strtoupper($this->code ?? '');
+        $name = strtoupper($this->name ?? '');
+
+        return in_array($code, ['MATERNELLE', 'PRIMAIRE'], true)
+            || in_array($name, ['MATERNELLE', 'PRIMAIRE'], true);
+    }
+
+    /**
+     * Determine if this cycle is organized by semesters (Collège & Lycée).
+     */
+    public function isSemesterBased(): bool
+    {
+        $code = strtoupper($this->code ?? '');
+        $name = strtoupper($this->name ?? '');
+
+        return in_array($code, ['COLLEGE', 'LYCEE'], true)
+            || in_array($name, ['COLLÈGE', 'COLLEGE', 'LYCÉE', 'LYCEE'], true);
+    }
+
+    /**
+     * Get the expected period type for this cycle ('TRIMESTRE' or 'SEMESTRE').
+     */
+    public function expectedPeriodType(): string
+    {
+        return $this->isSemesterBased() ? 'SEMESTRE' : 'TRIMESTRE';
+    }
 }

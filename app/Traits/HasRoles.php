@@ -24,6 +24,7 @@ trait HasRoles
             $roleObj = is_string($role) ? Role::firstOrCreate(['name' => $role]) : $role;
             $this->roles()->syncWithoutDetaching([$roleObj->id]);
         }
+
         return $this;
     }
 
@@ -33,6 +34,7 @@ trait HasRoles
         if ($roleObj) {
             $this->roles()->detach($roleObj->id);
         }
+
         return $this;
     }
 

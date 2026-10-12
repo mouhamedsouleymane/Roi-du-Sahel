@@ -21,7 +21,7 @@ $colorClasses = [
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             @if(session('status'))
                 <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm font-semibold">
@@ -98,13 +98,21 @@ $colorClasses = [
                                     {{ $cycle->is_active ? '⏸️ Désactiver' : '▶️ Activer' }}
                                 </button>
                             </form>
-                            <form method="POST" action="{{ route('cycles.destroy', $cycle) }}" class="inline" onsubmit="return confirm('Supprimer ce cycle ?')">
-                                @csrf @method('DELETE')
-                                <button type="submit"
-                                        class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                            @if($cycle->levels->isEmpty())
+                                <form method="POST" action="{{ route('cycles.destroy', $cycle) }}" class="inline" onsubmit="return confirm('Supprimer ce cycle ?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit"
+                                            class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                        🗑️ Supprimer
+                                    </button>
+                                </form>
+                            @else
+                                <button type="button" disabled
+                                        title="Impossible de supprimer : ce cycle contient {{ $cycle->levels->count() }} niveau(x)"
+                                        class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed">
                                     🗑️ Supprimer
                                 </button>
-                            </form>
+                            @endif
                         </div>
                     </div>
                 @endforeach

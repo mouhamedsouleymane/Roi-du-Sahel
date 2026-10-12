@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,7 +29,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'string', 'digits:8'],
+            'phone' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -42,7 +43,19 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        $user = \App\Models\User::where('phone', $this->string('phone'))->first();
+        $login = trim($this->string('phone'));
+
+        // Check if login identifier is email or phone number
+        if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+            $user = User::where('email', $login)->first();
+        } else {
+            $digits = preg_replace('/\D/', '', $login);
+            $cleanPhone = strlen($digits) > 8 ? substr($digits, -8) : $digits;
+
+            $user = User::where('phone', $cleanPhone)
+                ->orWhere('phone', $login)
+                ->first();
+        }
 
         if (! $user || ! Auth::attempt(['email' => $user->email, 'password' => $this->string('password')], $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());

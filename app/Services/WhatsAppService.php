@@ -8,8 +8,11 @@ use Illuminate\Support\Facades\Log;
 class WhatsAppService
 {
     protected string $token;
+
     protected string $phoneNumberId;
+
     protected string $version;
+
     protected string $endpoint;
 
     public function __construct()
@@ -56,7 +59,8 @@ class WhatsAppService
 
             return $response->json() ?? [];
         } catch (\Exception $e) {
-            Log::error('WhatsApp Service Exception (sendTextMessage): ' . $e->getMessage());
+            Log::error('WhatsApp Service Exception (sendTextMessage): '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -84,11 +88,11 @@ class WhatsAppService
                 'action' => ['buttons' => $formattedButtons],
             ];
 
-            if (!empty($headerText)) {
+            if (! empty($headerText)) {
                 $interactive['header'] = ['type' => 'text', 'text' => $headerText];
             }
 
-            if (!empty($footerText)) {
+            if (! empty($footerText)) {
                 $interactive['footer'] = ['text' => $footerText];
             }
 
@@ -102,7 +106,8 @@ class WhatsAppService
 
             return $response->json() ?? [];
         } catch (\Exception $e) {
-            Log::error('WhatsApp Interactive Button Error: ' . $e->getMessage());
+            Log::error('WhatsApp Interactive Button Error: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -114,12 +119,12 @@ class WhatsAppService
     {
         $components = [];
 
-        if (!empty($parameters)) {
+        if (! empty($parameters)) {
             $formattedParams = [];
             foreach ($parameters as $param) {
                 $formattedParams[] = [
                     'type' => 'text',
-                    'text' => (string)$param,
+                    'text' => (string) $param,
                 ];
             }
 
@@ -141,14 +146,16 @@ class WhatsAppService
                 ],
             ];
 
-            if (!empty($components)) {
+            if (! empty($components)) {
                 $payload['template']['components'] = $components;
             }
 
             $response = Http::withToken($this->token)->post($this->endpoint, $payload);
+
             return $response->json() ?? [];
         } catch (\Exception $e) {
-            Log::error('WhatsApp Template Error: ' . $e->getMessage());
+            Log::error('WhatsApp Template Error: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -174,7 +181,8 @@ class WhatsAppService
 
             return $response->json() ?? [];
         } catch (\Exception $e) {
-            Log::error('WhatsApp Document Error: ' . $e->getMessage());
+            Log::error('WhatsApp Document Error: '.$e->getMessage());
+
             return ['error' => $e->getMessage()];
         }
     }
@@ -195,11 +203,11 @@ class WhatsAppService
         };
 
         $msg = "🏫 *COMPLEXE SCOLAIRE ROI DU SAHEL*\n"
-            . "⚠️ *Avis d'Assiduité*\n\n"
-            . "Bonjour Cher Parent,\n"
-            . "Nous vous informons que l'élève *{$studentName}* a enregistré *{$statusLabel}* ce jour (*{$date}*).\n"
-            . ($details ? "Détails: {$details}\n" : "")
-            . "Merci de prendre attache avec la vie scolaire pour toute justification ou renseignement.";
+            ."⚠️ *Avis d'Assiduité*\n\n"
+            ."Bonjour Cher Parent,\n"
+            ."Nous vous informons que l'élève *{$studentName}* a enregistré *{$statusLabel}* ce jour (*{$date}*).\n"
+            .($details ? "Détails: {$details}\n" : '')
+            .'Merci de prendre attache avec la vie scolaire pour toute justification ou renseignement.';
 
         return $this->sendTextMessage($parentPhone, $msg);
     }
@@ -210,12 +218,12 @@ class WhatsAppService
     public function notifyTermResults(string $parentPhone, string $studentName, string $termName, float|string $average, string $rank, ?string $reportCardPdfUrl = null): array
     {
         $msg = "🏫 *COMPLEXE SCOLAIRE ROI DU SAHEL*\n"
-            . "📊 *Résultats du {$termName}*\n\n"
-            . "Bonjour Cher Parent,\n"
-            . "Les résultats de l'élève *{$studentName}* sont disponibles :\n"
-            . "• *Moyenne générale* : {$average} / 20\n"
-            . "• *Rang* : {$rank}\n\n"
-            . "Le bulletin détaillé est consultable sur votre espace parent ou téléchargeable ci-joint.";
+            ."📊 *Résultats du {$termName}*\n\n"
+            ."Bonjour Cher Parent,\n"
+            ."Les résultats de l'élève *{$studentName}* sont disponibles :\n"
+            ."• *Moyenne générale* : {$average} / 20\n"
+            ."• *Rang* : {$rank}\n\n"
+            .'Le bulletin détaillé est consultable sur votre espace parent ou téléchargeable ci-joint.';
 
         if ($reportCardPdfUrl) {
             return $this->sendDocument($parentPhone, $reportCardPdfUrl, "Bulletin_{$studentName}_{$termName}.pdf", $msg);
@@ -233,17 +241,17 @@ class WhatsAppService
      */
     public function sendPaymentReminder(string $parentPhone, string $studentName, string $invoiceTitle, float|string $amountDue, string $dueDate, string $paymentMethods = 'Guichet, Mobile Money'): array
     {
-        $formattedAmount = is_numeric($amountDue) ? number_format($amountDue, 0, ',', ' ') . ' FCFA' : $amountDue;
+        $formattedAmount = is_numeric($amountDue) ? number_format($amountDue, 0, ',', ' ').' FCFA' : $amountDue;
 
         $msg = "🏫 *COMPLEXE SCOLAIRE ROI DU SAHEL*\n"
-            . "💳 *Rappel d'Échéance de Paiement*\n\n"
-            . "Bonjour Cher Parent,\n"
-            . "Sauf erreur ou règlement récent de votre part, nous vous rappelons l'échéance concernant *{$studentName}* :\n\n"
-            . "• *Objet* : {$invoiceTitle}\n"
-            . "• *Montant restant dû* : *{$formattedAmount}*\n"
-            . "• *Date limite* : {$dueDate}\n"
-            . "• *Moyens de paiement* : {$paymentMethods}\n\n"
-            . "Merci de procéder au règlement avant la date indiquée pour assurer la continuité pédagogique.";
+            ."💳 *Rappel d'Échéance de Paiement*\n\n"
+            ."Bonjour Cher Parent,\n"
+            ."Sauf erreur ou règlement récent de votre part, nous vous rappelons l'échéance concernant *{$studentName}* :\n\n"
+            ."• *Objet* : {$invoiceTitle}\n"
+            ."• *Montant restant dû* : *{$formattedAmount}*\n"
+            ."• *Date limite* : {$dueDate}\n"
+            ."• *Moyens de paiement* : {$paymentMethods}\n\n"
+            .'Merci de procéder au règlement avant la date indiquée pour assurer la continuité pédagogique.';
 
         $buttons = [
             ['id' => 'BTN_HOW_TO_PAY', 'title' => 'Moyens de paiement'],
@@ -263,10 +271,10 @@ class WhatsAppService
     public function sendInstitutionalAnnouncement(string $parentPhone, string $title, string $content, string $signature = 'La Direction'): array
     {
         $msg = "🏫 *COMPLEXE SCOLAIRE ROI DU SAHEL*\n"
-            . "📢 *COMMUNIQUÉ OFFICIEL*\n\n"
-            . "*{$title}*\n\n"
-            . "{$content}\n\n"
-            . "_{$signature}_";
+            ."📢 *COMMUNIQUÉ OFFICIEL*\n\n"
+            ."*{$title}*\n\n"
+            ."{$content}\n\n"
+            ."_{$signature}_";
 
         return $this->sendTextMessage($parentPhone, $msg);
     }
@@ -281,7 +289,7 @@ class WhatsAppService
 
         foreach ($phoneNumbers as $phone) {
             $res = $this->sendInstitutionalAnnouncement($phone, $title, $content);
-            if (!isset($res['error']) && !isset($res['errors'])) {
+            if (! isset($res['error']) && ! isset($res['errors'])) {
                 $success++;
             } else {
                 $failed++;

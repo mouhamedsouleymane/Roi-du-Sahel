@@ -16,7 +16,7 @@
     </x-slot>
 
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
 
             {{-- Banner Devise Officielle --}}
             <div class="bg-gradient-to-r from-purple-950 via-purple-900 to-indigo-950 text-white rounded-3xl p-6 shadow-xl border border-purple-800/40 flex flex-wrap justify-between items-center gap-4">

@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\ClassSubjectCoefficient;
 use App\Models\Cycle;
 use App\Models\Level;
-use App\Models\SchoolClass;
+use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class CycleAndLevelTest extends TestCase
@@ -233,7 +235,7 @@ class CycleAndLevelTest extends TestCase
         ]);
 
         // Create an academic year first (required for classes)
-        \DB::table('academic_years')->insert([
+        DB::table('academic_years')->insert([
             'id' => 1,
             'name' => '2024-2025',
             'start_date' => '2024-09-01',
@@ -244,7 +246,7 @@ class CycleAndLevelTest extends TestCase
         ]);
 
         // Use raw insert to bypass FK constraints in SQLite test
-        \DB::table('classes')->insert([
+        DB::table('classes')->insert([
             'name' => 'Classe Test',
             'level_id' => $level->id,
             'academic_year_id' => 1,
@@ -256,6 +258,149 @@ class CycleAndLevelTest extends TestCase
 
         $response->assertSessionHas('error');
         $this->assertDatabaseHas('levels', ['id' => $level->id]);
+    }
+
+    public function test_cycle_delete_button_is_disabled_when_the_cycle_has_levels(): void
+    {
+        $user = User::factory()->create();
+        $cycle = Cycle::create(['code' => 'TEST', 'name' => 'Test']);
+        Level::create([
+            'cycle_id' => $cycle->id,
+            'code' => 'L1',
+            'name' => 'Level 1',
+            'order_index' => 1,
+        ]);
+
+        $response = $this->actingAs($user)->get('/cycles');
+
+        $response->assertOk();
+        $response->assertSee('Impossible de supprimer : ce cycle contient 1 niveau(x)', false);
+        $response->assertDontSee('value="DELETE"', false);
+    }
+
+    public function test_cycle_delete_button_is_available_when_the_cycle_is_empty(): void
+    {
+        $user = User::factory()->create();
+        Cycle::create(['code' => 'TEST', 'name' => 'Test']);
+
+        $response = $this->actingAs($user)->get('/cycles');
+
+        $response->assertOk();
+        $response->assertSee('value="DELETE"', false);
+        $response->assertDontSee('Impossible de supprimer', false);
+    }
+
+    public function test_level_delete_button_is_disabled_when_the_level_has_classes(): void
+    {
+        $user = User::factory()->create();
+        $cycle = Cycle::create(['code' => 'TEST', 'name' => 'Test']);
+        $level = Level::create([
+            'cycle_id' => $cycle->id,
+            'code' => 'L1',
+            'name' => 'Level 1',
+            'order_index' => 1,
+        ]);
+
+        // Use raw insert to bypass FK constraints in SQLite test
+        DB::table('academic_years')->insert([
+            'id' => 1,
+            'name' => '2024-2025',
+            'start_date' => '2024-09-01',
+            'end_date' => '2025-06-30',
+            'is_active' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('classes')->insert([
+            'name' => 'Classe Test',
+            'level_id' => $level->id,
+            'academic_year_id' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)->get("/cycles/{$cycle->id}");
+
+        $response->assertOk();
+        $response->assertSee('Impossible de supprimer : ce niveau contient 1 classe(s)', false);
+        $response->assertDontSee('value="DELETE"', false);
+    }
+
+    public function test_level_delete_button_is_available_when_the_level_has_no_classes(): void
+    {
+        $user = User::factory()->create();
+        $cycle = Cycle::create(['code' => 'TEST', 'name' => 'Test']);
+        Level::create([
+            'cycle_id' => $cycle->id,
+            'code' => 'L1',
+            'name' => 'Level 1',
+            'order_index' => 1,
+        ]);
+
+        $response = $this->actingAs($user)->get("/cycles/{$cycle->id}");
+
+        $response->assertOk();
+        $response->assertSee('value="DELETE"', false);
+        $response->assertDontSee('Impossible de supprimer', false);
+    }
+
+    public function test_level_cannot_be_deleted_if_it_has_coefficients(): void
+    {
+        $user = User::factory()->create();
+        $cycle = Cycle::create(['code' => 'TEST', 'name' => 'Test']);
+        $level = Level::create([
+            'cycle_id' => $cycle->id,
+            'code' => 'L1',
+            'name' => 'Level 1',
+            'order_index' => 1,
+        ]);
+        $subject = Subject::create([
+            'code' => 'MATH',
+            'name' => 'Mathématiques',
+            'category' => 'scientifique',
+        ]);
+        ClassSubjectCoefficient::create([
+            'level_id' => $level->id,
+            'subject_id' => $subject->id,
+            'coefficient' => 2,
+            'weekly_hours' => 4,
+        ]);
+
+        $response = $this->actingAs($user)->delete("/cycles/{$cycle->id}/levels/{$level->id}");
+
+        $response->assertRedirect(route('cycles.show', $cycle));
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('levels', ['id' => $level->id]);
+    }
+
+    public function test_level_delete_button_is_disabled_when_the_level_has_coefficients(): void
+    {
+        $user = User::factory()->create();
+        $cycle = Cycle::create(['code' => 'TEST', 'name' => 'Test']);
+        $level = Level::create([
+            'cycle_id' => $cycle->id,
+            'code' => 'L1',
+            'name' => 'Level 1',
+            'order_index' => 1,
+        ]);
+        $subject = Subject::create([
+            'code' => 'MATH',
+            'name' => 'Mathématiques',
+            'category' => 'scientifique',
+        ]);
+        ClassSubjectCoefficient::create([
+            'level_id' => $level->id,
+            'subject_id' => $subject->id,
+            'coefficient' => 2,
+            'weekly_hours' => 4,
+        ]);
+
+        $response = $this->actingAs($user)->get("/cycles/{$cycle->id}");
+
+        $response->assertOk();
+        $response->assertSee('Impossible de supprimer : 1 coefficient(s) y sont associés', false);
+        $response->assertDontSee('value="DELETE"', false);
     }
 
     public function test_guest_cannot_access_cycles(): void

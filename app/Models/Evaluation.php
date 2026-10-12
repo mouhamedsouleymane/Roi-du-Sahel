@@ -27,8 +27,8 @@ class Evaluation extends Model
     {
         return [
             'evaluation_date' => 'date',
-            'max_score'       => 'decimal:2',
-            'coefficient'     => 'decimal:2',
+            'max_score' => 'decimal:2',
+            'coefficient' => 'decimal:2',
         ];
     }
 

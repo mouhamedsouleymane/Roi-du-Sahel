@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-8 bg-slate-50 min-h-screen">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             <div class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
                 <form method="POST" action="{{ route('users.store') }}" class="space-y-6">

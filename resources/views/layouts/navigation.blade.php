@@ -60,6 +60,9 @@
                     <x-nav-link :href="route('enrollments.index')" :active="request()->routeIs('enrollments.*')">
                         {{ __('Inscriptions') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('pre-enrollments.index')" :active="request()->routeIs('pre-enrollments.*')">
+                        {{ __('Pré-inscriptions Web') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('subjects.index')" :active="request()->routeIs('subjects.*')">
                         {{ __('Matières') }}
                     </x-nav-link>

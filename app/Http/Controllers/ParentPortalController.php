@@ -18,7 +18,7 @@ class ParentPortalController extends Controller
      */
     public function index(Request $request): View
     {
-        $user       = auth()->user();
+        $user = auth()->user();
         $activeYear = AcademicYear::getActive();
 
         // Find linked Guardian by user_id or email
@@ -36,27 +36,27 @@ class ParentPortalController extends Controller
             $children = $guardian->students()
                 ->with(['enrollments' => function ($q) use ($activeYear) {
                     $q->where('academic_year_id', $activeYear?->id ?? 0)
-                      ->where('status', 'VALIDE')
-                      ->with('schoolClass.level.cycle');
+                        ->where('status', 'VALIDE')
+                        ->with('schoolClass.level.cycle');
                 }])
                 ->get();
         } else {
             // For testing/preview when logged in as admin without guardian link
             $children = Student::with(['enrollments' => function ($q) use ($activeYear) {
                 $q->where('academic_year_id', $activeYear?->id ?? 0)
-                  ->where('status', 'VALIDE')
-                  ->with('schoolClass.level.cycle');
+                    ->where('status', 'VALIDE')
+                    ->with('schoolClass.level.cycle');
             }])
-            ->limit(3)
-            ->get();
+                ->limit(3)
+                ->get();
         }
 
         $selectedStudentId = $request->query('student_id', $children->first()?->id);
-        $selectedStudent   = $children->firstWhere('id', $selectedStudentId) ?? $children->first();
+        $selectedStudent = $children->firstWhere('id', $selectedStudentId) ?? $children->first();
 
         $reportCards = collect();
         $attendances = collect();
-        $invoices    = collect();
+        $invoices = collect();
 
         if ($selectedStudent) {
             // Published report cards

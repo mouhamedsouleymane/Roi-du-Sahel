@@ -11,7 +11,7 @@
     </x-slot>
 
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
-        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:px-6 lg:px-8 space-y-6">
 
             @if(session('status'))
                 <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl text-sm font-semibold">
@@ -89,20 +89,50 @@
                                                     </button>
                                                 </form>
                                             @endif
-                                            <form method="POST" action="{{ route('academic-years.toggle-close', $year) }}" class="inline">
-                                                @csrf @method('PATCH')
-                                                <button type="submit" class="text-xs font-bold px-3 py-1.5 rounded-lg {{ $year->is_closed ? 'bg-blue-50 text-blue-700 hover:bg-blue-100' : 'bg-gray-50 text-gray-700 hover:bg-gray-100' }} transition">
-                                                    {{ $year->is_closed ? '🔓 Réouvrir' : '🔒 Clôturer' }}
-                                                </button>
-                                            </form>
-                                            @if(! $year->is_active)
-                                                <form method="POST" action="{{ route('academic-years.destroy', $year) }}" class="inline">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
-                                                        🗑️
+                                            @if($year->is_closed)
+                                                <form method="POST" action="{{ route('academic-years.toggle-close', $year) }}" class="inline">
+                                                    @csrf @method('PATCH')
+                                                    <button type="submit" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition">
+                                                        🔓 Réouvrir
                                                     </button>
                                                 </form>
+                                            @elseif(! $year->is_active && $year->hasEnded())
+                                                <form method="POST" action="{{ route('academic-years.toggle-close', $year) }}" class="inline">
+                                                    @csrf @method('PATCH')
+                                                    <button type="submit" class="text-xs font-bold px-3 py-1.5 rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 transition">
+                                                        🔒 Clôturer
+                                                    </button>
+                                                </form>
+                                            @else
+                                                @php
+                                                    $closeBlockedReason = 'année en cours jusqu\'au '.$year->end_date->format('d/m/Y');
+                                                    if ($year->is_active) {
+                                                        $closeBlockedReason = "année scolaire active : activez d'abord une autre année";
+                                                    }
+                                                @endphp
+                                                <button type="button" disabled
+                                                        title="Impossible de clôturer : {{ $closeBlockedReason }}"
+                                                        class="text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed">
+                                                    🔒 Clôturer
+                                                </button>
                                             @endif
+                                            @if(! $year->is_active)
+                                                @if($year->hasEnded())
+                                                    <form method="POST" action="{{ route('academic-years.destroy', $year) }}" class="inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition">
+                                                            <span>🗑️</span> Supprimer
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <button type="button" disabled
+                                                            title="Impossible de supprimer : année scolaire en cours jusqu'au {{ $year->end_date->format('d/m/Y') }}"
+                                                            class="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-slate-100 text-slate-400 cursor-not-allowed">
+                                                        <span>🗑️</span> Supprimer
+                                                    </button>
+                                                @endif
+                                            @endif
+
                                         </div>
                                     </td>
                                 </tr>

@@ -32,10 +32,10 @@ class DashboardTest extends TestCase
         $user = User::factory()->create();
 
         AcademicYear::create([
-            'name'       => '2025-2026',
+            'name' => '2025-2026',
             'start_date' => '2025-09-15',
-            'end_date'   => '2026-06-30',
-            'is_active'  => true,
+            'end_date' => '2026-06-30',
+            'is_active' => true,
         ]);
 
         $response = $this->actingAs($user)->get('/dashboard');

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class WhatsAppBroadcastController extends Controller
 {
@@ -28,7 +27,7 @@ class WhatsAppBroadcastController extends Controller
         // Filtrage selon la cible demandée
         if ($request->target === 'class' && $request->class_id) {
             $query->join('enrollments', 'students.id', '=', 'enrollments.student_id')
-                  ->where('enrollments.school_class_id', $request->class_id);
+                ->where('enrollments.school_class_id', $request->class_id);
         }
 
         $phoneNumbers = $query->distinct()->pluck('guardians.phone')->toArray();
