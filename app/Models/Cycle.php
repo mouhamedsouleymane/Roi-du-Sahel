@@ -63,4 +63,60 @@ class Cycle extends Model
     {
         return $this->isSemesterBased() ? 'SEMESTRE' : 'TRIMESTRE';
     }
+
+    public function isMaternelle(): bool
+    {
+        $v = strtoupper(($this->code ?? '').' '.($this->name ?? ''));
+
+        return str_contains($v, 'MATER') || str_contains($v, 'PRESCO');
+    }
+
+    public function isPrimaire(): bool
+    {
+        $v = strtoupper(($this->code ?? '').' '.($this->name ?? ''));
+
+        return str_contains($v, 'PRIM');
+    }
+
+    public function isCollege(): bool
+    {
+        $v = strtoupper(($this->code ?? '').' '.($this->name ?? ''));
+
+        return str_contains($v, 'COLLEG');
+    }
+
+    public function isLycee(): bool
+    {
+        $v = strtoupper(($this->code ?? '').' '.($this->name ?? ''));
+
+        return str_contains($v, 'LYC');
+    }
+
+    /**
+     * Retourne l'emoji représentatif du cycle.
+     */
+    public function iconEmoji(): string
+    {
+        return match (true) {
+            $this->isMaternelle() => '🧸',
+            $this->isPrimaire() => '🎒',
+            $this->isCollege() => '🏛️',
+            $this->isLycee() => '🎓',
+            default => '🏫',
+        };
+    }
+
+    /**
+     * Titre officiel du signataire pour ce cycle.
+     */
+    public function signatureTitle(): string
+    {
+        return match (true) {
+            $this->isMaternelle() => 'La Directrice du Préscolaire',
+            $this->isPrimaire() => 'Le Directeur de l\'École Primaire',
+            $this->isCollege() => 'Le Principal du Collège',
+            $this->isLycee() => 'Le Proviseur du Lycée',
+            default => 'Le Chef d\'Établissement',
+        };
+    }
 }

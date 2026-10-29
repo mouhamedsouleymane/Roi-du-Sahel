@@ -45,7 +45,7 @@
                             </label>
                             <input type="text" name="label" value="{{ old('label') }}" required
                                    placeholder="Ex: Achat de fournitures scolaires"
-                                   class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
 
                         <div>
@@ -53,7 +53,7 @@
                                 Catégorie <span class="text-red-500">*</span>
                             </label>
                             <select name="expense_category_id" required
-                                    class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                    class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                 <option value="">-- Choisir une catégorie --</option>
                                 @foreach ($categories as $cat)
                                     <option value="{{ $cat->id }}" {{ old('expense_category_id') == $cat->id ? 'selected' : '' }}>
@@ -68,7 +68,7 @@
                                 Date de la Dépense <span class="text-red-500">*</span>
                             </label>
                             <input type="date" name="expense_date" value="{{ old('expense_date', date('Y-m-d')) }}" required
-                                   class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
 
                         <div>
@@ -78,7 +78,7 @@
                             <div class="relative">
                                 <input type="number" name="amount" value="{{ old('amount') }}" required min="1" step="1"
                                        placeholder="Ex: 25000"
-                                       class="w-full text-xs font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
+                                       class="w-full text-xs font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
                                 <span class="absolute right-3 top-2.5 text-[10px] font-black text-slate-400 pointer-events-none">FCFA</span>
                             </div>
                         </div>
@@ -88,7 +88,7 @@
                                 Mode de Paiement <span class="text-red-500">*</span>
                             </label>
                             <select name="payment_method" required
-                                    class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                    class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                 @foreach (\App\Models\Expense::paymentMethods() as $key => $label)
                                     <option value="{{ $key }}" {{ old('payment_method', 'ESPECES') === $key ? 'selected' : '' }}>
                                         {{ $label }}
@@ -103,7 +103,7 @@
                             </label>
                             <input type="text" name="supplier" value="{{ old('supplier') }}"
                                    placeholder="Ex: Librairie Lumière, Électricité du Niger…"
-                                   class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
 
                         <div class="sm:col-span-2">
@@ -111,7 +111,7 @@
                                 Notes / Observations (Optionnel)
                             </label>
                             <textarea name="notes" rows="3" placeholder="Détails complémentaires…"
-                                      class="w-full text-xs rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">{{ old('notes') }}</textarea>
+                                      class="w-full text-xs rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">{{ old('notes') }}</textarea>
                         </div>
                     </div>
 

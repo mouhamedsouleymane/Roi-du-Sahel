@@ -4,11 +4,13 @@
 <div class="px-4 py-4 bg-purple-950/90 border-b border-purple-800/50 flex items-center justify-between flex-shrink-0">
     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 min-w-0" @click="sidebarOpen = false">
         <div class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-md ring-2 ring-amber-400/60 flex-shrink-0">
-            <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo CSP Les Rois du Sahel" class="w-full h-full object-cover">
+            <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo CSP Les Rois du Sahel"
+                class="w-full h-full object-cover">
         </div>
         <div class="truncate">
             <h1 class="font-extrabold text-base tracking-wide text-white leading-tight truncate">ROIS DU SAHEL</h1>
-            <span class="text-[10px] text-amber-400 font-extrabold tracking-widest uppercase block truncate">Complexe Scolaire Privé</span>
+            <span class="text-[10px] text-amber-400 font-extrabold tracking-widest uppercase block truncate">Complexe
+                Scolaire Privé</span>
         </div>
     </a>
     {{-- Close Button --}}
@@ -213,7 +215,8 @@
 {{-- Footer utilisateur --}}
 <div class="p-4 bg-purple-950/80 border-t border-purple-800/60 flex items-center justify-between gap-3 flex-shrink-0">
     <div class="flex items-center gap-3 overflow-hidden">
-        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-400 to-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-md flex-shrink-0 ring-2 ring-amber-400/30">
+        <div
+            class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-400 to-purple-600 text-white font-extrabold flex items-center justify-center text-xs shadow-md flex-shrink-0 ring-2 ring-amber-400/30">
             {{ mb_substr(Auth::user()->name ?? 'U', 0, 1) }}
         </div>
         <div class="truncate">

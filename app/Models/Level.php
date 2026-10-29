@@ -35,6 +35,13 @@ class Level extends Model
         return $this->hasMany(ClassSubjectCoefficient::class, 'level_id');
     }
 
+    public function subjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Subject::class, 'class_subject_coefficients')
+            ->withPivot(['coefficient', 'weekly_hours', 'is_optional'])
+            ->withTimestamps();
+    }
+
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(Teacher::class, 'teacher_levels')->withTimestamps();

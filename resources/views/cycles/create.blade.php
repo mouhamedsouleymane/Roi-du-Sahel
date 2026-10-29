@@ -23,7 +23,7 @@
                         </label>
                         <input type="text" name="code" required placeholder="LYCEE"
                                value="{{ old('code') }}"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 uppercase" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 uppercase" />
                         @error('code') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -33,7 +33,7 @@
                         </label>
                         <input type="text" name="name" required placeholder="Lycée"
                                value="{{ old('name') }}"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         @error('name') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -42,7 +42,7 @@
                             Description (optionnel)
                         </label>
                         <textarea name="description" rows="3" placeholder="Description courte du cycle…"
-                                  class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description') }}</textarea>
+                                  class="w-full text-xs border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description') }}</textarea>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -51,14 +51,14 @@
                                 Heure de début
                             </label>
                             <input type="time" name="start_time" value="{{ old('start_time', '08:00') }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
                         <div>
                             <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
                                 Heure de fin
                             </label>
                             <input type="time" name="end_time" value="{{ old('end_time', '14:30') }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
                     </div>
 
@@ -67,7 +67,7 @@
                             Couleur du T-shirt (tenue)
                         </label>
                         <select name="uniform_tshirt_color"
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                             <option value="">-- Sélectionner --</option>
                             @php $colors = ['Violet', 'Jaune', 'Vert', 'Bleu', 'Rouge']; @endphp
                             @foreach ($colors as $color)

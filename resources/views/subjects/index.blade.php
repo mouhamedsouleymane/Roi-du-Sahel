@@ -84,7 +84,7 @@
                         @endif
                         <label class="text-xs font-extrabold text-slate-600 uppercase">Filtrer :</label>
                         <select name="category" onchange="this.form.submit()"
-                                class="text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                class="text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                             <option value="">Toutes les catégories</option>
                             @foreach ($categories as $catKey => $catLabel)
                                 <option value="{{ $catKey }}" {{ $selectedCategory === $catKey ? 'selected' : '' }}>

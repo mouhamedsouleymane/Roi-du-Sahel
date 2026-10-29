@@ -86,7 +86,7 @@
                     {{-- Classe avec Optgroup --}}
                     <div>
                         <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Classe Concernée *</label>
-                        <select name="class_id" x-model="classId" required class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                        <select name="class_id" x-model="classId" required class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                             @php
                                 $classesByCycle = $classes->groupBy(fn($c) => $c->level->cycle->name ?? 'Autre');
                             @endphp
@@ -129,7 +129,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6" x-show="mode === 'manual'">
                         <div>
                             <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Matière *</label>
-                            <select name="subject_id" x-model="subjectId" :required="mode === 'manual'" class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                            <select name="subject_id" x-model="subjectId" :required="mode === 'manual'" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}" {{ old('subject_id', $schedule->subject_id) == $subject->id ? 'selected' : '' }}>
                                         {{ $subject->name }} ({{ $subject->code }})
@@ -139,7 +139,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Enseignant *</label>
-                            <select name="teacher_id" x-model="teacherId" :required="mode === 'manual'" class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                            <select name="teacher_id" x-model="teacherId" :required="mode === 'manual'" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 @foreach ($teachers as $teacher)
                                     <option value="{{ $teacher->id }}" {{ old('teacher_id', $schedule->teacher_id) == $teacher->id ? 'selected' : '' }}>
                                         {{ $teacher->user?->name }}{{ $teacher->speciality ? ' (' . $teacher->speciality . ')' : '' }}
@@ -161,7 +161,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-slate-100">
                         <div>
                             <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Jour *</label>
-                            <select name="day_of_week" required class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                            <select name="day_of_week" required class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 @foreach (['LUNDI' => 'Lundi', 'MARDI' => 'Mardi', 'MERCREDI' => 'Mercredi', 'JEUDI' => 'Jeudi', 'VENDREDI' => 'Vendredi', 'SAMEDI' => 'Samedi'] as $val => $label)
                                     <option value="{{ $val }}" {{ old('day_of_week', $schedule->day_of_week) == $val ? 'selected' : '' }}>{{ $label }}</option>
                                 @endforeach
@@ -171,19 +171,19 @@
                         <div>
                             <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Heure de Début *</label>
                             <input type="time" name="start_time" required x-model="startTime"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
 
                         <div>
                             <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Heure de Fin *</label>
                             <input type="time" name="end_time" required x-model="endTime"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
 
                         <div>
                             <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Salle</label>
                             <input type="text" name="room_number" value="{{ old('room_number', $schedule->room_number) }}" placeholder="Ex: Salle 104, Labo..."
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
                     </div>
 

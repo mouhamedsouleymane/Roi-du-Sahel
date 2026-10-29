@@ -88,11 +88,11 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Nom</label>
                             <input type="text" name="name" required placeholder="Trimestre 1"
-                                   class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Ordre</label>
-                            <select name="order" class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5">
+                            <select name="order" class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -101,12 +101,12 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Début</label>
                             <input type="date" name="start_date" required
-                                   class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Fin</label>
                             <input type="date" name="end_date" required
-                                   class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                         </div>
                         <button type="submit" class="px-4 py-1.5 text-xs font-bold bg-purple-900 text-white rounded-lg hover:bg-purple-800">
                             💾 Enregistrer
@@ -169,11 +169,11 @@
                                 <form method="POST" action="{{ route('academic-years.periods.update', [$academicYear, $period]) }}" class="space-y-2">
                                     @csrf @method('PUT')
                                     <input type="text" name="name" value="{{ $period->name }}" required
-                                           class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                                     <input type="date" name="start_date" value="{{ $period->start_date->format('Y-m-d') }}" required
-                                           class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                                     <input type="date" name="end_date" value="{{ $period->end_date->format('Y-m-d') }}" required
-                                           class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                                     <div class="flex gap-2">
                                         <button type="submit" class="flex-1 text-xs font-bold px-2 py-1.5 bg-purple-900 text-white rounded-lg hover:bg-purple-800">
                                             💾 Sauvegarder
@@ -222,11 +222,11 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Nom</label>
                             <input type="text" name="name" required placeholder="Semestre 1"
-                                   class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Ordre</label>
-                            <select name="order" class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5">
+                            <select name="order" class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                             </select>
@@ -234,12 +234,12 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Début</label>
                             <input type="date" name="start_date" required
-                                   class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1">Fin</label>
                             <input type="date" name="end_date" required
-                                   class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                         </div>
                         <button type="submit" class="px-4 py-1.5 text-xs font-bold bg-amber-600 text-white rounded-lg hover:bg-amber-700">
                             💾 Enregistrer
@@ -302,11 +302,11 @@
                                 <form method="POST" action="{{ route('academic-years.periods.update', [$academicYear, $period]) }}" class="space-y-2">
                                     @csrf @method('PUT')
                                     <input type="text" name="name" value="{{ $period->name }}" required
-                                           class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                                     <input type="date" name="start_date" value="{{ $period->start_date->format('Y-m-d') }}" required
-                                           class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                                     <input type="date" name="end_date" value="{{ $period->end_date->format('Y-m-d') }}" required
-                                           class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                                     <div class="flex gap-2">
                                         <button type="submit" class="flex-1 text-xs font-bold px-2 py-1.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700">
                                             💾 Sauvegarder

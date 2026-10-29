@@ -92,17 +92,17 @@
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-1">Code</label>
                                 <input type="text" name="code" required placeholder="6EME"
-                                       class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5 uppercase" />
+                                       class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5 uppercase" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-1">Nom</label>
                                 <input type="text" name="name" required placeholder="Sixième"
-                                       class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                       class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-1">Ordre</label>
                                 <input type="number" name="order_index" required min="1" value="{{ $cycle->levels->max('order_index') + 1 }}"
-                                       class="w-full text-xs font-bold border-slate-300 rounded-lg px-2 py-1.5" />
+                                       class="w-full text-xs font-bold border-purple-300 rounded-lg px-2 py-1.5" />
                             </div>
                             <div class="flex items-end">
                                 <button type="submit" class="px-4 py-1.5 text-xs font-bold bg-purple-900 text-white rounded-lg hover:bg-purple-800">

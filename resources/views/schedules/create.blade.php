@@ -156,7 +156,7 @@
                 window.location.href = '{{ route('schedules.create') }}?class_id=' + newClassId;
             }
         },
-
+    
         onSubjectSelect(newSubjectId) {
             this.subjectId = newSubjectId;
             const found = this.allAssignments.find(a => String(a.subject_id) === String(newSubjectId));
@@ -164,7 +164,7 @@
                 this.teacherId = String(found.teacher_id);
             }
         },
-
+    
         onAssignmentSelect(e) {
             const val = e.target.value;
             if (!val) {
@@ -354,8 +354,9 @@
                             </label>
                             <input type="text" x-model="searchSubjectText" placeholder="🔍 Filtrer matière..."
                                 class="w-full text-xs font-bold rounded-xl border-slate-200 focus:border-purple-600 focus:ring-purple-600 bg-white" />
-                            <select name="subject_id" x-model="subjectId" @change="onSubjectSelect($event.target.value)" :required="mode === 'manual'"
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                            <select name="subject_id" x-model="subjectId" @change="onSubjectSelect($event.target.value)"
+                                :required="mode === 'manual'"
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 <option value="">-- Choisir une matière (<span
                                         x-text="filteredSubjects.length"></span>) --</option>
                                 <template x-for="sbj in filteredSubjects" :key="sbj.id">
@@ -374,7 +375,7 @@
                                 placeholder="🔍 Filtrer enseignant / spécialité..."
                                 class="w-full text-xs font-bold rounded-xl border-slate-200 focus:border-purple-600 focus:ring-purple-600 bg-white" />
                             <select name="teacher_id" x-model="teacherId" :required="mode === 'manual'"
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 <option value="">-- Choisir un enseignant (<span
                                         x-text="filteredTeachers.length"></span>) --</option>
                                 <template x-for="t in filteredTeachers" :key="t.id">
@@ -400,7 +401,7 @@
                                 Jour <span class="text-rose-500">*</span>
                             </label>
                             <select name="day_of_week" required
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 @foreach (['LUNDI' => 'Lundi', 'MARDI' => 'Mardi', 'MERCREDI' => 'Mercredi', 'JEUDI' => 'Jeudi', 'VENDREDI' => 'Vendredi', 'SAMEDI' => 'Samedi'] as $val => $label)
                                     <option value="{{ $val }}"
                                         {{ old('day_of_week') == $val ? 'selected' : '' }}>{{ $label }}
@@ -414,7 +415,7 @@
                                 Heure Début <span class="text-rose-500">*</span>
                             </label>
                             <input type="time" name="start_time" x-model="startTime" required
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
 
                         <div>
@@ -422,7 +423,7 @@
                                 Heure Fin <span class="text-rose-500">*</span>
                             </label>
                             <input type="time" name="end_time" x-model="endTime" required
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
 
                         <div>
@@ -431,7 +432,7 @@
                             </label>
                             <input type="text" name="room_number" value="{{ old('room_number') }}"
                                 placeholder="Ex: Salle 104, Labo..."
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
                     </div>
 

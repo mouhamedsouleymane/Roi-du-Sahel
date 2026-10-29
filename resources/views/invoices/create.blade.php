@@ -34,7 +34,7 @@
                             Élève & Classe *
                         </label>
                         <select id="enrollment_id" name="enrollment_id" required
-                                class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">
+                                class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">
                             <option value="">-- Sélectionner l'élève concerné --</option>
                             @foreach ($enrollments as $e)
                                 <option value="{{ $e->id }}" {{ old('enrollment_id') == $e->id ? 'selected' : '' }}>
@@ -52,7 +52,7 @@
                                 Type de Frais *
                             </label>
                             <select id="fee_type_id" name="fee_type_id" required
-                                    class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">
+                                    class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">
                                 <option value="">-- Choisir le type de frais --</option>
                                 @foreach ($feeTypes as $ft)
                                     <option value="{{ $ft->id }}" {{ old('fee_type_id') == $ft->id ? 'selected' : '' }}>
@@ -70,7 +70,7 @@
                             </label>
                             <input type="number" id="amount_due" name="amount_due" min="1" step="100" required
                                    value="{{ old('amount_due') }}" placeholder="ex: 25000"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('amount_due') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                                 Date Limite de Paiement (Échéance)
                             </label>
                             <input type="date" id="due_date" name="due_date" value="{{ old('due_date') }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('due_date') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -92,7 +92,7 @@
                                 Notes & Références (optionnel)
                             </label>
                             <input type="text" id="notes" name="notes" value="{{ old('notes') }}" placeholder="ex: Frais de tenue scolaire ou sortie"
-                                   class="w-full text-sm font-medium border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-medium border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('notes') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>

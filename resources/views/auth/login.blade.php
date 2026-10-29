@@ -230,7 +230,7 @@
                         <div class="flex items-center justify-between">
                             <label for="remember_me" class="inline-flex items-center gap-2 cursor-pointer">
                                 <input id="remember_me" type="checkbox"
-                                    class="w-4 h-4 rounded border-slate-300 text-purple-600 shadow-sm focus:ring-purple-500"
+                                    class="w-4 h-4 rounded border-purple-300 text-purple-600 shadow-sm focus:ring-purple-500"
                                     name="remember">
                                 <span class="text-xs font-bold text-slate-500">Rester connecté</span>
                             </label>

@@ -23,7 +23,7 @@
                             Code du Cycle
                         </label>
                         <input type="text" name="code" required value="{{ old('code', $cycle->code) }}"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 uppercase" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 uppercase" />
                         @error('code') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -32,7 +32,7 @@
                             Nom du Cycle
                         </label>
                         <input type="text" name="name" required value="{{ old('name', $cycle->name) }}"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         @error('name') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -41,7 +41,7 @@
                             Description (optionnel)
                         </label>
                         <textarea name="description" rows="3"
-                                  class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description', $cycle->description) }}</textarea>
+                                  class="w-full text-xs border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description', $cycle->description) }}</textarea>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -50,7 +50,7 @@
                                 Heure de début
                             </label>
                             <input type="time" name="start_time" value="{{ old('start_time', $cycle->start_time) }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('start_time') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
                         <div>
@@ -58,7 +58,7 @@
                                 Heure de fin
                             </label>
                             <input type="time" name="end_time" value="{{ old('end_time', $cycle->end_time) }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('end_time') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                             Couleur du T-shirt (tenue)
                         </label>
                         <select name="uniform_tshirt_color"
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                             <option value="">-- Sélectionner --</option>
                             @php $colors = ['Violet' => 'bg-purple-600', 'Jaune' => 'bg-amber-500', 'Vert' => 'bg-green-600', 'Bleu' => 'bg-blue-600', 'Rouge' => 'bg-red-600']; @endphp
                             @foreach ($colors as $color => $class)

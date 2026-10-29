@@ -90,7 +90,7 @@
                         </label>
                         <input type="text" id="search" name="search" value="{{ $search }}"
                             placeholder="Nom, email ou téléphone (ex: 90123456)..."
-                            class="w-full text-sm font-bold rounded-xl border-slate-300 shadow-xs focus:border-purple-500 focus:ring-purple-500" />
+                            class="w-full text-sm font-bold rounded-xl border-purple-300 shadow-xs focus:border-purple-500 focus:ring-purple-500" />
                     </div>
 
                     <div>
@@ -98,7 +98,7 @@
                             Filtrer par Rôle
                         </label>
                         <select id="role" name="role"
-                            class="w-full text-sm font-bold rounded-xl border-slate-300 shadow-xs focus:border-purple-500 focus:ring-purple-500">
+                            class="w-full text-sm font-bold rounded-xl border-purple-300 shadow-xs focus:border-purple-500 focus:ring-purple-500">
                             <option value="">-- Tous les rôles --</option>
                             @foreach ($roles as $r)
                                 <option value="{{ $r->name }}" {{ $roleFilter === $r->name ? 'selected' : '' }}>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Teacher extends Model
 {
@@ -97,7 +98,19 @@ class Teacher extends Model
      */
     public function isRestrictedToOneClass(): bool
     {
-        return $this->is_polyvalent || $this->is_polyvalent_cycle;
+        if ($this->is_polyvalent || $this->is_polyvalent_cycle) {
+            return true;
+        }
+
+        if ($this->relationLoaded('cycles')) {
+            return $this->cycles->contains(
+                fn ($c) => in_array(strtolower(trim($c->name)), self::polyvalentCycleNames(), true)
+            );
+        }
+
+        return $this->cycles()
+            ->whereIn(DB::raw('LOWER(TRIM(name))'), self::polyvalentCycleNames())
+            ->exists();
     }
 
     /**
@@ -117,22 +130,95 @@ class Teacher extends Model
 
     /**
      * Check if the teacher can be assigned to a specific class for the given academic year.
-     * For Maternelle and Primaire teachers, they can only be assigned to a single class.
+     * - Maternelle & Primaire teachers: restricted to ONE and only ONE class of their cycle.
+     * - Collège & Lycée teachers: specialist teachers who can teach across multiple secondary classes.
+     * - Teachers cannot cross between Maternelle/Primaire and Secondaire (Collège/Lycée).
      */
     public function canBeAssignedToClass(int $classId, int $academicYearId, ?int $exceptAssignmentId = null): bool
     {
-        if (! $this->isRestrictedToOneClass()) {
-            return true;
+        $targetClass = SchoolClass::with('level.cycle')->find($classId);
+
+        if (! $targetClass) {
+            return false;
         }
 
-        $query = $this->assignments()
+        $targetCycleName = strtolower(trim($targetClass->level?->cycle?->name ?? ''));
+        $isTargetPolyvalent = in_array($targetCycleName, self::polyvalentCycleNames(), true);
+
+        // 1. Classe Maternelle ou Primaire :
+        // Seul un enseignant de ce cycle peut être affecté, et à une seule classe max par an
+        if ($isTargetPolyvalent) {
+            if (! $this->isRestrictedToOneClass()) {
+                return false;
+            }
+
+            // Vérifier que le cycle de l'instituteur correspond au cycle de la classe
+            $allowedCycleIds = $this->relationLoaded('cycles')
+                ? $this->cycles->pluck('id')->all()
+                : $this->cycles()->pluck('cycles.id')->all();
+
+            if ($this->cycle_id && ! in_array($this->cycle_id, $allowedCycleIds, true)) {
+                $allowedCycleIds[] = $this->cycle_id;
+            }
+
+            if (! empty($allowedCycleIds) && ! in_array($targetClass->level->cycle_id, $allowedCycleIds, true)) {
+                return false;
+            }
+
+            // Règle d'une et une seule classe max par année scolaire
+            $query = $this->assignments()
+                ->where('academic_year_id', $academicYearId)
+                ->where('class_id', '!=', $classId);
+
+            if ($exceptAssignmentId) {
+                $query->where('id', '!=', $exceptAssignmentId);
+            }
+
+            return ! $query->exists();
+        }
+
+        // 2. Classe Secondaire (Collège ou Lycée) :
+        // Un instituteur de Maternelle ou Primaire ne peut PAS enseigner au secondaire
+        if ($this->isRestrictedToOneClass()) {
+            return false;
+        }
+
+        // Pour un enseignant spécialiste du secondaire, il peut intervenir dans plusieurs classes
+        return true;
+    }
+
+    /**
+     * Get the distinct subject IDs this teacher is assigned to for a given academic year.
+     *
+     * @return array<int>
+     */
+    public function assignedSubjectIds(int $academicYearId): array
+    {
+        return $this->assignments()
             ->where('academic_year_id', $academicYearId)
-            ->where('class_id', '!=', $classId);
+            ->pluck('subject_id')
+            ->unique()
+            ->values()
+            ->all();
+    }
 
-        if ($exceptAssignmentId) {
-            $query->where('id', '!=', $exceptAssignmentId);
-        }
+    /**
+     * Get the classes this teacher is assigned to for a given academic year.
+     */
+    public function assignedClasses(int $academicYearId)
+    {
+        $classIds = $this->assignedClassIds($academicYearId);
 
-        return ! $query->exists();
+        return SchoolClass::with('level.cycle')->whereIn('id', $classIds)->get();
+    }
+
+    /**
+     * Get the subjects this teacher is assigned to for a given academic year.
+     */
+    public function assignedSubjects(int $academicYearId)
+    {
+        $subjectIds = $this->assignedSubjectIds($academicYearId);
+
+        return Subject::whereIn('id', $subjectIds)->orderBy('name')->get();
     }
 }

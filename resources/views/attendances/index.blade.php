@@ -1,195 +1,102 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-wrap justify-between items-center gap-3">
-            <h2 class="font-black text-2xl text-purple-950 leading-tight">
-                📋 Feuille de Présence & Appel
-            </h2>
-            <a href="{{ route('attendances.report') }}" class="px-4 py-2.5 text-xs font-black bg-purple-900 text-white rounded-xl hover:bg-purple-800 transition-all shadow-md">
-                📊 Bilan & Rapport des Absences
+            <h2 class="font-black text-2xl text-purple-950 leading-tight">Présences & Absences</h2>
+            <a href="{{ route('attendances.report') }}" class="px-4 py-2.5 text-xs font-black bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition shadow-md">
+                Bilan & Rapport
             </a>
         </div>
     </x-slot>
 
     <div class="py-8 bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen">
-        <div class="w-full sm:px-6 lg:px-8 space-y-6 animate-fade-in-up">
+        <div class="w-full sm:px-6 lg:px-8 space-y-10 animate-fade-in-up">
 
             @if (session('status'))
-                <div class="bg-emerald-100 border border-emerald-400 text-emerald-800 px-4 py-3 rounded-2xl shadow-xs">
-                    <strong>Succès ! </strong>{{ session('status') }}
+                <div class="bg-emerald-100 border border-emerald-400 text-emerald-800 px-4 py-3 rounded-2xl">
+                    <strong>Succès !</strong> {{ session('status') }}
                 </div>
             @endif
-
-            @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded-2xl shadow-xs">
-                    @foreach ($errors->all() as $error)
-                        <p>{{ $error }}</p>
-                    @endforeach
-                </div>
+            @if (session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded-2xl">{{ session('error') }}</div>
             @endif
 
-            {{-- Filtres de prise de présence --}}
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6">
-                <form method="GET" action="{{ route('attendances.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Classe</label>
-                        <select name="class_id" onchange="this.form.submit()" class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 font-bold">
-                            @foreach ($classes as $cls)
-                                <option value="{{ $cls->id }}" {{ $selectedClassId == $cls->id ? 'selected' : '' }}>
-                                    {{ $cls->level->cycle->name }} — {{ $cls->name }}
-                                </option>
-                            @endforeach
-                        </select>
+            {{-- Hero banner --}}
+            <div class="relative bg-purple-950 rounded-3xl overflow-hidden px-8 py-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                <div class="absolute inset-0 opacity-10"
+                     style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
+                <div class="relative">
+                    <p class="text-purple-300 text-xs font-black uppercase tracking-widest mb-1">{{ $activeYear?->name ?? 'Aucune année active' }}</p>
+                    <h3 class="text-white text-3xl font-black leading-tight">Registre des<br>présences</h3>
+                    <p class="text-purple-300 text-sm font-semibold mt-2">Sélectionnez une classe pour consulter ou saisir les feuilles d'appel.</p>
+                </div>
+                <div class="relative flex items-center gap-3">
+                    @php $totalClasses = $classes->flatten()->count(); @endphp
+                    <div class="bg-white/10 rounded-2xl px-6 py-4 text-center backdrop-blur-sm">
+                        <div class="text-3xl font-black text-white">{{ $totalClasses }}</div>
+                        <div class="text-[11px] font-bold text-purple-300 uppercase mt-0.5">Classe{{ $totalClasses > 1 ? 's' : '' }}</div>
                     </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Date</label>
-                        <input type="date" name="date" value="{{ $date }}" onchange="this.form.submit()"
-                               class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 font-bold" />
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Séance</label>
-                        <select name="session" onchange="this.form.submit()" class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 font-bold">
-                            <option value="MATIN" {{ $session === 'MATIN' ? 'selected' : '' }}>Matin (7h30 - 12h)</option>
-                            <option value="APRES_MIDI" {{ $session === 'APRES_MIDI' ? 'selected' : '' }}>Après-midi (15h - 18h)</option>
-                            <option value="JOURNEE" {{ $session === 'JOURNEE' ? 'selected' : '' }}>Journée entière</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Matière (Optionnel)</label>
-                        <select name="subject_id" onchange="this.form.submit()" class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 font-bold">
-                            <option value="">— Appel Général —</option>
-                            @foreach ($subjects as $sbj)
-                                <option value="{{ $sbj->id }}" {{ $subjectId == $sbj->id ? 'selected' : '' }}>
-                                    {{ $sbj->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <button type="submit" class="w-full px-4 py-2.5 bg-purple-950 text-white text-xs font-black rounded-xl hover:bg-purple-900 transition">
-                            🔄 Charger la liste
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            {{-- Formulaire d'appel --}}
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 overflow-hidden">
-                <div class="p-6 bg-gradient-to-r from-purple-950 via-purple-900 to-indigo-950 text-white flex flex-wrap justify-between items-center gap-4">
-                    <div>
-                        <h3 class="text-xl font-black">
-                            Classe : {{ $selectedClass?->name ?? '–' }}
-                        </h3>
-                        <p class="text-xs text-amber-300 font-semibold mt-0.5">
-                            Fiche du {{ \Carbon\Carbon::parse($date)->translatedFormat('l d F Y') }} • Session : {{ $session }}
-                        </p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button type="button" onclick="setAllStatus('PRESENT')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-xl transition shadow-xs">
-                            Tous Présents
-                        </button>
-                        <button type="button" onclick="setAllStatus('ABSENT')" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-black rounded-xl transition shadow-xs">
-                            Tous Absents
-                        </button>
+                    <div class="bg-white/10 rounded-2xl px-6 py-4 text-center backdrop-blur-sm">
+                        <div class="text-3xl font-black text-white">{{ $classes->count() }}</div>
+                        <div class="text-[11px] font-bold text-purple-300 uppercase mt-0.5">Cycle{{ $classes->count() > 1 ? 's' : '' }}</div>
                     </div>
                 </div>
+            </div>
 
-                <form method="POST" action="{{ route('attendances.store') }}">
-                    @csrf
-                    <input type="hidden" name="class_id" value="{{ $selectedClassId }}" />
-                    <input type="hidden" name="attendance_date" value="{{ $date }}" />
-                    <input type="hidden" name="session" value="{{ $session }}" />
-                    <input type="hidden" name="subject_id" value="{{ $subjectId }}" />
+            {{-- Grille par cycle --}}
+            @php
+                $cycleColors = [
+                    0 => ['dot' => 'bg-violet-500', 'badge' => 'bg-violet-100 text-violet-700', 'hover' => 'hover:border-violet-200 hover:shadow-violet-100'],
+                    1 => ['dot' => 'bg-sky-500',    'badge' => 'bg-sky-100 text-sky-700',       'hover' => 'hover:border-sky-200 hover:shadow-sky-100'],
+                    2 => ['dot' => 'bg-emerald-500','badge' => 'bg-emerald-100 text-emerald-700','hover' => 'hover:border-emerald-200 hover:shadow-emerald-100'],
+                    3 => ['dot' => 'bg-amber-500',  'badge' => 'bg-amber-100 text-amber-700',   'hover' => 'hover:border-amber-200 hover:shadow-amber-100'],
+                ];
+                $ci = 0;
+            @endphp
 
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-slate-100">
-                            <thead class="bg-slate-50">
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-black text-slate-500 uppercase w-10">#</th>
-                                    <th class="px-4 py-3 text-left text-xs font-black text-slate-500 uppercase">Matricule</th>
-                                    <th class="px-4 py-3 text-left text-xs font-black text-slate-500 uppercase">Élève</th>
-                                    <th class="px-4 py-3 text-center text-xs font-black text-slate-500 uppercase">Statut de Présence</th>
-                                    <th class="px-4 py-3 text-left text-xs font-black text-slate-500 uppercase">Motif / Observation</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 bg-white">
-                                @forelse ($students as $i => $student)
-                                    @php
-                                        $record = $student->attendances->first();
-                                        $currentStatus = $record?->status ?? 'PRESENT';
-                                    @endphp
-                                    <tr class="hover:bg-slate-50 transition">
-                                        <td class="px-4 py-3.5 text-sm text-slate-400 font-bold">{{ $i + 1 }}</td>
-                                        <td class="px-4 py-3.5 text-xs font-mono font-black text-purple-900">
-                                            {{ $student->matricule }}
-                                            <input type="hidden" name="attendances[{{ $i }}][student_id]" value="{{ $student->id }}" />
-                                        </td>
-                                        <td class="px-4 py-3.5 text-sm font-extrabold text-slate-900">
-                                            {{ $student->last_name }} {{ $student->first_name }}
-                                        </td>
-                                        <td class="px-4 py-3.5 text-center">
-                                            <div class="inline-flex rounded-xl p-1 bg-slate-100 gap-1 border border-slate-200/60">
-                                                <label class="px-3 py-1 rounded-lg text-xs font-extrabold cursor-pointer transition-all has-[:checked]:bg-emerald-600 has-[:checked]:text-white text-slate-600 hover:text-slate-900">
-                                                    <input type="radio" name="attendances[{{ $i }}][status]" value="PRESENT"
-                                                           class="sr-only status-radio" {{ $currentStatus === 'PRESENT' ? 'checked' : '' }} />
-                                                    Présent
-                                                </label>
-                                                <label class="px-3 py-1 rounded-lg text-xs font-extrabold cursor-pointer transition-all has-[:checked]:bg-red-600 has-[:checked]:text-white text-slate-600 hover:text-slate-900">
-                                                    <input type="radio" name="attendances[{{ $i }}][status]" value="ABSENT"
-                                                           class="sr-only status-radio" {{ $currentStatus === 'ABSENT' ? 'checked' : '' }} />
-                                                    Absent
-                                                </label>
-                                                <label class="px-3 py-1 rounded-lg text-xs font-extrabold cursor-pointer transition-all has-[:checked]:bg-amber-500 has-[:checked]:text-white text-slate-600 hover:text-slate-900">
-                                                    <input type="radio" name="attendances[{{ $i }}][status]" value="RETARD"
-                                                           class="sr-only status-radio" {{ $currentStatus === 'RETARD' ? 'checked' : '' }} />
-                                                    Retard
-                                                </label>
-                                                <label class="px-3 py-1 rounded-lg text-xs font-extrabold cursor-pointer transition-all has-[:checked]:bg-blue-600 has-[:checked]:text-white text-slate-600 hover:text-slate-900">
-                                                    <input type="radio" name="attendances[{{ $i }}][status]" value="EXCUSE"
-                                                           class="sr-only status-radio" {{ $currentStatus === 'EXCUSE' ? 'checked' : '' }} />
-                                                    Excusé
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td class="px-4 py-3.5">
-                                            <input type="text" name="attendances[{{ $i }}][reason]" value="{{ $record?->reason ?? '' }}"
-                                                   placeholder="Raison médicale, voyage…"
-                                                   class="w-full text-xs border-slate-300 rounded-xl focus:ring-purple-500 focus:border-purple-500" />
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="px-4 py-8 text-center text-sm text-slate-400 italic">
-                                            Aucun élève inscrit dans cette classe.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+            @forelse ($classes as $cycleName => $cycleClasses)
+                @php $color = $cycleColors[$ci % count($cycleColors)]; $ci++; @endphp
+                <div>
+                    {{-- En-tête cycle --}}
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="w-2.5 h-2.5 rounded-full {{ $color['dot'] }}"></span>
+                        <h3 class="text-sm font-black text-slate-700 uppercase tracking-widest">{{ $cycleName }}</h3>
+                        <span class="px-2 py-0.5 text-[11px] font-black rounded-full {{ $color['badge'] }}">
+                            {{ $cycleClasses->count() }} classe{{ $cycleClasses->count() > 1 ? 's' : '' }}
+                        </span>
+                        <div class="flex-1 h-px bg-slate-200"></div>
                     </div>
 
-                    @if ($students->isNotEmpty())
-                        <div class="p-5 bg-slate-50 border-t border-slate-100 flex justify-end">
-                            <x-primary-button class="bg-purple-900 hover:bg-purple-800 shadow-md">
-                                💾 Enregistrer la Feuille d'Appel
-                            </x-primary-button>
-                        </div>
-                    @endif
-                </form>
-            </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                        @foreach ($cycleClasses as $class)
+                            <a href="{{ route('attendances.show', ['class_id' => $class->id]) }}"
+                               class="group bg-white rounded-3xl shadow-sm border border-slate-200/80 p-5 flex flex-col gap-3 hover:shadow-lg transition-all duration-200 {{ $color['hover'] }}">
+
+                                {{-- Icône initiale --}}
+                                <div class="w-12 h-12 rounded-2xl {{ $color['badge'] }} flex items-center justify-center shrink-0">
+                                    <span class="text-xl font-black">{{ mb_strtoupper(mb_substr($class->name, 0, 1)) }}</span>
+                                </div>
+
+                                <div>
+                                    <p class="text-sm font-black text-slate-900 group-hover:text-purple-950 transition leading-tight">
+                                        {{ $class->name }}
+                                    </p>
+                                    <p class="text-[11px] font-semibold text-slate-400 mt-0.5">{{ $class->level->name }}</p>
+                                </div>
+
+                                <div class="flex items-center gap-1 text-[11px] font-black text-slate-400 group-hover:text-purple-700 transition mt-auto">
+                                    <span>Voir les feuilles</span>
+                                    <span class="group-hover:translate-x-0.5 transition-transform">→</span>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @empty
+                <div class="bg-white rounded-3xl border border-slate-200/80 p-16 text-center">
+                    <p class="text-sm text-slate-400 italic">Aucune classe pour l'année scolaire active.</p>
+                </div>
+            @endforelse
 
         </div>
     </div>
-
-    <script>
-        function setAllStatus(status) {
-            document.querySelectorAll(`.status-radio[value="${status}"]`).forEach(radio => {
-                radio.checked = true;
-                radio.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-        }
-    </script>
 </x-app-layout>

@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "session_id": "1790324656763_eru3w",
+  "source": "vscode",
+  "pid": 22732,
+  "started_at": "2026-09-25T08:24:17.703Z",
+  "ended_at": "2026-10-12T21:34:10.516Z",
+  "exit_code": 1,
+  "status": "failed",
+  "interactive": true,
+  "provider": "cline",
+  "model": "z-ai/glm-5.3-flash",
+  "cwd": "c:\\src\\Roi du Sahel",
+  "workspace_root": "c:\\src\\Roi du Sahel",
+  "enable_tools": true,
+  "enable_spawn": false,
+  "enable_teams": false,
+  "prompt": "analyse c fichier C:\\src\\Roi du Sahel\\q-dev-chat-2026-09-24.md",
+  "metadata": {
+    "sessionHistoryOrigin": {
+      "mode": "user",
+      "version": "4.1.23"
+    },
+    "title": "analyse c fichier C:\\src\\Roi du Sahel\\q-dev-chat-2026-09-24.md",
+    "isFavorited": false,
+    "size": 68222,
+    "totalCost": 0,
+    "tokensIn": 16779145,
+    "tokensOut": 182761,
+    "cacheWrites": 0,
+    "cacheReads": 60637399,
+    "modelId": "openrouter/free",
+    "legacyTask": false,
+    "aggregatedAgentsCost": 0,
+    "usage": {
+      "inputTokens": 118990263,
+      "outputTokens": 430887,
+      "cacheReadTokens": 98512958,
+      "cacheWriteTokens": 0,
+      "totalCost": 0
+    },
+    "aggregateUsage": {
+      "inputTokens": 118990263,
+      "outputTokens": 430887,
+      "cacheReadTokens": 98512958,
+      "cacheWriteTokens": 0,
+      "totalCost": 0
+    },
+    "terminal_marker": "failed_external_process_exit",
+    "terminal_marker_at": "2026-10-12T21:33:43.315Z",
+    "terminal_marker_pid": 22732,
+    "terminal_marker_source": "stale_session_reconciler"
+  },
+  "messages_path": "C:\\Users\\MOUHAMED SOULEYMANE\\.cline\\data\\sessions\\1790324656763_eru3w\\1790324656763_eru3w.messages.json"
+}

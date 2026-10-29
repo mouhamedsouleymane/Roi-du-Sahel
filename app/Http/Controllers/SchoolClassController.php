@@ -29,6 +29,10 @@ class SchoolClassController extends Controller
         $classes = SchoolClass::with(['level.cycle', 'academicYear', 'mainTeacher'])
             ->withCount([
                 'enrollments' => fn ($q) => $q->whereIn('status', ['EN_ATTENTE', 'VALIDE']),
+                'enrollments as boys_count' => fn ($q) => $q->whereIn('status', ['EN_ATTENTE', 'VALIDE'])
+                    ->whereHas('student', fn ($sq) => $sq->where('gender', 'M')),
+                'enrollments as girls_count' => fn ($q) => $q->whereIn('status', ['EN_ATTENTE', 'VALIDE'])
+                    ->whereHas('student', fn ($sq) => $sq->where('gender', 'F')),
                 'enrollments as all_enrollments_count',
             ])
             ->when($selectedYearId, fn ($q) => $q->where('academic_year_id', $selectedYearId))
@@ -41,14 +45,29 @@ class SchoolClassController extends Controller
     /**
      * Show the form for creating a new class.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
         $activeYear = AcademicYear::getActive();
+        $selectedYearId = $request->query('academic_year_id', $activeYear?->id);
+        $selectedLevelId = $request->query('level_id');
         $levels = Level::with('cycle')->orderBy('order_index')->get();
-        $teachers = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['Enseignant', 'Super Admin', 'Directeur', 'Censeur']))->get();
         $academicYears = AcademicYear::orderBy('name', 'desc')->get();
 
-        return view('classes.create', compact('levels', 'teachers', 'academicYears', 'activeYear'));
+        $teachers = User::whereHas('roles', fn ($q) => $q->whereIn('name', ['Enseignant', 'Super Admin', 'Directeur', 'Censeur']))
+            ->with(['teacher.cycle', 'teacher.cycles'])
+            ->get()
+            ->map(function ($u) {
+                return [
+                    'id' => $u->id,
+                    'name' => $u->name,
+                    'cycle_id' => $u->teacher?->cycle_id,
+                    'cycle_name' => $u->teacher?->cycle?->name ?? 'Secondaire',
+                    'is_polyvalent' => (bool) $u->teacher?->is_polyvalent,
+                    'speciality' => $u->teacher?->speciality ?? 'Enseignant',
+                ];
+            });
+
+        return view('classes.create', compact('levels', 'teachers', 'academicYears', 'activeYear', 'selectedYearId', 'selectedLevelId'));
     }
 
     /**

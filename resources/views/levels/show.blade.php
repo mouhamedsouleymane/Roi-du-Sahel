@@ -116,7 +116,7 @@
                                 Choisir la Matière
                             </label>
                             <select name="subject_id" required
-                                    class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                    class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 <option value="">-- Sélectionner une discipline --</option>
                                 @foreach ($subjects as $sbj)
                                     <option value="{{ $sbj->id }}" {{ old('subject_id') == $sbj->id ? 'selected' : '' }}>
@@ -132,7 +132,7 @@
                                 Coefficient
                             </label>
                             <input type="number" name="coefficient" value="{{ old('coefficient', 2) }}" min="1" max="20" required
-                                   class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('coefficient') <span class="text-[11px] text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -141,7 +141,7 @@
                                 Volume Horaire (Heures/Semaine)
                             </label>
                             <input type="number" name="weekly_hours" value="{{ old('weekly_hours', 3) }}" min="1" max="20" required
-                                   class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('weekly_hours') <span class="text-[11px] text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -279,7 +279,7 @@
                                             Coefficient <span class="text-rose-500">*</span>
                                         </label>
                                         <input type="number" name="coefficient" x-model="editCoefficient" min="1" max="20" required
-                                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                     </div>
 
                                     <div>
@@ -287,7 +287,7 @@
                                             Heures / sem. <span class="text-rose-500">*</span>
                                         </label>
                                         <input type="number" name="weekly_hours" x-model="editWeeklyHours" min="1" max="20" required
-                                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                     </div>
                                 </div>
 

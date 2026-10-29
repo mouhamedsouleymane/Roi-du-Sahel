@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Démo — Bordures violettes par défaut | Les Rois du Sahel</title>
+<link rel="stylesheet" href="./build/assets/app-BAMlR1Nh.css">
+<style>
+  .demo-old input, .demo-old select, .demo-old textarea { border-color: #cbd5e1 !important; }
+  .swatch { width: 3rem; height: 3rem; border-radius: .75rem; border-width: 2px; }
+  code.inline { font-size: .72rem; }
+</style>
+</head>
+<body class="font-sans antialiased bg-gradient-to-b from-slate-50 via-purple-50/20 to-slate-100 min-h-screen text-slate-800">
+
+<header class="bg-purple-950 text-white">
+  <div class="w-full px-6 lg:px-8 py-8">
+    <p class="text-xs font-black tracking-widest uppercase text-amber-300">Les Rois du Sahel — Démonstration</p>
+    <h1 class="font-black text-3xl leading-tight mt-1">Bordures violettes par défaut sur les champs</h1>
+    <p class="text-sm text-purple-200 mt-2">Avant : border-slate-300 / border-gray-300 — Après : border-purple-300 + socle CSS global.</p>
+  </div>
+</header>
+
+<main class="w-full px-6 lg:px-8 py-8 space-y-8">
+
+  <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
+      <h2 class="font-black text-lg text-slate-500 uppercase tracking-wider">Avant (gris)</h2>
+      <p class="text-xs text-slate-500 font-semibold mt-1">Anciennes classes forcées en gris pour la démo.</p>
+      <div class="space-y-4 mt-6 demo-old">
+        <div>
+          <label for="demo-old-year" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Intitulé de l'année</label>
+          <input id="demo-old-year" type="text" value="2025-2026" placeholder="2025-2026" title="Intitulé de l'année" aria-label="Intitulé de l'année" class="w-full text-sm font-bold border rounded-xl shadow-xs px-3.5 py-2.5">
+        </div>
+        <div>
+          <label for="demo-old-level" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Niveau</label>
+          <select id="demo-old-level" title="Niveau" aria-label="Niveau" class="w-full text-sm font-bold border rounded-xl shadow-xs px-3.5 py-2.5">
+            <option>Collège — 6ème</option><option>Lycée — Terminale D</option>
+          </select>
+        </div>
+        <div>
+          <label for="demo-old-desc" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Description</label>
+          <textarea id="demo-old-desc" rows="2" placeholder="Ancien rendu gris." title="Description" aria-label="Description" class="w-full text-xs border rounded-xl shadow-xs px-3.5 py-2.5">Ancien rendu gris.</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white shadow-xl rounded-3xl p-8 border border-purple-200">
+      <h2 class="font-black text-lg text-purple-950 uppercase tracking-wider">Après (violet)</h2>
+      <p class="text-xs text-slate-500 font-semibold mt-1">Le rendu réel du projet.</p>
+      <div class="space-y-4 mt-6">
+        <div>
+          <label for="demo-new-year" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Intitulé de l'année</label>
+          <input id="demo-new-year" type="text" value="2025-2026" placeholder="2025-2026" title="Intitulé de l'année" aria-label="Intitulé de l'année" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+        </div>
+        <div>
+          <label for="demo-new-level" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Niveau</label>
+          <select id="demo-new-level" title="Niveau" aria-label="Niveau" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+            <option>Collège — 6ème</option><option>Lycée — Terminale D</option>
+          </select>
+        </div>
+        <div>
+          <label for="demo-new-desc" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Description</label>
+          <textarea id="demo-new-desc" rows="2" placeholder="Nouveau rendu violet." title="Description" aria-label="Description" class="w-full text-xs border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">Nouveau rendu violet.</textarea>
+        </div>
+        <p class="text-xs font-bold text-purple-700">Survolez ou cliquez : hover purple-400, focus purple-500 + anneau.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
+    <h2 class="font-black text-lg text-purple-950 uppercase tracking-wider">Les 3 teintes utilisées</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+      <div class="flex items-center gap-3 p-4 rounded-2xl bg-purple-50/60 border border-purple-100">
+        <span class="swatch border-purple-300 bg-white block"></span>
+        <div><p class="font-black text-sm">Repos — purple-300</p><code class="inline bg-white px-1 rounded border">#c4b5fd</code></div>
+      </div>
+      <div class="flex items-center gap-3 p-4 rounded-2xl bg-purple-50/60 border border-purple-100">
+        <span class="swatch border-purple-400 bg-white block"></span>
+        <div><p class="font-black text-sm">Survol — purple-400</p><code class="inline bg-white px-1 rounded border">#a78bfa</code></div>
+      </div>
+      <div class="flex items-center gap-3 p-4 rounded-2xl bg-purple-50/60 border border-purple-100">
+        <span class="swatch border-purple-500 bg-white block"></span>
+        <div><p class="font-black text-sm">Focus — purple-500</p><code class="inline bg-white px-1 rounded border">#8b5cf6</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
+    <h2 class="font-black text-lg text-purple-950 uppercase tracking-wider">Tous les types de champs concernés</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <div><label for="demo-f-text" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Texte</label>
+        <input id="demo-f-text" type="text" placeholder="ex : MATH" title="Texte" aria-label="Texte" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"></div>
+      <div><label for="demo-f-email" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Email</label>
+        <input id="demo-f-email" type="email" placeholder="parent@email.com" title="Email" aria-label="Email" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"></div>
+      <div><label for="demo-f-date" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Date</label>
+        <input id="demo-f-date" type="date" value="2025-10-15" placeholder="YYYY-MM-DD" title="Date" aria-label="Date" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"></div>
+      <div><label for="demo-f-number" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Nombre (note /20)</label>
+        <input id="demo-f-number" type="number" min="0" max="20" step="0.25" value="14.5" placeholder="14.5" title="Nombre (note /20)" aria-label="Nombre (note /20)" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"></div>
+      <div><label for="demo-f-password" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Mot de passe</label>
+        <input id="demo-f-password" type="password" value="secret123" placeholder="Mot de passe" title="Mot de passe" aria-label="Mot de passe" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"></div>
+      <div><label for="demo-f-time" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Heure</label>
+        <input id="demo-f-time" type="time" value="08:00" placeholder="08:00" title="Heure" aria-label="Heure" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"></div>
+      <div><label for="demo-f-select" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Select</label>
+        <select id="demo-f-select" title="Select" aria-label="Select" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"><option>Maternelle</option><option>Primaire</option><option>Collège</option><option>Lycée</option></select></div>
+      <div><label for="demo-f-search" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Recherche / filtre</label>
+        <input id="demo-f-search" type="search" placeholder="Rechercher…" title="Recherche" aria-label="Recherche" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500"></div>
+      <div class="md:col-span-2"><label for="demo-f-textarea" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Textarea</label>
+        <textarea id="demo-f-textarea" rows="2" placeholder="Commentaire libre…" title="Textarea" aria-label="Textarea" class="w-full text-xs border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">Commentaire libre…</textarea></div>
+    </div>
+  </section>
+
+  <section class="bg-white shadow-xl rounded-3xl p-8 border border-slate-200/80">
+    <h2 class="font-black text-lg text-purple-950 uppercase tracking-wider">Volontairement inchangés</h2>
+    <div class="flex flex-wrap items-center gap-6 mt-4 text-sm font-bold">
+      <label class="flex items-center gap-2"><input type="checkbox" checked class="w-4 h-4 rounded border-slate-300 text-purple-600"> Checkbox</label>
+      <label class="flex items-center gap-2"><input type="radio" name="demo-radio" checked class="w-4 h-4 border-slate-300 text-purple-600"> Radio</label>
+      <span class="px-4 py-2 bg-white border border-gray-300 rounded-md">Bouton secondaire</span>
+      <span class="px-4 py-2 rounded-2xl border border-purple-100 bg-purple-50 text-purple-950">Carte / badge</span>
+    </div>
+  </section>
+
+  <section class="bg-slate-950 text-slate-100 shadow-xl rounded-3xl p-8 border border-purple-800/60">
+    <h2 class="font-black text-lg uppercase tracking-wider text-amber-300">Ce qui a été appliqué dans le projet</h2>
+    <ol class="list-decimal ml-5 mt-3 space-y-2 text-sm font-semibold text-purple-100">
+      <li>Socle CSS global dans resources/css/app.css : tout input / select / textarea naît en purple-300.</li>
+      <li>Composant components/text-input.blade.php : border-purple-300 hover:border-purple-400.</li>
+      <li>~440 champs dans 60+ vues Blade : border-slate-300 / border-gray-300 vers border-purple-300.</li>
+    </ol>
+  </section>
+
+  <p class="text-center text-xs text-slate-400 font-semibold pb-4">Page de démonstration statique — public/demo-bordures-violettes.html — à supprimer avant mise en production si inutile.</p>
+</main>
+</body>
+</html>

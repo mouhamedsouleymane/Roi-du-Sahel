@@ -50,6 +50,12 @@ class StudentMatriculeGenerator
         if ($yearName) {
             $parts = explode('-', $yearName);
             $yearPrefix = $parts[0] ?? '2025';
+        } else {
+            $activeYear = AcademicYear::getActive();
+            if ($activeYear) {
+                $parts = explode('-', $activeYear->name);
+                $yearPrefix = $parts[0] ?? '2025';
+            }
         }
 
         $latestEnrollment = Enrollment::where('enrollment_number', 'LIKE', "INS-{$yearPrefix}-%")

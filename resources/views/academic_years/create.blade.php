@@ -23,7 +23,7 @@
                         </label>
                         <input type="text" name="name" required placeholder="2025-2026"
                                value="{{ old('name') }}"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         @error('name') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -33,7 +33,7 @@
                                 Date de Début
                             </label>
                             <input type="date" name="start_date" required value="{{ old('start_date') }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('start_date') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
                         <div>
@@ -41,7 +41,7 @@
                                 Date de Fin
                             </label>
                             <input type="date" name="end_date" required value="{{ old('end_date') }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('end_date') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             Description (optionnel)
                         </label>
                         <textarea name="description" rows="2"
-                                  class="w-full text-xs border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description') }}</textarea>
+                                  class="w-full text-xs border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description') }}</textarea>
                     </div>
 
                     <div class="p-4 bg-purple-50 rounded-2xl border border-purple-100 flex items-center justify-between">

@@ -42,7 +42,7 @@
                             </label>
                             <input type="text" id="display_name" name="display_name" required value="{{ old('display_name', $role->display_name ?? $role->name) }}"
                                    placeholder="ex: Responsable Cantine"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('display_name') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -52,7 +52,7 @@
                             </label>
                             <input type="text" id="name" name="name" {{ $isProtected ? 'readonly' : '' }} required
                                    value="{{ old('name', $role->name) }}"
-                                   class="w-full text-sm font-bold {{ $isProtected ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white' }} border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold {{ $isProtected ? 'bg-slate-100 text-slate-500 cursor-not-allowed' : 'bg-white' }} border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @if ($isProtected)
                                 <span class="text-[10px] text-slate-400 font-semibold mt-1 block">Le code des rôles système n'est pas modifiable.</span>
                             @endif
@@ -65,7 +65,7 @@
                             </label>
                             <textarea id="description" name="description" rows="2"
                                       placeholder="Précisez les prérogatives associées à ce rôle..."
-                                      class="w-full text-sm font-medium border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">{{ old('description', $role->description) }}</textarea>
+                                      class="w-full text-sm font-medium border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">{{ old('description', $role->description) }}</textarea>
                             @error('description') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>

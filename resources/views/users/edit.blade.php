@@ -23,7 +23,7 @@
                             Nom Complet de l'Utilisateur *
                         </label>
                         <input type="text" id="name" name="name" required value="{{ old('name', $user->name) }}" placeholder="ex: Souleymane Oumarou"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                         @error('name') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -33,7 +33,7 @@
                                 Adresse Email *
                             </label>
                             <input type="email" id="email" name="email" required value="{{ old('email', $user->email) }}" placeholder="utilisateur@roisdusahel.ne"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('email') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -43,7 +43,7 @@
                             </label>
                             <input type="tel" id="phone" name="phone" required value="{{ old('phone', $user->phone) }}" placeholder="12345678"
                                    maxlength="8" pattern="[0-9]{8}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('phone') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                                 <span class="normal-case font-semibold text-slate-400 ml-1">(laisser vide pour ne pas changer)</span>
                             </label>
                             <input type="password" id="password" name="password" placeholder="••••••••"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('password') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -63,7 +63,7 @@
                             <label for="role" class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
                                 Rôle & Habilitations *
                             </label>
-                            <select id="role" name="role" required class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">
+                            <select id="role" name="role" required class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">
                                 <option value="">-- Sélectionner un rôle --</option>
                                 @foreach ($roles as $r)
                                     @php $currentRole = $user->roles->first()?->name; @endphp

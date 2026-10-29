@@ -47,13 +47,13 @@
                                             <textarea id="setting_{{ $setting->key }}" 
                                                       name="settings[{{ $setting->key }}]" 
                                                       rows="3" 
-                                                      class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('settings.'.$setting->key, $setting->value) }}</textarea>
+                                                      class="mt-1 block w-full border-purple-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">{{ old('settings.'.$setting->key, $setting->value) }}</textarea>
                                         @else
                                             <input type="text" 
                                                    id="setting_{{ $setting->key }}" 
                                                    name="settings[{{ $setting->key }}]" 
                                                    value="{{ old('settings.'.$setting->key, $setting->value) }}" 
-                                                   class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
+                                                   class="mt-1 block w-full border-purple-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" />
                                         @endif
                                     </div>
                                 @endforeach

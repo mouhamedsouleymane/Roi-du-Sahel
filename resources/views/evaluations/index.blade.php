@@ -82,7 +82,7 @@
                     <div>
                         <label class="block text-[11px] font-black text-slate-600 uppercase tracking-wider mb-1.5">📅 Période</label>
                         <select name="period_id" onchange="this.form.submit()"
-                                class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-600 focus:ring-purple-600">
+                                class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-600 focus:ring-purple-600">
                             @php
                                 $trimestres = $periods->where('type', 'TRIMESTRE')->sortBy('order');
                                 $semestres = $periods->where('type', 'SEMESTRE')->sortBy('order');
@@ -111,7 +111,7 @@
                     <div>
                         <label class="block text-[11px] font-black text-slate-600 uppercase tracking-wider mb-1.5">🏫 Filtrer par Classe</label>
                         <select name="class_id" onchange="this.form.submit()"
-                                class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-600 focus:ring-purple-600">
+                                class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-600 focus:ring-purple-600">
                             <option value="">-- Toutes les classes --</option>
                             @php $classesByCycle = $classes->groupBy(fn($c) => $c->level->cycle->name ?? 'Autre'); @endphp
                             @foreach ($classesByCycle as $cycleName => $cycleClasses)
@@ -129,7 +129,7 @@
                     <div>
                         <label class="block text-[11px] font-black text-slate-600 uppercase tracking-wider mb-1.5">📚 Matière</label>
                         <select name="subject_id" onchange="this.form.submit()"
-                                class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-600 focus:ring-purple-600">
+                                class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-600 focus:ring-purple-600">
                             <option value="">-- Toutes les matières --</option>
                             @php $filterSubjects = $selectedClassId ? $classSubjects : $subjects; @endphp
                             @foreach ($filterSubjects as $sbj)
@@ -143,7 +143,7 @@
                     <div>
                         <label class="block text-[11px] font-black text-slate-600 uppercase tracking-wider mb-1.5">🔍 Recherche</label>
                         <input type="text" name="search" value="{{ $search }}" placeholder="Titre, matière, prof..."
-                                class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-600 focus:ring-purple-600" />
+                                class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-600 focus:ring-purple-600" />
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -444,7 +444,7 @@
                                     {{-- En mode classe sélectionnable --}}
                                     <div x-show="!isClassLocked">
                                         <select x-model="formClassId" @change="onClassChange()"
-                                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                             <option value="">-- Choisir la classe --</option>
                                             @foreach ($classesByCycle as $cycleName => $cycleClasses)
                                                 <optgroup label="── {{ strtoupper($cycleName) }} ──">
@@ -468,7 +468,7 @@
                                               class="text-[10px] font-black px-2 py-0.5 rounded-full bg-purple-100 text-purple-900 border border-purple-200"></span>
                                     </label>
                                     <select x-model="formPeriodId" name="period_id" required
-                                            class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                            class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                         <template x-for="p in currentPeriods" :key="p.id">
                                             <option :value="p.id" x-text="p.name + (p.type === 'TRIMESTRE' ? ' (Trimestre)' : ' (Semestre)')"></option>
                                         </template>
@@ -501,7 +501,7 @@
                                     {{-- En mode matière sélectionnable --}}
                                     <div x-show="!isSubjectLocked">
                                         <select x-model="formSubjectId" @change="onSubjectChange()"
-                                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 disabled:bg-slate-100 disabled:text-slate-400">
+                                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 disabled:bg-slate-100 disabled:text-slate-400">
                                             <option value="">-- Choisir la matière --</option>
                                             <template x-for="subj in currentSubjects" :key="subj.id">
                                                 <option :value="subj.id" x-text="subj.name"></option>
@@ -540,7 +540,7 @@
                                     {{-- En mode enseignant sélectionnable --}}
                                     <div x-show="!isTeacherLocked || !formTeacherId">
                                         <select x-model="formTeacherId"
-                                                :class="autoAssignedTeacher ? 'border-emerald-400 ring-1 ring-emerald-300' : 'border-slate-300'"
+                                                :class="autoAssignedTeacher ? 'border-emerald-400 ring-1 ring-emerald-300' : 'border-purple-300'"
                                                 class="w-full text-sm font-bold rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 transition disabled:bg-slate-100 disabled:text-slate-400">
                                             <option value="">-- Choisir l'enseignant --</option>
                                             <template x-for="t in currentTeachers" :key="t.id">
@@ -562,7 +562,7 @@
                                     <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Type *</label>
                                     <select name="type" required
                                             x-model="formType" @change="onTypeChange()"
-                                            class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                            class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                         <option value="DEVOIR">Devoir Surveillé (DS)</option>
                                         <option value="COMPOSITION">Composition</option>
                                         <option value="CONTROLE">Contrôle</option>
@@ -581,7 +581,7 @@
                                     </label>
                                     <input type="text" name="title" required placeholder="Ex: DEVOIR - Mathématiques"
                                            x-model="formTitle" @input="titleAutoGenerated = false"
-                                           class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                           class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 </div>
                             </div>
 
@@ -591,14 +591,14 @@
                                     <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Date *</label>
                                     <input type="date" name="evaluation_date" required
                                            value="{{ old('evaluation_date', now()->format('Y-m-d')) }}"
-                                           class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                           class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 </div>
 
                                 {{-- NOTE MAX --}}
                                 <div>
                                     <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Note Max</label>
                                     <input type="number" name="max_score" min="1" max="100" step="0.5" value="20" required
-                                           class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-center" />
+                                           class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-center" />
                                 </div>
                             </div>
 

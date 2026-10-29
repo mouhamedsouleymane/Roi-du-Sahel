@@ -10,6 +10,7 @@ use App\Models\SchoolSetting;
 use App\Models\Subject;
 use App\Models\Teacher;
 use App\Models\TeacherAssignment;
+use App\Models\TimeSlot;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -98,6 +99,19 @@ class ScheduleController extends Controller
         $totalSlotsCount = Schedule::where('academic_year_id', $activeYearId)->count();
         $classSlotsCount = $selectedClass ? $selectedClass->schedules->count() : $totalSlotsCount;
 
+        // Plages horaires dynamiques depuis la base de données
+        $cycleId = $selectedClass?->level?->cycle_id ?? $selectedTeacher?->cycle_id ?? null;
+        $timeSlotsQuery = TimeSlot::active()->ordered();
+        if ($cycleId) {
+            $cycleSlots = (clone $timeSlotsQuery)->forCycle($cycleId)->get();
+            $timeSlots = $cycleSlots->isNotEmpty() ? $cycleSlots : (clone $timeSlotsQuery)->whereNull('cycle_id')->get();
+            if ($timeSlots->isEmpty()) {
+                $timeSlots = TimeSlot::active()->ordered()->get();
+            }
+        } else {
+            $timeSlots = TimeSlot::active()->ordered()->get();
+        }
+
         return view('schedules.index', compact(
             'schedules',
             'classes',
@@ -108,6 +122,7 @@ class ScheduleController extends Controller
             'selectedTeacherId',
             'selectedClass',
             'selectedTeacher',
+            'timeSlots',
             'viewType',
             'activeYear',
             'totalSlotsCount',
@@ -172,7 +187,21 @@ class ScheduleController extends Controller
             'room_number' => 'nullable|string|max:50',
         ]);
 
-        // Vérification intelligente des conflits
+        // Vérification de la règle d'unicité de l'enseignant par matière et par classe
+        $teacherConflict = $this->checkSingleTeacherPerSubjectConflict(
+            $activeYear->id,
+            (int) $validated['class_id'],
+            (int) $validated['subject_id'],
+            (int) $validated['teacher_id']
+        );
+
+        if ($teacherConflict) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['conflict' => $teacherConflict]);
+        }
+
+        // Vérification intelligente des conflits horaires
         $conflict = $this->checkScheduleConflict(
             $activeYear->id,
             (int) $validated['class_id'],
@@ -266,6 +295,21 @@ class ScheduleController extends Controller
             'end_time' => 'required',
             'room_number' => 'nullable|string|max:50',
         ]);
+
+        // Vérification de la règle d'unicité de l'enseignant par matière et par classe
+        $teacherConflict = $this->checkSingleTeacherPerSubjectConflict(
+            $schedule->academic_year_id,
+            (int) $validated['class_id'],
+            (int) $validated['subject_id'],
+            (int) $validated['teacher_id'],
+            $schedule->id
+        );
+
+        if ($teacherConflict) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['conflict' => $teacherConflict]);
+        }
 
         // Vérification des conflits en excluant le créneau actuel
         $conflict = $this->checkScheduleConflict(
@@ -395,7 +439,7 @@ class ScheduleController extends Controller
     public function destroy(Schedule $schedule): RedirectResponse
     {
         $classId = $schedule->class_id;
-        $schedule->delete();
+        Schedule::destroy($schedule->id);
 
         return redirect()->route('schedules.index', ['class_id' => $classId])
             ->with('status', 'Le créneau horaire a été supprimé.');
@@ -472,6 +516,52 @@ class ScheduleController extends Controller
 
                 return "Collision de salle : La salle '{$roomNumber}' est déjà occupée par la classe {$roomConflict->schoolClass?->name} ({$roomConflict->subject?->name}) de {$start} à {$end} le {$dayOfWeek}.";
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Ensure single-teacher-per-subject-per-class rule.
+     * Deux enseignants ne peuvent pas enseigner la même matière pour la même classe.
+     */
+    private function checkSingleTeacherPerSubjectConflict(
+        int $academicYearId,
+        int $classId,
+        int $subjectId,
+        int $teacherId,
+        ?int $excludeScheduleId = null
+    ): ?string {
+        // 1. Vérifier par rapport à l'affectation officielle (TeacherAssignment)
+        $officialAssignment = TeacherAssignment::where('academic_year_id', $academicYearId)
+            ->where('class_id', $classId)
+            ->where('subject_id', $subjectId)
+            ->with(['teacher.user', 'subject', 'schoolClass'])
+            ->first();
+
+        if ($officialAssignment && (int) $officialAssignment->teacher_id !== $teacherId) {
+            $officialTeacher = $officialAssignment->teacher?->user?->name ?? 'un autre enseignant';
+            $subj = $officialAssignment->subject?->name ?? 'cette matière';
+            $cls = $officialAssignment->schoolClass?->name ?? 'cette classe';
+
+            return "Conflit d'attribution : Pour la classe {$cls}, la matière {$subj} est officiellement attribuée à {$officialTeacher}. Deux enseignants ne peuvent pas enseigner la même matière pour la même classe.";
+        }
+
+        // 2. Vérifier par rapport aux créneaux déjà existants dans l'emploi du temps
+        $existingSlot = Schedule::where('academic_year_id', $academicYearId)
+            ->where('class_id', $classId)
+            ->where('subject_id', $subjectId)
+            ->where('teacher_id', '!=', $teacherId)
+            ->when($excludeScheduleId, fn ($q) => $q->where('id', '!=', $excludeScheduleId))
+            ->with(['teacher.user', 'subject', 'schoolClass'])
+            ->first();
+
+        if ($existingSlot) {
+            $otherTeacher = $existingSlot->teacher?->user?->name ?? 'un autre enseignant';
+            $subj = $existingSlot->subject?->name ?? 'cette matière';
+            $cls = $existingSlot->schoolClass?->name ?? 'cette classe';
+
+            return "Incohérence pédagogique : {$otherTeacher} donne déjà les cours de {$subj} pour la classe {$cls}. Deux enseignants différents ne peuvent pas enseigner la même matière pour la même classe.";
         }
 
         return null;

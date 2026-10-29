@@ -35,13 +35,13 @@
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Intitulé <span class="text-red-500">*</span></label>
                             <input type="text" name="label" value="{{ old('label', $expense->label) }}" required
-                                   class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Catégorie <span class="text-red-500">*</span></label>
                             <select name="expense_category_id" required
-                                    class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                    class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                 @foreach ($categories as $cat)
                                     <option value="{{ $cat->id }}" {{ old('expense_category_id', $expense->expense_category_id) == $cat->id ? 'selected' : '' }}>
                                         {{ $cat->name }}
@@ -53,14 +53,14 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Date <span class="text-red-500">*</span></label>
                             <input type="date" name="expense_date" value="{{ old('expense_date', $expense->expense_date->format('Y-m-d')) }}" required
-                                   class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Montant (FCFA) <span class="text-red-500">*</span></label>
                             <div class="relative">
                                 <input type="number" name="amount" value="{{ old('amount', (int) $expense->amount) }}" required min="1"
-                                       class="w-full text-xs font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
+                                       class="w-full text-xs font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
                                 <span class="absolute right-3 top-2.5 text-[10px] font-black text-slate-400 pointer-events-none">FCFA</span>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mode de Paiement <span class="text-red-500">*</span></label>
                             <select name="payment_method" required
-                                    class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                    class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                 @foreach (\App\Models\Expense::paymentMethods() as $key => $lbl)
                                     <option value="{{ $key }}" {{ old('payment_method', $expense->payment_method) === $key ? 'selected' : '' }}>{{ $lbl }}</option>
                                 @endforeach
@@ -78,13 +78,13 @@
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Fournisseur / Bénéficiaire</label>
                             <input type="text" name="supplier" value="{{ old('supplier', $expense->supplier) }}"
-                                   class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
 
                         <div class="sm:col-span-2">
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Notes</label>
                             <textarea name="notes" rows="3"
-                                      class="w-full text-xs rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">{{ old('notes', $expense->notes) }}</textarea>
+                                      class="w-full text-xs rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">{{ old('notes', $expense->notes) }}</textarea>
                         </div>
                     </div>
 

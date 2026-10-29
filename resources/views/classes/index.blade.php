@@ -5,7 +5,7 @@
                 <h2 class="font-black text-2xl text-purple-950 leading-tight">🏫 Classes</h2>
                 <form method="GET" action="{{ route('classes.index') }}" data-no-confirm="true">
                     <select name="academic_year_id" onchange="this.form.submit()"
-                            class="text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                            class="text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                         @foreach ($academicYears as $year)
                             <option value="{{ $year->id }}" {{ $selectedYearId == $year->id ? 'selected' : '' }}>
                                 {{ $year->name }}{{ $year->is_active ? ' ✅' : '' }}
@@ -52,6 +52,14 @@
                                     <div>📚 {{ $cls->level->name }}</div>
                                     <div>📍 {{ $cls->room_number ?? 'Salle non attribuée' }}</div>
                                     <div>👤 {{ $cls->mainTeacher?->name ?? 'Sans prof principal' }}</div>
+                                </div>
+                                <div class="mt-2.5 pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px] font-black">
+                                    <span class="inline-flex items-center gap-1 text-sky-700 bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-100" title="Garçons">
+                                        <span>👦</span> {{ $cls->boys_count ?? 0 }} G
+                                    </span>
+                                    <span class="inline-flex items-center gap-1 text-pink-700 bg-pink-50 px-2 py-0.5 rounded-lg border border-pink-100" title="Filles">
+                                        <span>👧</span> {{ $cls->girls_count ?? 0 }} F
+                                    </span>
                                 </div>
                                 <div class="mt-3 grid grid-cols-2 gap-1.5">
                                     <a href="{{ route('classes.show', $cls) }}"

@@ -118,14 +118,72 @@ class StudentController extends Controller
     {
         $student->load([
             'guardians',
+            'currentEnrollment.schoolClass.level.cycle',
             'enrollments.schoolClass.level.cycle',
             'enrollments.academicYear',
             'attendances' => function ($q) {
-                $q->latest()->limit(10);
+                $q->latest('attendance_date')->limit(10);
+            },
+            'grades' => function ($q) {
+                $q->with([
+                    'evaluation.subject',
+                    'evaluation.period',
+                    'evaluation.teacher',
+                    'evaluation.schoolClass',
+                ]);
+            },
+            'reportCards' => function ($q) {
+                $q->with(['period', 'schoolClass'])->latest();
             },
         ]);
 
-        return view('students.show', compact('student'));
+        $grades = $student->grades
+            ->sortByDesc(fn ($g) => $g->evaluation?->evaluation_date?->timestamp ?? $g->created_at?->timestamp ?? 0)
+            ->values();
+
+        $reportCards = $student->reportCards;
+
+        $isOutOfTen = (bool) ($student->currentEnrollment?->schoolClass?->isPrimaire() || $student->currentEnrollment?->schoolClass?->isMaternelle());
+        $scale = $isOutOfTen ? 10 : 20;
+
+        $presentGrades = $grades->where('is_absent', false)->whereNotNull('score');
+        $totalEvaluations = $grades->count();
+        $absencesCount = $grades->where('is_absent', true)->count();
+
+        $highestGrade = $presentGrades->max('score');
+        $lowestGrade = $presentGrades->min('score');
+
+        $totalWeightedPoints = $presentGrades->sum(function ($g) {
+            $max = (float) ($g->evaluation?->max_score ?? 20);
+            $coef = (float) ($g->evaluation?->coefficient ?? 1);
+            $score = (float) $g->score;
+
+            return ($max > 0 ? ($score / $max) * 20 : 0) * $coef;
+        });
+
+        $totalCoef = $presentGrades->sum(fn ($g) => (float) ($g->evaluation?->coefficient ?? 1));
+        $averageOnTwenty = $totalCoef > 0 ? round($totalWeightedPoints / $totalCoef, 2) : null;
+        $generalAverage = $averageOnTwenty !== null
+            ? ($isOutOfTen ? round($averageOnTwenty / 2, 2) : $averageOnTwenty)
+            : null;
+
+        $periods = $grades->map(fn ($g) => $g->evaluation?->period)->filter()->unique('id')->values();
+        $subjects = $grades->map(fn ($g) => $g->evaluation?->subject)->filter()->unique('id')->values();
+
+        return view('students.show', compact(
+            'student',
+            'grades',
+            'reportCards',
+            'isOutOfTen',
+            'scale',
+            'totalEvaluations',
+            'absencesCount',
+            'highestGrade',
+            'lowestGrade',
+            'generalAverage',
+            'periods',
+            'subjects'
+        ));
     }
 
     /**

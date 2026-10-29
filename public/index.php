@@ -51,4 +51,3 @@ if (method_exists($app, 'usePublicPath')) {
 }
 
 $app->handleRequest(Request::capture());
-

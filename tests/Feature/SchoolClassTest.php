@@ -114,6 +114,30 @@ class SchoolClassTest extends TestCase
         $this->actingAs($user)->get("/classes/{$class->id}")->assertStatus(200)->assertSee('6ème A');
     }
 
+    public function test_class_show_page_displays_gender_breakdown(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        $year = $this->makeYear();
+        $level = $this->makeLevel();
+        $class = SchoolClass::create(['academic_year_id' => $year->id, 'level_id' => $level->id, 'name' => '6ème A', 'capacity' => 40]);
+
+        DB::table('students')->insert([
+            ['id' => 1, 'matricule' => 'MAT001', 'first_name' => 'Ibrahim', 'last_name' => 'Ali', 'birth_date' => '2010-01-01', 'birth_place' => 'Niamey', 'gender' => 'M', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 2, 'matricule' => 'MAT002', 'first_name' => 'Fatima', 'last_name' => 'Sani', 'birth_date' => '2010-02-02', 'birth_place' => 'Niamey', 'gender' => 'F', 'created_at' => now(), 'updated_at' => now()],
+        ]);
+        DB::table('enrollments')->insert([
+            ['student_id' => 1, 'class_id' => $class->id, 'academic_year_id' => $year->id, 'enrollment_number' => 'INS-001', 'type' => 'NOUVEAU', 'status' => 'VALIDE', 'enrollment_date' => now(), 'created_at' => now(), 'updated_at' => now()],
+            ['student_id' => 2, 'class_id' => $class->id, 'academic_year_id' => $year->id, 'enrollment_number' => 'INS-002', 'type' => 'NOUVEAU', 'status' => 'VALIDE', 'enrollment_date' => now(), 'created_at' => now(), 'updated_at' => now()],
+        ]);
+
+        $this->actingAs($user)->get("/classes/{$class->id}")
+            ->assertStatus(200)
+            ->assertSee('Par Genre')
+            ->assertSee('Garçons')
+            ->assertSee('Filles');
+    }
+
     public function test_class_can_be_updated(): void
     {
         /** @var User $user */

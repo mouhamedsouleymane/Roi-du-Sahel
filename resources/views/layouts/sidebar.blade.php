@@ -9,7 +9,8 @@
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3 min-w-0">
                     <div
                         class="w-10 h-10 rounded-full overflow-hidden bg-white shadow-md shadow-amber-500/20 ring-2 ring-amber-400/60 flex-shrink-0">
-                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo CSP Les Rois du Sahel" class="w-full h-full object-cover">
+                        <img src="{{ asset('images/logo_roi.jpeg') }}" alt="Logo CSP Les Rois du Sahel"
+                            class="w-full h-full object-cover">
                     </div>
                     <div x-show="!sidebarCollapsed" x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" class="truncate">
@@ -167,6 +168,12 @@
                         class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('schedules.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
                         <span class="text-lg transition-transform group-hover:scale-110">⏱️</span>
                         <span x-show="!sidebarCollapsed" class="truncate">Emploi du Temps</span>
+                    </a>
+                    <a href="{{ route('time-slots.index') }}" title="Plages Horaires"
+                        :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"
+                        class="flex items-center rounded-xl transition-all duration-300 group {{ request()->routeIs('time-slots.*') ? 'bg-gradient-to-r from-amber-500 via-purple-700 to-purple-800 text-white font-extrabold shadow-lg ring-1 ring-amber-400/50' : 'text-purple-100/80 hover:bg-white/10 hover:text-white' }}">
+                        <span class="text-lg transition-transform group-hover:scale-110">🕒</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">Plages Horaires</span>
                     </a>
                     <a href="{{ route('evaluations.index') }}" title="Évaluations & Notes"
                         :class="sidebarCollapsed ? 'justify-center px-0 py-3' : 'gap-3 px-3 py-2.5'"

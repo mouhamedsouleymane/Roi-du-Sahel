@@ -127,7 +127,7 @@
                             </label>
                             <input type="text" name="code" required
                                    value="{{ old('code', $subject->code) }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 uppercase" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 uppercase" />
                             @error('code') <span class="text-xs text-red-600 mt-1 block font-bold">{{ $message }}</span> @enderror
                         </div>
 
@@ -136,7 +136,7 @@
                                 Catégorie Pédagogique <span class="text-rose-500">*</span>
                             </label>
                             <select name="category" required
-                                    class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                    class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                 @foreach ($categories as $catKey => $catLabel)
                                     <option value="{{ $catKey }}" {{ old('category', $subject->category) === $catKey ? 'selected' : '' }}>
                                         {{ $catLabel }}
@@ -153,7 +153,7 @@
                         </label>
                         <input type="text" name="name" required
                                value="{{ old('name', $subject->name) }}"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         @error('name') <span class="text-xs text-red-600 mt-1 block font-bold">{{ $message }}</span> @enderror
                     </div>
 
@@ -162,7 +162,7 @@
                             Description ou Objectifs du Programme (optionnel)
                         </label>
                         <textarea name="description" rows="2"
-                                  class="w-full text-xs font-semibold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description', $subject->description) }}</textarea>
+                                  class="w-full text-xs font-semibold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">{{ old('description', $subject->description) }}</textarea>
                         @error('description') <span class="text-xs text-red-600 mt-1 block font-bold">{{ $message }}</span> @enderror
                     </div>
 
@@ -342,7 +342,7 @@
                                                            :name="'levels_data[' + level.id + '][coefficient]'"
                                                            min="1" max="20"
                                                            :value="getLevelCoeff(level.id)"
-                                                           class="w-full text-xs font-bold border-slate-300 rounded-lg p-1 focus:ring-purple-500 focus:border-purple-500" />
+                                                           class="w-full text-xs font-bold border-purple-300 rounded-lg p-1 focus:ring-purple-500 focus:border-purple-500" />
                                                 </div>
                                                 <div>
                                                     <label class="block text-[9px] font-black uppercase text-slate-600 mb-0.5">
@@ -352,7 +352,7 @@
                                                            :name="'levels_data[' + level.id + '][weekly_hours]'"
                                                            min="1" max="20"
                                                            :value="getLevelHours(level.id)"
-                                                           class="w-full text-xs font-bold border-slate-300 rounded-lg p-1 focus:ring-purple-500 focus:border-purple-500" />
+                                                           class="w-full text-xs font-bold border-purple-300 rounded-lg p-1 focus:ring-purple-500 focus:border-purple-500" />
                                                 </div>
                                             </div>
                                         </div>

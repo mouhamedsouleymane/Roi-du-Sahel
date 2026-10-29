@@ -152,19 +152,19 @@
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Nom Complet *</label>
                                 <input type="text" name="name" required value="{{ old('name', $teacher->user->name) }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('name') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Numéro Téléphone</label>
                                 <input type="text" name="phone" value="{{ old('phone', $teacher->user->phone) }}" placeholder="ex: 90123456"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('phone') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Email *</label>
                                 <input type="email" name="email" required value="{{ old('email', $teacher->user->email) }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('email') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -297,18 +297,18 @@
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Spécialité *</label>
                                 <input type="text" name="speciality" required value="{{ old('speciality', $teacher->speciality) }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('speciality') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Qualification</label>
                                 <input type="text" name="qualification" value="{{ old('qualification', $teacher->qualification) }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Type de Contrat *</label>
                                 <select name="employment_type" required
-                                        class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                        class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                     <option value="PERMANENT"   {{ old('employment_type', $teacher->employment_type) == 'PERMANENT'   ? 'selected' : '' }}>Permanent / Titulaire</option>
                                     <option value="VACATAIRE"   {{ old('employment_type', $teacher->employment_type) == 'VACATAIRE'   ? 'selected' : '' }}>Vacataire</option>
                                     <option value="CONTRACTUEL" {{ old('employment_type', $teacher->employment_type) == 'CONTRACTUEL' ? 'selected' : '' }}>Contractuel</option>
@@ -318,7 +318,7 @@
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Statut *</label>
                                 <select name="status" required
-                                        class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                        class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                     <option value="ACTIF"   {{ old('status', $teacher->status) == 'ACTIF'   ? 'selected' : '' }}>Actif</option>
                                     <option value="INACTIF" {{ old('status', $teacher->status) == 'INACTIF' ? 'selected' : '' }}>Inactif</option>
                                     <option value="CONGE"   {{ old('status', $teacher->status) == 'CONGE'   ? 'selected' : '' }}>En Congé</option>
@@ -329,7 +329,7 @@
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Date de Recrutement</label>
                                 <input type="date" name="hire_date"
                                        value="{{ old('hire_date', $teacher->hire_date?->format('Y-m-d')) }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             </div>
                         </div>
                     </div>

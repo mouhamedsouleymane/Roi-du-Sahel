@@ -121,14 +121,14 @@
                                                    value="{{ $grade && !$grade->is_absent ? $grade->score : '' }}"
                                                    placeholder="—"
                                                    {{ $grade?->is_absent ? 'disabled' : '' }}
-                                                   class="w-24 text-center text-sm font-black border-slate-300 rounded-xl shadow-xs focus:border-purple-500 focus:ring-purple-500 disabled:bg-slate-100 disabled:text-slate-400 transition" />
+                                                   class="w-24 text-center text-sm font-black border-purple-300 rounded-xl shadow-xs focus:border-purple-500 focus:ring-purple-500 disabled:bg-slate-100 disabled:text-slate-400 transition" />
                                         </td>
                                         <td class="px-6 py-3">
                                             <input type="text"
                                                    name="grades[{{ $i }}][comment]"
                                                    value="{{ $grade?->comment ?? '' }}"
                                                    placeholder="Facultatif"
-                                                   class="w-full text-xs font-semibold border-slate-300 rounded-xl shadow-xs focus:border-purple-500 focus:ring-purple-500" />
+                                                   class="w-full text-xs font-semibold border-purple-300 rounded-xl shadow-xs focus:border-purple-500 focus:ring-purple-500" />
                                         </td>
                                     </tr>
                                 @endforeach

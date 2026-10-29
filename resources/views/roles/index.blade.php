@@ -82,7 +82,7 @@
                         </label>
                         <input type="text" id="search" name="search" value="{{ $search }}"
                             placeholder="Rechercher par nom de rôle ou description..."
-                            class="w-full text-sm font-bold rounded-xl border-slate-300 shadow-xs focus:border-purple-500 focus:ring-purple-500" />
+                            class="w-full text-sm font-bold rounded-xl border-purple-300 shadow-xs focus:border-purple-500 focus:ring-purple-500" />
                     </div>
 
                     <div class="flex items-center gap-2">

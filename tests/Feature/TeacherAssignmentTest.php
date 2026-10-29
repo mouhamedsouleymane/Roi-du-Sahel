@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\AcademicYear;
+use App\Models\ClassSubjectCoefficient;
 use App\Models\Cycle;
 use App\Models\Level;
 use App\Models\SchoolClass;
@@ -75,12 +76,57 @@ class TeacherAssignmentTest extends TestCase
     public function test_assignments_create_page_can_be_rendered(): void
     {
         $user = User::factory()->create();
+        $year = $this->createActiveYear();
+        [$cycle, $level, $class] = $this->createCycleWithClass($year, 'PRI', 'Primaire');
+
+        $response = $this->actingAs($user)->get("/assignments/create?class_id={$class->id}");
+
+        $response->assertStatus(200);
+        $response->assertSee('Nouvelle Affectation');
+        $response->assertSee($class->name);
+    }
+
+    public function test_assignments_create_page_requires_class_id_from_gerer_flow(): void
+    {
+        $user = User::factory()->create();
         $this->createActiveYear();
 
         $response = $this->actingAs($user)->get('/assignments/create');
 
+        $response->assertRedirect('/assignments');
+        $response->assertSessionHas('warning');
+    }
+
+    public function test_create_view_only_shows_subjects_attached_to_class_level(): void
+    {
+        $user = User::factory()->create();
+        $year = $this->createActiveYear();
+        [$cycle, $level, $class] = $this->createCycleWithClass($year, 'PRI', 'Primaire');
+
+        $level2 = Level::create(['cycle_id' => $cycle->id, 'code' => 'L2', 'name' => 'Niveau 2']);
+
+        $subjectInLevel = $this->createSubject('LECTURE_CP');
+        $subjectOtherLevel = $this->createSubject('HISTOIRE_CM2');
+
+        ClassSubjectCoefficient::create([
+            'level_id' => $level->id,
+            'subject_id' => $subjectInLevel->id,
+            'coefficient' => 3,
+            'weekly_hours' => 5,
+        ]);
+
+        ClassSubjectCoefficient::create([
+            'level_id' => $level2->id,
+            'subject_id' => $subjectOtherLevel->id,
+            'coefficient' => 2,
+            'weekly_hours' => 3,
+        ]);
+
+        $response = $this->actingAs($user)->get("/assignments/create?class_id={$class->id}");
+
         $response->assertStatus(200);
-        $response->assertSee('Nouvelle Affectation');
+        $response->assertSee($subjectInLevel->name);
+        $response->assertDontSee($subjectOtherLevel->name);
     }
 
     // ---------------------------------------------------------------------------
@@ -408,6 +454,137 @@ class TeacherAssignmentTest extends TestCase
             'teacher_id' => $teacher2->id,
             'class_id' => $class->id,
             'subject_id' => $subject2->id,
+        ]);
+    }
+
+    public function test_store_by_class_matrix_rejects_subject_not_attached_to_class_level(): void
+    {
+        $user = User::factory()->create();
+        $year = $this->createActiveYear();
+        [$cycle, $level, $class] = $this->createCycleWithClass($year, 'PRI', 'Primaire');
+        $level2 = Level::create(['cycle_id' => $cycle->id, 'code' => 'L2', 'name' => 'Niveau 2']);
+
+        $validSubject = $this->createSubject('MATH_PRI');
+        $invalidSubject = $this->createSubject('PHILO_TERM');
+        $teacher = $this->createTeacher($cycle->id, true, 'PRI-SUBJ');
+
+        ClassSubjectCoefficient::create([
+            'level_id' => $level->id,
+            'subject_id' => $validSubject->id,
+            'coefficient' => 2,
+            'weekly_hours' => 3,
+        ]);
+
+        ClassSubjectCoefficient::create([
+            'level_id' => $level2->id,
+            'subject_id' => $invalidSubject->id,
+            'coefficient' => 4,
+            'weekly_hours' => 4,
+        ]);
+
+        $response = $this->actingAs($user)->post('/assignments', [
+            'class_id' => $class->id,
+            'class_assignments' => [
+                ['subject_id' => $invalidSubject->id, 'teacher_id' => $teacher->id],
+            ],
+        ]);
+
+        $response->assertSessionHasErrors('rows');
+        $this->assertDatabaseMissing('teacher_assignments', [
+            'class_id' => $class->id,
+            'subject_id' => $invalidSubject->id,
+        ]);
+    }
+
+    public function test_store_by_class_matrix_enforces_single_class_rule_for_maternelle_primaire_teacher(): void
+    {
+        $user = User::factory()->create();
+        $year = $this->createActiveYear();
+        [$cycle, $level, $class1] = $this->createCycleWithClass($year, 'PRI', 'Primaire');
+        $class2 = SchoolClass::create(['academic_year_id' => $year->id, 'level_id' => $level->id, 'name' => 'Classe 2']);
+
+        $subject1 = $this->createSubject('FRAN_1');
+        $subject2 = $this->createSubject('MATH_1');
+        $teacher = $this->createTeacher($cycle->id, true, 'PRI-SINGLE');
+
+        ClassSubjectCoefficient::create([
+            'level_id' => $level->id,
+            'subject_id' => $subject1->id,
+            'coefficient' => 2,
+            'weekly_hours' => 3,
+        ]);
+        ClassSubjectCoefficient::create([
+            'level_id' => $level->id,
+            'subject_id' => $subject2->id,
+            'coefficient' => 2,
+            'weekly_hours' => 3,
+        ]);
+
+        // Assign teacher to class1
+        $this->actingAs($user)->post('/assignments', [
+            'class_id' => $class1->id,
+            'class_assignments' => [
+                ['subject_id' => $subject1->id, 'teacher_id' => $teacher->id],
+            ],
+        ])->assertRedirect('/assignments');
+
+        // Attempt to assign the SAME teacher to class2
+        $response = $this->actingAs($user)->post('/assignments', [
+            'class_id' => $class2->id,
+            'class_assignments' => [
+                ['subject_id' => $subject2->id, 'teacher_id' => $teacher->id],
+            ],
+        ]);
+
+        $response->assertSessionHasErrors('rows');
+        $this->assertDatabaseMissing('teacher_assignments', [
+            'class_id' => $class2->id,
+            'teacher_id' => $teacher->id,
+        ]);
+    }
+
+    public function test_two_teachers_cannot_teach_the_same_subject_for_the_same_class(): void
+    {
+        $user = User::factory()->create();
+        $year = $this->createActiveYear();
+        [$cycle, $level, $class] = $this->createCycleWithClass($year, 'COL', 'Collège');
+
+        $subject = $this->createSubject('MATH_UNIQUE');
+        $teacher1 = $this->createTeacher($cycle->id, false, 'COL-001');
+        $teacher2 = $this->createTeacher($cycle->id, false, 'COL-002');
+
+        ClassSubjectCoefficient::create([
+            'level_id' => $level->id,
+            'subject_id' => $subject->id,
+            'coefficient' => 4,
+            'weekly_hours' => 4,
+        ]);
+
+        // Teacher 1 is already assigned to this class and subject
+        TeacherAssignment::create([
+            'academic_year_id' => $year->id,
+            'class_id' => $class->id,
+            'subject_id' => $subject->id,
+            'teacher_id' => $teacher1->id,
+        ]);
+
+        // Teacher 2 attempts to be assigned to the same class and subject via By-Teacher store
+        $response = $this->actingAs($user)->post('/assignments', [
+            'teacher_id' => $teacher2->id,
+            'rows' => [
+                ['class_id' => $class->id, 'subject_id' => $subject->id],
+            ],
+        ]);
+
+        $response->assertSessionHasErrors('rows');
+
+        // Verify the database still has teacher1 and did NOT duplicate or assign teacher2
+        $this->assertEquals(1, TeacherAssignment::where('academic_year_id', $year->id)->where('class_id', $class->id)->where('subject_id', $subject->id)->count());
+        $this->assertDatabaseHas('teacher_assignments', [
+            'academic_year_id' => $year->id,
+            'class_id' => $class->id,
+            'subject_id' => $subject->id,
+            'teacher_id' => $teacher1->id,
         ]);
     }
 }

@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             CoefficientSeeder::class,
             TeacherSeeder::class,
             StudentAndGuardianSeeder::class,
+            ClassStudentsSeeder::class,
             TeacherAssignmentSeeder::class,
             ScheduleSeeder::class,
             PeriodSeeder::class,

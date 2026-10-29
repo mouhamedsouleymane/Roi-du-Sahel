@@ -193,11 +193,11 @@
                                 </label>
                                 <input type="number" name="amount" min="1" max="{{ $remaining }}" required
                                        value="{{ $remaining }}"
-                                       class="mt-1 block w-full border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm font-bold" />
+                                       class="mt-1 block w-full border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm font-bold" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700">Mode de Paiement</label>
-                                <select name="payment_method" required class="mt-1 block w-full border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm font-bold">
+                                <select name="payment_method" required class="mt-1 block w-full border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm font-bold">
                                     <option value="ESPECES">Espèces</option>
                                     <option value="MOBILE_MONEY">Mobile Money</option>
                                     <option value="VIREMENT">Virement Bancaire</option>
@@ -207,18 +207,18 @@
                             <div>
                                 <label class="block text-xs font-bold text-slate-700">Date du Versement</label>
                                 <input type="date" name="payment_date" required value="{{ date('Y-m-d') }}"
-                                       class="mt-1 block w-full border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm font-bold" />
+                                       class="mt-1 block w-full border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm font-bold" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700">Référence (Optionnel)</label>
                                 <input type="text" name="reference" placeholder="N° chèque, transaction MoMo…"
-                                       class="mt-1 block w-full border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm" />
+                                       class="mt-1 block w-full border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm" />
                             </div>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700">Caissier / Enregistré par</label>
                             <input type="text" name="recorded_by" placeholder="Nom du caissier"
-                                   class="mt-1 block w-full border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm" />
+                                   class="mt-1 block w-full border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 text-sm" />
                         </div>
                         <x-primary-button class="bg-purple-900 hover:bg-purple-800 shadow-md">
                             💾 Enregistrer le Paiement

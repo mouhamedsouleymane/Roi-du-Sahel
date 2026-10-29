@@ -17,7 +17,6 @@ class Attendance extends Model
         'teacher_id',
         'academic_year_id',
         'attendance_date',
-        'session',
         'status',
         'reason',
         'recorded_by',

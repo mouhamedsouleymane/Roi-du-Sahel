@@ -5,38 +5,50 @@
     display: none !important;
   }
 
-  /* === Augmentation globale de la hauteur des champs de formulaire === */
+  /* === Champs de formulaire : bordure violette par défaut + hauteur confortable === */
   input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="hidden"]),
   select,
   textarea {
-    padding-top: 0.625rem;    /* py-2.5 */
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-purple-400);
+    padding-top: 0.625rem;
+    /* py-2.5 */
     padding-bottom: 0.625rem;
-    padding-left: 0.875rem;   /* px-3.5 */
+    padding-left: 0.875rem;
+    /* px-3.5 */
     padding-right: 0.875rem;
-    min-height: 2.75rem;      /* 44px — hauteur confortable */
-    font-size: 0.9375rem;     /* ~15px */
+    min-height: 2.75rem;
+    /* 44px — hauteur confortable */
+    font-size: 0.9375rem;
+    /* ~15px */
     line-height: 1.5;
-    border-radius: 0.5rem;    /* rounded-lg */
+    border-radius: 0.5rem;
+    /* rounded-lg */
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   textarea {
-    min-height: 6rem;         /* hauteur minimale pour les zones de texte */
+    min-height: 6rem;
+    /* hauteur minimale pour les zones de texte */
     resize: vertical;
   }
 
   select {
-    padding-right: 2.5rem;    /* espace pour la flèche native */
+    padding-right: 2.5rem;
+    /* espace pour la flèche native */
   }
 }
 
 @layer utilities {
+
   /* Keyframe Animations */
   @keyframes fadeInUp {
     from {
       opacity: 0;
       transform: translateY(12px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -44,18 +56,24 @@
   }
 
   @keyframes floatSlow {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translateY(0px);
     }
+
     50% {
       transform: translateY(-6px);
     }
   }
 
   @keyframes pulseGlow {
-    0%, 100% {
+
+    0%,
+    100% {
       box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
     }
+
     50% {
       box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
     }
@@ -65,6 +83,7 @@
     0% {
       background-position: -200% 0;
     }
+
     100% {
       background-position: 200% 0;
     }
@@ -132,12 +151,14 @@
   }
 
   /* === Custom Sidebar Scrollbar === */
-  aside nav,
-  aside,
-  .scrollbar-sidebar,
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(168, 85, 247, 0.4) transparent;
+  @supports (scrollbar-width: thin) {
+    aside nav,
+    aside,
+    .scrollbar-sidebar,
+    .scrollbar-thin {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(168, 85, 247, 0.4) transparent;
+    }
   }
 
   aside nav::-webkit-scrollbar,

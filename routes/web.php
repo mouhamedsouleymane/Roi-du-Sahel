@@ -26,6 +26,7 @@ use App\Http\Controllers\StudentPortalController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherAssignmentController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\TimeSlotController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WhatsAppBroadcastController;
 use App\Http\Controllers\WhatsAppWebhookController;
@@ -219,6 +220,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/schedules/{schedule}/duplicate', [ScheduleController::class, 'duplicate'])->name('schedules.duplicate');
     Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy'])->name('schedules.destroy');
 
+    // Plages Horaires (CRUD Complet & Dynamique)
+    Route::get('/time-slots', [TimeSlotController::class, 'index'])->name('time-slots.index');
+    Route::get('/time-slots/create', [TimeSlotController::class, 'create'])->name('time-slots.create');
+    Route::post('/time-slots', [TimeSlotController::class, 'store'])->name('time-slots.store');
+    Route::get('/time-slots/{timeSlot}/edit', [TimeSlotController::class, 'edit'])->name('time-slots.edit');
+    Route::match(['PUT', 'PATCH'], '/time-slots/{timeSlot}', [TimeSlotController::class, 'update'])->name('time-slots.update');
+    Route::post('/time-slots/{timeSlot}/toggle-status', [TimeSlotController::class, 'toggleStatus'])->name('time-slots.toggle-status');
+    Route::delete('/time-slots/{timeSlot}', [TimeSlotController::class, 'destroy'])->name('time-slots.destroy');
+
     // Évaluations & Saisie de Notes
     Route::get('/evaluations', [EvaluationController::class, 'index'])->name('evaluations.index');
     Route::post('/evaluations', [EvaluationController::class, 'store'])->name('evaluations.store');
@@ -275,10 +285,16 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/expense-categories/{expenseCategory}/toggle', [ExpenseController::class, 'toggleCategory'])->name('expense-categories.toggle');
     Route::delete('/expense-categories/{expenseCategory}', [ExpenseController::class, 'destroyCategory'])->name('expense-categories.destroy');
 
-    // Gestion des Absences & Présences
+    // Gestion des Absences & Présences (CRUD feuilles d'appel + bilan)
     Route::get('/attendances/report', [AttendanceController::class, 'report'])->name('attendances.report');
     Route::get('/attendances', [AttendanceController::class, 'index'])->name('attendances.index');
+    Route::get('/attendances/create', [AttendanceController::class, 'create'])->name('attendances.create');
     Route::post('/attendances', [AttendanceController::class, 'store'])->name('attendances.store');
+    Route::get('/attendances/class', [AttendanceController::class, 'show'])->name('attendances.show');
+    Route::get('/attendances/sheet', [AttendanceController::class, 'sheet'])->name('attendances.sheet');
+    Route::get('/attendances/edit', [AttendanceController::class, 'edit'])->name('attendances.edit');
+    Route::match(['PUT', 'PATCH'], '/attendances', [AttendanceController::class, 'update'])->name('attendances.update');
+    Route::delete('/attendances', [AttendanceController::class, 'destroy'])->name('attendances.destroy');
 
     // Communication Institutionnelle WhatsApp
     Route::post('/whatsapp/announcements/send', [WhatsAppBroadcastController::class, 'sendAnnouncement'])

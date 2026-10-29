@@ -175,7 +175,7 @@
                                     Type de Frais <span class="text-red-500">*</span>
                                 </label>
                                 <select name="fee_type_id" required
-                                        class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                        class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                     <option value="">-- Choisir le type de frais --</option>
                                     @foreach ($feeTypes as $ft)
                                         <option value="{{ $ft->id }}">
@@ -190,7 +190,7 @@
                                     Cycle (Optionnel)
                                 </label>
                                 <select name="cycle_id" x-model="selectedFormCycleId"
-                                        class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                        class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                     <option value="">— Tous les cycles (Tarif global) —</option>
                                     @foreach ($cycles as $cycle)
                                         <option value="{{ $cycle->id }}">{{ $cycle->name }}</option>
@@ -204,7 +204,7 @@
                                     Niveau Spécifique (Optionnel)
                                 </label>
                                 <select name="level_id"
-                                        class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                        class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                     <option value="">— Tous les niveaux du cycle —</option>
                                     <template x-for="lvl in allLevels.filter(l => !selectedFormCycleId || String(l.cycle_id) === String(selectedFormCycleId))" :key="lvl.id">
                                         <option :value="lvl.id" x-text="(lvl.cycle ? lvl.cycle.name + ' — ' : '') + lvl.name"></option>
@@ -219,7 +219,7 @@
                                 </label>
                                 <div class="relative">
                                     <input type="number" name="amount" min="1" step="1" required placeholder="Ex: 50000"
-                                           class="w-full text-xs font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
+                                           class="w-full text-xs font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
                                     <span class="absolute right-3 top-2.5 text-[10px] font-black text-slate-400 pointer-events-none">FCFA</span>
                                 </div>
                             </div>
@@ -245,7 +245,7 @@
                                 {{-- Filters --}}
                                 <form method="GET" action="{{ route('invoices.settings') }}" class="flex flex-wrap items-center gap-2">
                                     <select name="fee_type_id" onchange="this.form.submit()"
-                                            class="text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
+                                            class="text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
                                         <option value="">Tous les frais</option>
                                         @foreach ($feeTypes as $ft)
                                             <option value="{{ $ft->id }}" {{ request('fee_type_id') == $ft->id ? 'selected' : '' }}>
@@ -254,7 +254,7 @@
                                         @endforeach
                                     </select>
                                     <select name="cycle_id" onchange="this.form.submit()"
-                                            class="text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
+                                            class="text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
                                         <option value="">Tous les cycles</option>
                                         @foreach ($cycles as $c)
                                             <option value="{{ $c->id }}" {{ request('cycle_id') == $c->id ? 'selected' : '' }}>
@@ -428,7 +428,7 @@
                                     Code Unique <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" name="code" required placeholder="Ex: CANTINE, TENUE..."
-                                       class="w-full text-xs font-mono uppercase font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                       class="w-full text-xs font-mono uppercase font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                                 <p class="text-[10px] text-slate-400 mt-1">Identifiant en majuscules (ex: INSCRIPT, SCOLARITE_T1).</p>
                             </div>
 
@@ -437,7 +437,7 @@
                                     Intitulé Public <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" name="name" required placeholder="Ex: Frais de Restauration Scolaire"
-                                       class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                       class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                             </div>
 
                             <div>
@@ -445,18 +445,18 @@
                                     Description (Optionnelle)
                                 </label>
                                 <textarea name="description" rows="2" placeholder="Ex: Payable au début de chaque trimestre scolaire..."
-                                          class="w-full text-xs rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
+                                          class="w-full text-xs rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
                             </div>
 
                             <div class="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200/60">
                                 <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
                                     <input type="checkbox" name="is_recurring" value="1"
-                                           class="rounded border-slate-300 text-purple-900 focus:ring-purple-900 shadow-xs" />
+                                           class="rounded border-purple-300 text-purple-900 focus:ring-purple-900 shadow-xs" />
                                     <span>Frais Récurrent (ex: par trimestre/mois)</span>
                                 </label>
                                 <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
                                     <input type="checkbox" name="is_active" value="1" checked
-                                           class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-600 shadow-xs" />
+                                           class="rounded border-purple-300 text-emerald-600 focus:ring-emerald-600 shadow-xs" />
                                     <span>Type de frais actif pour la facturation</span>
                                 </label>
                             </div>
@@ -593,7 +593,7 @@
                                 Choisir le Type de Frais à Facturer <span class="text-red-500">*</span>
                             </label>
                             <select name="fee_type_id" required
-                                    class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                    class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                                 <option value="">-- Sélectionner un type de frais --</option>
                                 @foreach ($feeTypes->where('is_active', true) as $ft)
                                     <option value="{{ $ft->id }}">
@@ -639,30 +639,30 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Code</label>
                         <input type="text" name="code" x-model="selectedType.code" required
-                               class="w-full text-xs font-mono uppercase font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                               class="w-full text-xs font-mono uppercase font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Intitulé</label>
                         <input type="text" name="name" x-model="selectedType.name" required
-                               class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                               class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                     </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Description</label>
                         <textarea name="description" x-model="selectedType.description" rows="2"
-                                  class="w-full text-xs rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
+                                  class="w-full text-xs rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
                     </div>
 
                     <div class="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
                         <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
                             <input type="checkbox" name="is_recurring" value="1" x-model="selectedType.is_recurring"
-                                   class="rounded border-slate-300 text-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="rounded border-purple-300 text-purple-900 focus:ring-purple-900 shadow-xs" />
                             <span>Frais Récurrent</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
                             <input type="checkbox" name="is_active" value="1" x-model="selectedType.is_active"
-                                   class="rounded border-slate-300 text-emerald-600 focus:ring-emerald-600 shadow-xs" />
+                                   class="rounded border-purple-300 text-emerald-600 focus:ring-emerald-600 shadow-xs" />
                             <span>Type de frais actif</span>
                         </label>
                     </div>
@@ -704,7 +704,7 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Type de Frais</label>
                         <select name="fee_type_id" x-model="selectedStructure.fee_type_id" required
-                                class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                             @foreach ($feeTypes as $ft)
                                 <option value="{{ $ft->id }}">{{ $ft->name }} ({{ $ft->code }})</option>
                             @endforeach
@@ -714,7 +714,7 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Cycle</label>
                         <select name="cycle_id" x-model="editFormCycleId"
-                                class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                             <option value="">— Tous les cycles (Global) —</option>
                             @foreach ($cycles as $c)
                                 <option value="{{ $c->id }}">{{ $c->name }}</option>
@@ -725,7 +725,7 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Niveau Spécifique</label>
                         <select name="level_id" x-model="selectedStructure.level_id"
-                                class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
+                                class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs">
                             <option value="">— Tous les niveaux du cycle —</option>
                             <template x-for="lvl in allLevels.filter(l => !editFormCycleId || String(l.cycle_id) === String(editFormCycleId))" :key="lvl.id">
                                 <option :value="lvl.id" x-text="(lvl.cycle ? lvl.cycle.name + ' — ' : '') + lvl.name" :selected="String(lvl.id) === String(selectedStructure.level_id)"></option>
@@ -737,7 +737,7 @@
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Montant (FCFA)</label>
                         <div class="relative">
                             <input type="number" name="amount" x-model="selectedStructure.amount" min="1" step="1" required
-                                   class="w-full text-xs font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
+                                   class="w-full text-xs font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs pr-14" />
                             <span class="absolute right-3 top-2.5 text-[10px] font-black text-slate-400 pointer-events-none">FCFA</span>
                         </div>
                     </div>

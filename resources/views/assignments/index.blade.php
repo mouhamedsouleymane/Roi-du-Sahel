@@ -16,9 +16,9 @@
                     class="px-4 py-2 text-xs font-black bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl transition shadow-sm flex items-center gap-1.5">
                     <span>👨‍🏫</span> Corps Professoral
                 </a>
-                <a href="{{ route('assignments.create') }}"
+                <a href="#classes-coverage"
                     class="px-4 py-2 text-xs font-black bg-purple-900 hover:bg-purple-800 text-amber-300 rounded-xl transition shadow-sm flex items-center gap-1.5">
-                    <span>➕</span> Nouvelle Affectation
+                    <span>⚡</span> Gérer par Classe
                 </a>
             </div>
         </div>
@@ -53,24 +53,31 @@
 
             {{-- 5 Cartes KPIs Globales --}}
             <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-md hover:-translate-y-1 transition duration-300">
-                    <div class="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-1">Total Affectations</div>
+                <div
+                    class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-md hover:-translate-y-1 transition duration-300">
+                    <div class="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-1">Total Affectations
+                    </div>
                     <div class="text-2xl sm:text-3xl font-black text-purple-950">{{ $totalAssignments }}</div>
                     <div class="text-[11px] text-slate-500 font-bold mt-1">Attributions actives</div>
                 </div>
-                <div class="bg-white p-5 rounded-3xl border border-emerald-200/80 shadow-md hover:-translate-y-1 transition duration-300">
-                    <div class="text-[11px] font-black uppercase tracking-wider text-emerald-600 mb-1">Enseignants Assignés</div>
+                <div
+                    class="bg-white p-5 rounded-3xl border border-emerald-200/80 shadow-md hover:-translate-y-1 transition duration-300">
+                    <div class="text-[11px] font-black uppercase tracking-wider text-emerald-600 mb-1">Enseignants
+                        Assignés</div>
                     <div class="text-2xl sm:text-3xl font-black text-emerald-700">{{ $assignedTeachersCount }}</div>
                     <div class="text-[11px] text-slate-500 font-bold mt-1">En poste cette année</div>
                 </div>
-                <div class="bg-white p-5 rounded-3xl border border-indigo-200/80 shadow-md hover:-translate-y-1 transition duration-300">
-                    <div class="text-[11px] font-black uppercase tracking-wider text-indigo-600 mb-1">Classes Couvertes</div>
+                <div
+                    class="bg-white p-5 rounded-3xl border border-indigo-200/80 shadow-md hover:-translate-y-1 transition duration-300">
+                    <div class="text-[11px] font-black uppercase tracking-wider text-indigo-600 mb-1">Classes Couvertes
+                    </div>
                     <div class="text-2xl sm:text-3xl font-black text-indigo-700">{{ $coveredClassesCount }}
                         <span class="text-base text-slate-400 font-bold">/ {{ $totalClassesCount }}</span>
                     </div>
                     <div class="text-[11px] text-slate-500 font-bold mt-1">Classes avec cours</div>
                 </div>
-                <div class="bg-white p-5 rounded-3xl border border-amber-200/80 shadow-md hover:-translate-y-1 transition duration-300">
+                <div
+                    class="bg-white p-5 rounded-3xl border border-amber-200/80 shadow-md hover:-translate-y-1 transition duration-300">
                     <div class="text-[11px] font-black uppercase tracking-wider text-amber-600 mb-1">Cycles Actifs</div>
                     <div class="text-2xl sm:text-3xl font-black text-amber-900">{{ $coveredCyclesCount }}</div>
                     <div class="text-[11px] text-slate-500 font-bold mt-1">Niveaux représentés</div>
@@ -78,9 +85,14 @@
                 @php
                     $totalMissing = collect($classCoverage)->sum('missing');
                 @endphp
-                <div class="bg-white p-5 rounded-3xl border {{ $totalMissing > 0 ? 'border-rose-200/80' : 'border-emerald-200/80' }} shadow-md hover:-translate-y-1 transition duration-300">
-                    <div class="text-[11px] font-black uppercase tracking-wider {{ $totalMissing > 0 ? 'text-rose-600' : 'text-emerald-600' }} mb-1">Matières Manquantes</div>
-                    <div class="text-2xl sm:text-3xl font-black {{ $totalMissing > 0 ? 'text-rose-700' : 'text-emerald-700' }}">{{ $totalMissing }}</div>
+                <div
+                    class="bg-white p-5 rounded-3xl border {{ $totalMissing > 0 ? 'border-rose-200/80' : 'border-emerald-200/80' }} shadow-md hover:-translate-y-1 transition duration-300">
+                    <div
+                        class="text-[11px] font-black uppercase tracking-wider {{ $totalMissing > 0 ? 'text-rose-600' : 'text-emerald-600' }} mb-1">
+                        Matières Manquantes</div>
+                    <div
+                        class="text-2xl sm:text-3xl font-black {{ $totalMissing > 0 ? 'text-rose-700' : 'text-emerald-700' }}">
+                        {{ $totalMissing }}</div>
                     <div class="text-[11px] text-slate-500 font-bold mt-1">
                         {{ $totalMissing === 0 ? '✅ Couverture complète' : 'À affecter' }}
                     </div>
@@ -88,7 +100,8 @@
             </div>
 
             {{-- Bandeau règle pédagogique --}}
-            <div class="p-4 bg-purple-50 border border-purple-200/80 rounded-2xl flex items-start gap-3 text-xs text-purple-950 shadow-xs">
+            <div
+                class="p-4 bg-purple-50 border border-purple-200/80 rounded-2xl flex items-start gap-3 text-xs text-purple-950 shadow-xs">
                 <span class="text-lg">💡</span>
                 <div>
                     <strong class="font-extrabold block text-sm text-purple-950">Règle pédagogique par cycle :</strong>
@@ -182,14 +195,20 @@
             {{-- ══════════════════════════════════════════ --}}
             {{-- Couverture des Classes par Cycle           --}}
             {{-- ══════════════════════════════════════════ --}}
-            @if ($classes->count() > 0 && ! request()->hasAny(['search', 'cycle_id', 'class_id', 'teacher_id', 'subject_id']))
-                <div class="bg-white shadow-xl rounded-3xl border border-slate-200/80 overflow-hidden">
-                    <div class="px-8 py-5 bg-gradient-to-r from-slate-800 to-slate-900 flex items-center justify-between gap-3">
+            @if ($classes->count() > 0 && !request()->hasAny(['search', 'cycle_id', 'class_id', 'teacher_id', 'subject_id']))
+                <div id="classes-coverage"
+                    class="bg-white shadow-xl rounded-3xl border border-slate-200/80 overflow-hidden">
+                    <div
+                        class="px-8 py-5 bg-gradient-to-r from-slate-800 to-slate-900 flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
-                            <span class="w-10 h-10 bg-amber-400 text-purple-950 rounded-2xl flex items-center justify-center font-black text-lg">📊</span>
+                            <span
+                                class="w-10 h-10 bg-amber-400 text-purple-950 rounded-2xl flex items-center justify-center font-black text-lg">📊</span>
                             <div>
-                                <div class="text-sm font-black text-white">État de Couverture des Classes</div>
-                                <div class="text-xs font-bold text-slate-400 mt-0.5">Matières affectées vs matières configurées par classe</div>
+                                <div class="text-sm font-black text-white">État de Couverture des Classes & Affectations
+                                    Rapides</div>
+                                <div class="text-xs font-bold text-slate-400 mt-0.5">Cliquez sur <span
+                                        class="text-emerald-400 font-extrabold">⚡ Gérer</span> sur une classe pour lui
+                                    affecter ses cours et ses enseignants</div>
                             </div>
                         </div>
                         <div class="text-xs font-black text-slate-400">
@@ -198,12 +217,15 @@
                     </div>
                     <div class="p-6">
                         @php
-                            $coverageByGroupCycle = collect($classCoverage)->groupBy(fn ($item) => $item['class']->level->cycle->name ?? 'Autre');
+                            $coverageByGroupCycle = collect($classCoverage)->groupBy(
+                                fn($item) => $item['class']->level->cycle->name ?? 'Autre',
+                            );
                         @endphp
                         <div class="space-y-6">
                             @foreach ($coverageByGroupCycle as $cycleName => $items)
                                 <div>
-                                    <div class="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-3 flex items-center gap-2">
+                                    <div
+                                        class="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-3 flex items-center gap-2">
                                         <span class="w-1 h-4 bg-purple-600 rounded-full inline-block"></span>
                                         {{ $cycleName }}
                                     </div>
@@ -211,29 +233,49 @@
                                         @foreach ($items as $coverage)
                                             @php
                                                 $pct = $coverage['percent'];
-                                                $barColor = $pct >= 100 ? 'bg-emerald-500' : ($pct >= 50 ? 'bg-amber-500' : 'bg-rose-500');
-                                                $textColor = $pct >= 100 ? 'text-emerald-700' : ($pct >= 50 ? 'text-amber-700' : 'text-rose-700');
-                                                $bgColor = $pct >= 100 ? 'bg-emerald-50 border-emerald-200' : ($pct >= 50 ? 'bg-amber-50 border-amber-200' : 'bg-rose-50 border-rose-200');
+                                                $barColor =
+                                                    $pct >= 100
+                                                        ? 'bg-emerald-500'
+                                                        : ($pct >= 50
+                                                            ? 'bg-amber-500'
+                                                            : 'bg-rose-500');
+                                                $textColor =
+                                                    $pct >= 100
+                                                        ? 'text-emerald-700'
+                                                        : ($pct >= 50
+                                                            ? 'text-amber-700'
+                                                            : 'text-rose-700');
+                                                $bgColor =
+                                                    $pct >= 100
+                                                        ? 'bg-emerald-50 border-emerald-200'
+                                                        : ($pct >= 50
+                                                            ? 'bg-amber-50 border-amber-200'
+                                                            : 'bg-rose-50 border-rose-200');
                                             @endphp
                                             <div class="p-4 rounded-2xl border {{ $bgColor }} space-y-2.5">
                                                 <div class="flex items-center justify-between">
                                                     <div>
-                                                        <div class="text-sm font-black text-slate-900">{{ $coverage['class']->name }}</div>
-                                                        <div class="text-[10px] text-slate-500 font-bold">{{ $coverage['class']->level->name }}</div>
+                                                        <div class="text-sm font-black text-slate-900">
+                                                            {{ $coverage['class']->name }}</div>
+                                                        <div class="text-[10px] text-slate-500 font-bold">
+                                                            {{ $coverage['class']->level->name }}</div>
                                                     </div>
-                                                    <span class="text-sm font-black {{ $textColor }}">{{ $pct }}%</span>
+                                                    <span
+                                                        class="text-sm font-black {{ $textColor }}">{{ $pct }}%</span>
                                                 </div>
                                                 {{-- Progress bar --}}
                                                 <div class="w-full bg-slate-200 rounded-full h-1.5">
                                                     <div class="{{ $barColor }} h-1.5 rounded-full transition-all duration-500"
                                                         style="width: {{ min(100, $pct) }}%"></div>
                                                 </div>
-                                                <div class="flex items-center justify-between text-[10px] font-bold text-slate-600 pt-1 border-t border-slate-200/60">
-                                                    <span>{{ $coverage['assigned'] }} / {{ $coverage['configured'] }} matières</span>
+                                                <div
+                                                    class="flex items-center justify-between text-[10px] font-bold text-slate-600 pt-1 border-t border-slate-200/60">
+                                                    <span>{{ $coverage['assigned'] }} / {{ $coverage['configured'] }}
+                                                        matières</span>
                                                     <a href="{{ route('assignments.create', ['class_id' => $coverage['class']->id]) }}"
-                                                        class="px-2 py-0.5 rounded-lg {{ $coverage['missing'] > 0 ? 'bg-purple-100 text-purple-950 hover:bg-purple-200' : 'bg-emerald-100 text-emerald-950 hover:bg-emerald-200' }} transition flex items-center gap-1 font-black">
+                                                        class="px-2.5 py-1 rounded-xl bg-emerald-100 text-emerald-950 hover:bg-emerald-200 border border-emerald-300 transition flex items-center gap-1 font-black text-[11px] shadow-2xs">
                                                         <span>⚡</span>
-                                                        <span>{{ $coverage['missing'] > 0 ? 'Affecter (+' . $coverage['missing'] . ')' : 'Gérer' }}</span>
+                                                        <span>Gérer</span>
                                                     </a>
                                                 </div>
                                             </div>
@@ -302,9 +344,10 @@
                         $distinctTeachersCount = $cycleAssignments->pluck('teacher_id')->unique()->count();
 
                         // Coverage for this cycle's classes
-                        $cycleClassCoverage = collect($classCoverage)
-                            ->filter(fn ($c) => $c['class']->level->cycle->name === $cycleName);
-                        $cycleMissing = $cycleClassCoverage->sum('missing');
+$cycleClassCoverage = collect($classCoverage)->filter(
+    fn($c) => $c['class']->level->cycle->name === $cycleName,
+);
+$cycleMissing = $cycleClassCoverage->sum('missing');
                     @endphp
 
                     <div class="bg-white shadow-xl rounded-3xl overflow-hidden border border-slate-200/80">
@@ -344,7 +387,8 @@
                                         </span>
                                         @if ($cycleMissing > 0)
                                             <span class="text-rose-300">
-                                                ⚠️ {{ $cycleMissing }} matière{{ $cycleMissing > 1 ? 's' : '' }} non affectée{{ $cycleMissing > 1 ? 's' : '' }}
+                                                ⚠️ {{ $cycleMissing }} matière{{ $cycleMissing > 1 ? 's' : '' }} non
+                                                affectée{{ $cycleMissing > 1 ? 's' : '' }}
                                             </span>
                                         @else
                                             <span class="text-emerald-300">✅ Cycle complet</span>
@@ -395,20 +439,38 @@
                                     class="bg-slate-50 text-[10px] font-black uppercase tracking-wider text-slate-500 border-b border-slate-200">
                                     <tr>
                                         <th class="py-3.5 px-6">Classe & Niveau</th>
-                                        <th class="py-3.5 px-6">Matière</th>
+                                        @if (!$isPolyvalent)
+                                            <th class="py-3.5 px-6">Matière</th>
+                                        @endif
                                         <th class="py-3.5 px-6">Enseignant Attribué</th>
                                         <th class="py-3.5 px-6">Couverture classe</th>
-                                        <th class="py-3.5 px-6">Régime</th>
                                         <th class="py-3.5 px-6 text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-100 bg-white font-semibold">
-                                    @foreach ($cycleAssignments->sortBy(fn ($a) => $a->schoolClass?->name) as $asn)
+                                    @php
+                                        $cycleRows = $isPolyvalent
+                                            ? $cycleAssignments
+                                                ->unique(fn($a) => $a->class_id . '-' . $a->teacher_id)
+                                                ->sortBy(fn($a) => $a->schoolClass?->name)
+                                            : $cycleAssignments->sortBy(fn($a) => $a->schoolClass?->name);
+                                    @endphp
+                                    @foreach ($cycleRows as $asn)
                                         @php
                                             $cov = $classCoverage[$asn->class_id] ?? null;
                                             $covPct = $cov['percent'] ?? 0;
-                                            $covColor = $covPct >= 100 ? 'bg-emerald-500' : ($covPct >= 50 ? 'bg-amber-500' : 'bg-rose-500');
-                                            $covText = $covPct >= 100 ? 'text-emerald-700' : ($covPct >= 50 ? 'text-amber-700' : 'text-rose-700');
+                                            $covColor =
+                                                $covPct >= 100
+                                                    ? 'bg-emerald-500'
+                                                    : ($covPct >= 50
+                                                        ? 'bg-amber-500'
+                                                        : 'bg-rose-500');
+                                            $covText =
+                                                $covPct >= 100
+                                                    ? 'text-emerald-700'
+                                                    : ($covPct >= 50
+                                                        ? 'text-amber-700'
+                                                        : 'text-rose-700');
                                         @endphp
                                         <tr class="hover:bg-purple-50/30 transition">
                                             {{-- Classe & Niveau --}}
@@ -427,13 +489,15 @@
                                                 </div>
                                             </td>
 
-                                            {{-- Matière --}}
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span
-                                                    class="text-xs font-black text-purple-900 px-3 py-1 bg-purple-50 border border-purple-100 rounded-xl">
-                                                    {{ $asn->subject->name }}
-                                                </span>
-                                            </td>
+                                            {{-- Matière (Maternelle et Primaire n'ont pas cette colonne) --}}
+                                            @if (!$isPolyvalent)
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    <span
+                                                        class="text-xs font-black text-purple-900 px-3 py-1 bg-purple-50 border border-purple-100 rounded-xl">
+                                                        {{ $asn->subject->name }}
+                                                    </span>
+                                                </td>
+                                            @endif
 
                                             {{-- Enseignant --}}
                                             <td class="px-6 py-4 whitespace-nowrap">
@@ -446,7 +510,8 @@
                                                         <div class="text-sm font-bold text-slate-900">
                                                             {{ $asn->teacher->user->name }}</div>
                                                         <div class="text-[10px] text-slate-500 font-medium">
-                                                            {{ $asn->teacher->speciality ?? 'Générale' }}</div>
+                                                            {{ $asn->teacher->speciality ?? ($isPolyvalent ? 'Titulaire de classe' : 'Générale') }}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -468,26 +533,14 @@
                                                 @endif
                                             </td>
 
-                                            {{-- Régime / Spécificité --}}
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                @if ($isPolyvalent || $asn->teacher->is_polyvalent)
-                                                    <span
-                                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                        Classe Unique
-                                                    </span>
-                                                @else
-                                                    <span
-                                                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-blue-50 text-blue-800 border border-blue-200">
-                                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                                        Multi-classes
-                                                    </span>
-                                                @endif
-                                            </td>
-
                                             {{-- Actions --}}
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-xs font-medium">
                                                 <div class="flex items-center justify-end gap-2">
+                                                    <a href="{{ route('assignments.create', ['class_id' => $asn->class_id]) }}"
+                                                        class="px-2.5 py-1.5 text-[11px] font-black bg-emerald-50 text-emerald-950 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition flex items-center gap-1 shadow-2xs"
+                                                        title="Gérer toutes les matières de {{ $asn->schoolClass->name }}">
+                                                        <span>⚡</span> Gérer
+                                                    </a>
                                                     <a href="{{ route('assignments.show', $asn) }}"
                                                         class="px-2.5 py-1.5 text-[11px] font-black bg-purple-50 text-purple-900 hover:bg-purple-100 rounded-xl transition shadow-2xs">
                                                         👁️ Voir

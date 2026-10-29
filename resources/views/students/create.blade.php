@@ -27,30 +27,30 @@
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Nom de Famille *</label>
                                 <input type="text" name="last_name" required value="{{ old('last_name') }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('last_name') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Prénom(s) *</label>
                                 <input type="text" name="first_name" required value="{{ old('first_name') }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('first_name') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Date de Naissance *</label>
                                 <input type="date" name="birth_date" required value="{{ old('birth_date') }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('birth_date') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Lieu de Naissance *</label>
                                 <input type="text" name="birth_place" required value="{{ old('birth_place') }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 @error('birth_place') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Genre *</label>
-                                <select name="gender" required class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                <select name="gender" required class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                     <option value="">-- Choisir --</option>
                                     <option value="M" {{ old('gender') == 'M' ? 'selected' : '' }}>Masculin</option>
                                     <option value="F" {{ old('gender') == 'F' ? 'selected' : '' }}>Féminin</option>
@@ -59,7 +59,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Groupe Sanguin</label>
-                                <select name="blood_group" class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                <select name="blood_group" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                     <option value="">-- Inconnu --</option>
                                     @foreach (['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as $bg)
                                         <option value="{{ $bg }}" {{ old('blood_group') == $bg ? 'selected' : '' }}>{{ $bg }}</option>
@@ -69,7 +69,7 @@
                             <div class="md:col-span-2">
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Nationalité</label>
                                 <input type="text" name="nationality" value="{{ old('nationality', 'Malienne') }}"
-                                       class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                       class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Classe *</label>
-                                <select name="class_id" required class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                <select name="class_id" required class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                     <option value="">-- Choisir une classe --</option>
                                     @foreach ($classes as $class)
                                         <option value="{{ $class->id }}" {{ old('class_id') == $class->id ? 'selected' : '' }}>
@@ -95,7 +95,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">Type d'Inscription</label>
-                                <select name="enrollment_type" class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                <select name="enrollment_type" class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                     <option value="NOUVELLE" {{ old('enrollment_type') == 'NOUVELLE' ? 'selected' : '' }}>Nouvelle Inscription</option>
                                     <option value="REINSCRIPTION" {{ old('enrollment_type') == 'REINSCRIPTION' ? 'selected' : '' }}>Réinscription</option>
                                     <option value="TRANSFERT" {{ old('enrollment_type') == 'TRANSFERT' ? 'selected' : '' }}>Transfert</option>

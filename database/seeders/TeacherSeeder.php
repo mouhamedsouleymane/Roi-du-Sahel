@@ -48,9 +48,20 @@ class TeacherSeeder extends Seeder
             // ── Arabe ───────────────────────────────────────────────────
             ['name' => 'M. Ibrahim Sani', 'email' => 'ibrahim.sani@roisdusahel.ne', 'matricule' => 'ENS-2025-0013', 'speciality' => 'Arabe', 'qualification' => 'Licence Arabe', 'employment_type' => 'VACATAIRE'],
 
-            // ── Primaire (instituteurs) ─────────────────────────────────
-            ['name' => 'Mme Fati Amadou', 'email' => 'fati.amadou@roisdusahel.ne', 'matricule' => 'ENS-2025-0014', 'speciality' => 'Primaire', 'qualification' => 'CAP', 'employment_type' => 'PERMANENT'],
-            ['name' => 'M. Moussa Ibrahim', 'email' => 'moussa.ibrahim@roisdusahel.ne', 'matricule' => 'ENS-2025-0015', 'speciality' => 'Primaire', 'qualification' => 'CAP', 'employment_type' => 'PERMANENT'],
+            // ── Maternelle (éducatrices) ────────────────────────────────
+            ['name' => 'Mme Mariama Ousmane', 'email' => 'mariama.ousmane@roisdusahel.ne', 'matricule' => 'ENS-2025-0016', 'speciality' => 'Maternelle', 'qualification' => 'CAP Petite Enfance', 'employment_type' => 'PERMANENT', 'cycle_id' => 1, 'is_polyvalent' => true],
+            ['name' => 'Mme Nafissa Saley', 'email' => 'nafissa.saley@roisdusahel.ne', 'matricule' => 'ENS-2025-0017', 'speciality' => 'Maternelle', 'qualification' => 'CAP Petite Enfance', 'employment_type' => 'PERMANENT', 'cycle_id' => 1, 'is_polyvalent' => true],
+            ['name' => 'Mme Balkissa Daouda', 'email' => 'balkissa.daouda@roisdusahel.ne', 'matricule' => 'ENS-2025-0018', 'speciality' => 'Maternelle', 'qualification' => 'CAP Petite Enfance', 'employment_type' => 'PERMANENT', 'cycle_id' => 1, 'is_polyvalent' => true],
+
+            // ── Primaire (instituteurs titulaires) ──────────────────────
+            ['name' => 'Mme Fati Amadou', 'email' => 'fati.amadou@roisdusahel.ne', 'matricule' => 'ENS-2025-0014', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
+            ['name' => 'M. Moussa Ibrahim', 'email' => 'moussa.ibrahim@roisdusahel.ne', 'matricule' => 'ENS-2025-0015', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
+            ['name' => 'M. Ousmane Mahamane', 'email' => 'ousmane.mahamane@roisdusahel.ne', 'matricule' => 'ENS-2025-0019', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
+            ['name' => 'Mme Zeinabou Souley', 'email' => 'zeinabou.souley@roisdusahel.ne', 'matricule' => 'ENS-2025-0020', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
+            ['name' => 'M. Salissou Adamou', 'email' => 'salissou.adamou@roisdusahel.ne', 'matricule' => 'ENS-2025-0021', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
+            ['name' => 'Mme Ramatou Harouna', 'email' => 'ramatou.harouna@roisdusahel.ne', 'matricule' => 'ENS-2025-0022', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
+            ['name' => 'M. Hamadou Garba', 'email' => 'hamadou.garba@roisdusahel.ne', 'matricule' => 'ENS-2025-0023', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
+            ['name' => 'Mme Halima Salifou', 'email' => 'halima.salifou@roisdusahel.ne', 'matricule' => 'ENS-2025-0024', 'speciality' => 'Primaire', 'qualification' => 'CAP Instituteur', 'employment_type' => 'PERMANENT', 'cycle_id' => 2, 'is_polyvalent' => true],
         ];
 
         foreach ($teachersData as $data) {
@@ -65,17 +76,23 @@ class TeacherSeeder extends Seeder
 
             $user->assignRole('Enseignant');
 
-            Teacher::firstOrCreate(
+            $teacher = Teacher::firstOrCreate(
                 ['user_id' => $user->id],
                 [
+                    'cycle_id' => $data['cycle_id'] ?? null,
                     'matricule' => $data['matricule'],
                     'speciality' => $data['speciality'],
                     'qualification' => $data['qualification'],
                     'employment_type' => $data['employment_type'],
                     'hire_date' => '2025-09-01',
                     'status' => 'ACTIF',
+                    'is_polyvalent' => $data['is_polyvalent'] ?? false,
                 ]
             );
+
+            if (! empty($data['cycle_id'])) {
+                $teacher->cycles()->syncWithoutDetaching([$data['cycle_id']]);
+            }
         }
     }
 }

@@ -144,9 +144,9 @@
                         <form method="GET" action="{{ route('expenses.index') }}"
                             class="flex flex-wrap gap-2 items-center">
                             <input type="text" name="search" value="{{ $search }}" placeholder="Rechercher…"
-                                class="text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs w-40">
+                                class="text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs w-40">
                             <select name="category_id" onchange="this.form.submit()"
-                                class="text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
+                                class="text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
                                 <option value="">Toutes catégories</option>
                                 @foreach ($categories as $cat)
                                     <option value="{{ $cat->id }}"
@@ -154,7 +154,7 @@
                                 @endforeach
                             </select>
                             <select name="payment_method" onchange="this.form.submit()"
-                                class="text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
+                                class="text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
                                 <option value="">Tous modes</option>
                                 @foreach (\App\Models\Expense::paymentMethods() as $key => $label)
                                     <option value="{{ $key }}"
@@ -162,7 +162,7 @@
                                 @endforeach
                             </select>
                             <select name="month" onchange="this.form.submit()"
-                                class="text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
+                                class="text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 py-1.5 shadow-2xs">
                                 <option value="">Tous les mois</option>
                                 @foreach (range(1, 12) as $m)
                                     <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>

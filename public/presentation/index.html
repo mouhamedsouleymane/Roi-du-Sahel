@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exposé Officiel — Plateforme Numérique Les Rois du Sahel</title>
+    <meta name="description" content="Exposé officiel de présentation de la plateforme de gestion scolaire intégrée du Complexe Scolaire Privé Les Rois du Sahel (Niamey).">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-night: #090214;
+            --bg-deep: #160728;
+            --bg-card: rgba(35, 12, 60, 0.55);
+            --purple-900: #3b0764;
+            --purple-700: #7e22ce;
+            --purple-light: #c084fc;
+            --gold-400: #fbbf24;
+            --gold-500: #f59e0b;
+            --gold-300: #fcd34d;
+            --gold-glow: rgba(245, 158, 11, 0.25);
+            --border-purple: rgba(126, 34, 206, 0.35);
+            --border-gold: rgba(251, 191, 36, 0.4);
+            --text-main: #f8fafc;
+            --text-sub: #cbd5e1;
+            --text-muted: #94a3b8;
+            --green-400: #34d399;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; width: 100%; background: var(--bg-night); overflow: hidden; }
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Cadre scène fixe 1920x1080 centré par transform */
+        #viewport {
+            position: fixed; inset: 0; width: 100vw; height: 100vh;
+            overflow: hidden; background: #05010b;
+        }
+        #stage {
+            width: 1920px; height: 1080px;
+            position: absolute; top: 50%; left: 50%;
+            overflow: hidden;
+            transform-origin: center center;
+            box-shadow: 0 0 120px rgba(0, 0, 0, 0.95);
+            background:
+                radial-gradient(1200px 750px at 10% 0%, rgba(126, 34, 206, 0.38), transparent 60%),
+                radial-gradient(1000px 650px at 95% 100%, rgba(245, 158, 11, 0.22), transparent 60%),
+                linear-gradient(160deg, #120422 0%, #1a0832 50%, #0a0214 100%);
+            border: 1px solid rgba(126, 34, 206, 0.25);
+        }
+
+        /* Barre supérieure académique / institutionnelle */
+        .topbar {
+            position: absolute; top: 0; left: 0; right: 0; height: 96px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 76px; z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(14, 4, 26, 0.85);
+            backdrop-filter: blur(14px);
+        }
+        .brand { display: flex; align-items: center; gap: 16px; }
+        .brand .logo-wrap {
+            width: 58px; height: 58px; border-radius: 50%; overflow: hidden;
+            background: #fff; padding: 2px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            border: 2px solid var(--gold-400); flex-shrink: 0;
+        }
+        .brand .logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-text h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 21px; font-weight: 800; letter-spacing: 1.5px;
+            color: #fff; line-height: 1.1; text-transform: uppercase;
+        }
+        .brand-text span {
+            font-size: 13px; font-weight: 700; letter-spacing: 2px;
+            color: var(--gold-400); text-transform: uppercase; display: block;
+        }
+        .motto-badge {
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid var(--border-gold);
+            padding: 6px 18px; border-radius: 99px;
+            font-size: 13px; font-weight: 800; letter-spacing: 2.5px;
+            color: var(--gold-300); text-transform: uppercase;
+        }
+        .breadcrumb-part {
+            background: rgba(126, 34, 206, 0.22);
+            border: 1px solid var(--border-purple);
+            padding: 7px 20px; border-radius: 99px;
+            font-size: 14px; font-weight: 700; letter-spacing: 1.5px;
+            color: #e2e8f0; text-transform: uppercase;
+        }
+        .slide-counter {
+            font-size: 17px; font-weight: 700; color: var(--text-muted);
+        }
+        .slide-counter strong { font-size: 24px; color: var(--gold-400); }
+
+        /* Diapositives */
+        .slide {
+            position: absolute; inset: 0; padding: 126px 76px 88px;
+            display: grid; grid-template-columns: 40% 1fr; gap: 54px; align-items: center;
+            opacity: 0; visibility: hidden; transform: translateY(22px);
+            transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1), visibility .45s;
+        }
+        .slide.active { opacity: 1; visibility: visible; transform: none; }
+        .slide.center { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+        .slide.stack { grid-template-columns: 1fr; align-content: start; gap: 32px; }
+
+        /* Typographie de présentation */
+        .kicker {
+            display: inline-flex; align-items: center; gap: 12px;
+            font-size: 18px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;
+            color: var(--gold-400); margin-bottom: 16px;
+        }
+        .kicker::before {
+            content: ''; width: 36px; height: 3px; background: var(--gold-400); border-radius: 3px;
+        }
+        .slide.center .kicker::before { display: none; }
+
+        h2.title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 58px; font-weight: 800; line-height: 1.15;
+            color: #ffffff; margin-bottom: 24px;
+        }
+        .gold { color: var(--gold-400); }
+        .purple-light { color: var(--purple-light); }
+
+        .lead-p {
+            font-size: 25px; line-height: 1.5; color: var(--text-sub); margin-bottom: 24px;
+        }
+
+        /* Listes d'arguments avec puces iconographiques */
+        .points-list { list-style: none; display: grid; gap: 18px; }
+        .points-list li {
+            display: flex; gap: 18px; align-items: flex-start;
+            font-size: 27px; line-height: 1.4; color: #f1f5f9;
+        }
+        .points-list li .bullet {
+            flex: 0 0 auto; width: 48px; height: 48px; border-radius: 14px;
+            display: grid; place-items: center; font-size: 24px;
+            background: rgba(245, 158, 11, 0.14);
+            border: 1px solid var(--border-gold);
+            color: var(--gold-400);
+        }
+        .points-list li strong { color: #ffffff; }
+
+        /* Fenêtre de capture d'écran de l'application */
+        .shot-window {
+            position: relative; border-radius: 20px; overflow: hidden;
+            background: #0d0618; border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 40px 90px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px var(--gold-glow);
+            height: 750px; display: flex; flex-direction: column;
+        }
+        .shot-window .titlebar {
+            height: 44px; background: #200839; display: flex; align-items: center;
+            gap: 8px; padding: 0 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+        .shot-window .titlebar i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+        .shot-window .titlebar i:nth-child(1) { background: #ef4444; }
+        .shot-window .titlebar i:nth-child(2) { background: #f59e0b; }
+        .shot-window .titlebar i:nth-child(3) { background: #10b981; }
+        .shot-window .titlebar em {
+            margin-left: 14px; font-style: normal; font-size: 14px; font-weight: 600;
+            color: var(--gold-300); background: rgba(255, 255, 255, 0.08);
+            padding: 4px 16px; border-radius: 99px; letter-spacing: 0.5px;
+        }
+        .shot-window img {
+            width: 100%; height: calc(100% - 44px); object-fit: cover; object-position: top left;
+            display: block; background: #ffffff;
+        }
+        .shot-window.contain img { object-fit: contain; background: #0d0618; }
+
+        /* Grilles et cartes de synthèse */
+        .cards-grid { display: grid; gap: 24px; width: 100%; }
+        .cards-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .cards-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+        .cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+        .feature-card {
+            background: linear-gradient(160deg, rgba(59, 7, 100, 0.45), rgba(15, 3, 27, 0.7));
+            border: 1px solid var(--border-purple); border-radius: 22px; padding: 32px 28px;
+            text-align: left; position: relative; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        .feature-card::before {
+            content: ''; position: absolute; left: 0; top: 0; height: 5px; width: 100%;
+            background: linear-gradient(90deg, var(--gold-400), var(--purple-light));
+        }
+        .feature-card .icon-head { font-size: 46px; margin-bottom: 12px; }
+        .feature-card h3 { font-size: 30px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+        .feature-card p { font-size: 22px; line-height: 1.45; color: var(--text-sub); }
+        .feature-card .tag-pill {
+            display: inline-block; margin-top: 14px; font-size: 17px; font-weight: 800;
+            color: var(--gold-400); background: rgba(245, 158, 11, 0.14);
+            border: 1px solid var(--border-gold); padding: 6px 14px; border-radius: 99px;
+        }
+
+        /* Plan de l'exposé (Sommaire interactif) */
+        .agenda-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; max-width: 1760px;
+        }
+        .agenda-item {
+            background: linear-gradient(145deg, rgba(59, 7, 100, 0.5), rgba(18, 4, 34, 0.8));
+            border: 1px solid var(--border-purple); border-radius: 20px;
+            padding: 24px 28px; display: flex; gap: 22px; align-items: center;
+            cursor: pointer; transition: all .25s ease;
+        }
+        .agenda-item:hover {
+            transform: translateX(8px); border-color: var(--gold-400);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+        }
+        .agenda-num {
+            width: 64px; height: 64px; border-radius: 18px; flex-shrink: 0;
+            display: grid; place-items: center; font-size: 28px; font-weight: 900;
+            background: linear-gradient(135deg, var(--gold-500), var(--purple-700));
+            color: #ffffff; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+        }
+        .agenda-info h3 { font-size: 27px; color: #fff; margin-bottom: 4px; }
+        .agenda-info p { font-size: 20px; color: var(--text-muted); }
+
+        /* Maquette Smartphone pour la partie Mobile */
+        .mobile-showcase {
+            width: 360px; height: 740px; border-radius: 54px; padding: 14px; margin: 0 auto;
+            background: linear-gradient(160deg, #2b0b4b, #120422);
+            border: 2px solid var(--border-gold);
+            box-shadow: 0 40px 90px -20px rgba(0,0,0,.95), 0 0 40px rgba(245, 158, 11, 0.18);
+        }
+        .mobile-screen {
+            height: 100%; border-radius: 42px; overflow: hidden;
+            background: linear-gradient(180deg, #240a44, #0b0216); padding: 46px 24px 24px;
+        }
+        .mobile-screen h4 { font-size: 22px; color: var(--gold-400); margin-bottom: 2px; }
+        .mobile-screen small { color: var(--text-muted); font-size: 14px; display: block; margin-bottom: 20px; }
+        .mobile-card {
+            background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px; padding: 14px 16px; margin-bottom: 12px;
+            display: flex; gap: 12px; align-items: center;
+        }
+        .mobile-card b { display: block; font-size: 17px; color: #fff; }
+        .mobile-card span { font-size: 13px; color: var(--text-muted); }
+
+        /* Tableau comparatif académique */
+        .table-compare {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            border-radius: 20px; overflow: hidden; border: 1px solid var(--border-purple);
+            background: rgba(18, 4, 34, 0.7);
+        }
+        .table-compare th, .table-compare td {
+            padding: 22px 28px; text-align: left; font-size: 24px;
+        }
+        .table-compare th {
+            background: rgba(59, 7, 100, 0.6); color: var(--gold-400);
+            font-size: 25px; font-weight: 800; letter-spacing: 1px;
+            border-bottom: 2px solid var(--border-gold);
+        }
+        .table-compare tr:not(:last-child) td { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        .table-compare td.bad { color: #fca5a5; }
+        .table-compare td.good { color: #86efac; font-weight: 700; }
+
+        /* Bouton CTA d'action */
+        .btn-action {
+            display: inline-flex; gap: 16px; align-items: center;
+            background: linear-gradient(135deg, var(--gold-400), var(--gold-500));
+            color: #120422; font-weight: 800; font-size: 28px; padding: 20px 48px; border-radius: 99px;
+            box-shadow: 0 16px 40px rgba(245, 158, 11, 0.4); cursor: pointer; border: none;
+        }
+
+        /* Cartouche formel de page de garde */
+        .cover-box {
+            background: linear-gradient(150deg, rgba(59, 7, 100, 0.4), rgba(15, 3, 27, 0.8));
+            border: 2px solid var(--border-gold); border-radius: 26px; padding: 48px 64px;
+            max-width: 1540px; margin: 0 auto; text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75);
+        }
+        .cover-meta {
+            margin-top: 40px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.12);
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center;
+        }
+        .cover-meta div span { font-size: 16px; text-transform: uppercase; color: var(--gold-400); font-weight: 800; letter-spacing: 1.5px; display: block; margin-bottom: 6px; }
+        .cover-meta div strong { font-size: 22px; color: #fff; font-weight: 700; }
+
+        /* Pied de page et indicateurs */
+        .bottom-nav {
+            position: absolute; left: 0; right: 0; bottom: 0; height: 60px; padding: 0 76px;
+            display: flex; align-items: center; justify-content: space-between; z-index: 10;
+            background: rgba(10, 2, 20, 0.7); border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .indicators { display: flex; gap: 8px; align-items: center; }
+        .indicators b {
+            width: 10px; height: 10px; border-radius: 99px; background: rgba(255, 255, 255, 0.2);
+            transition: all .25s; cursor: pointer;
+        }
+        .indicators b.active {
+            width: 38px; background: linear-gradient(90deg, var(--gold-400), var(--purple-light));
+        }
+        .nav-shortcuts { font-size: 15px; color: var(--text-muted); font-weight: 600; }
+        .nav-shortcuts kbd {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            padding: 2px 8px; border-radius: 6px; color: var(--gold-300); font-family: monospace;
+        }
+
+        /* Panneau Notes Orateur */
+        #speaker-notes {
+            position: fixed; right: 28px; bottom: 28px; width: 560px; max-height: 42vh; overflow-y: auto;
+            background: rgba(15, 4, 28, 0.96); border: 1px solid var(--gold-400); border-radius: 20px;
+            padding: 22px 28px; font-size: 18px; line-height: 1.6; color: #f1f5f9; z-index: 100;
+            display: none; box-shadow: 0 30px 80px rgba(0,0,0,0.85);
+        }
+        #speaker-notes.open { display: block; }
+        #speaker-notes h5 {
+            font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-400); margin-bottom: 12px;
+        }
+
+        /* Zones de clic latéraux pour navigation souris */
+        .click-prev, .click-next { position: fixed; top: 0; bottom: 0; width: 10%; z-index: 30; cursor: pointer; }
+        .click-prev { left: 0; } .click-next { right: 0; }
+    </style>
+</head>
+<body>
+
+<div id="viewport">
+<div id="stage">
+
+    <!-- En-tête institutionnel -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo-wrap">
+                <img src="img/logo.png" alt="Logo CSP Les Rois du Sahel" onerror="this.src='../images/logo_roi.jpeg'">
+            </div>
+            <div class="brand-text">
+                <h1>Rois du Sahel</h1>
+                <span>Complexe Scolaire Privé · Niamey</span>
+            </div>
+        </div>
+
+        <div class="motto-badge">Discipline • Travail • Succès</div>
+
+        <div class="breadcrumb-part" id="currentSectionTitle">Introduction</div>
+
+        <div class="slide-counter">
+            Diapositive <strong id="slideNum">1</strong> / <span id="slideTotal">16</span>
+        </div>
+    </header>
+
+    <!-- 1. PAGE DE GARDE OFFICIELLE (Norme Exposé) -->
+    <section class="slide center active"
+        data-section="Introduction"
+        data-notes="Bonjour à tous les membres de la direction, chers enseignants et chers parents d'élèves. Bienvenue à cet exposé officiel. L'objectif d'aujourd'hui est de vous présenter avec clarté, sans jargon technique, la nouvelle plateforme intégrée de notre établissement conçue pour simplifier la vie de l'école et de nos familles.">
+        <div class="cover-box">
+            <div class="kicker">République du Niger • Ministère de l'Éducation Nationale</div>
+            <h1 style="font-family:'Playfair Display', Georgia, serif; font-size: 78px; font-weight: 900; line-height: 1.15; margin-bottom: 22px;">
+                Exposé de Présentation de la<br><span class="gold">Plateforme Numérique Intégrée</span>
+            </h1>
+            <p class="lead-p" style="max-width: 1200px; margin: 0 auto; font-size: 28px;">
+                Modernisation administrative, suivi pédagogique rigoureux et portail d'information en temps réel au service de l'excellence scolaire.
+            </p>
+            <div class="cover-meta">
+                <div>
+                    <span>Cadre de l'Exposé</span>
+                    <strong>Réunion Générale & Démonstration</strong>
+                </div>
+                <div>
+                    <span>Public Concerné</span>
+                    <strong>Administration, Enseignants & Parents</strong>
+                </div>
+                <div>
+                    <span>Année Académique</span>
+                    <strong>2026 — 2027</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. PLAN DE L'EXPOSÉ (Sommaire Général) -->
+    <section class="slide stack"
+        data-section="Plan de l'Exposé"
+        data-notes="Comme pour tout travail structuré, notre exposé suivra un plan rigoureux en cinq parties. Nous verrons d'abord le contexte et la problématique qui nous ont poussés à franchir ce cap, puis nos objectifs. Nous détaillerons ensuite les modules de travail avec les vrais écrans du système, nous découvrirons le portail parents et la future application mobile, et enfin nous aborderons la sécurité et le débat.">
+        <div>
+            <div class="kicker">Structure du Travail</div>
+            <h2 class="title" style="margin-bottom: 18px;">Plan Général de <span class="gold">l'Exposé</span></h2>
+            <p class="lead-p">Une démarche méthodique articulée autour de 5 axes fondamentaux :</p>
+        </div>
+        <div class="agenda-grid">
+            <div class="agenda-item" onclick="goToSlide(2)">
+                <div class="agenda-num">I</div>
+                <div class="agenda-info">
+                    <h3>Contexte & Problématique</h3>
+                    <p>Le constat de la gestion traditionnelle et les défis à relever</p>
+                </div>
+            </div>
+            <div class="agenda-item" onclick="goToSlide(3)">
+                <div class="agenda-num">II</div>
+                <div class="agenda-info">
+                    <h3>Objectifs Stratégiques & Bénéfices</h3>
+                    <p>Ce que gagnent l'école, les enseignants et les parents</p>
+                </div>
+            </div>
+            <div class="agenda-item" onclick="goToSlide(4)">
+                <div class="agenda-num">III</div>
+                <div class="agenda-info">
+                    <h3>Modules Opérationnels & Démonstration</h3>
+                    <p>Direction, inscriptions, notes, bulletins par cycle, présences, finances</p>
+                </div>
+            </div>
+            <div class="agenda-item" onclick="goToSlide(11)">
+                <div class="agenda-num">IV</div>
+                <div class="agenda-info">
+                    <h3>Portail Famille & Innovation Mobile</h3>
+                    <p>L'espace web des parents et la future application sur smartphone</p>
+                </div>
+            </div>
+            <div class="agenda-item" onclick="goToSlide(13)" style="grid-column: span 2;">
+                <div class="agenda-num">V</div>
+                <div class="agenda-info">
+                    <h3>Sécurité des Données, Bilan Comparatif & Débat</h3>
+                    <p>Confidentialité stricte, synthèse avant/après et séance de questions-réponses</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. PARTIE I : Contexte & Problématique -->
+    <section class="slide"
+        data-section="I. Contexte & Problématique"
+        data-notes="Commençons par la première partie : pourquoi avons-nous engagé cette transition ? Dans le schéma scolaire classique, la dispersion des dossiers papier, les risques d'erreurs lors du calcul des moyennes trimestrielles et les délais pour avertir les parents constituaient un frein majeur. Notre problématique était claire : comment centraliser et fiabiliser toutes les données scolaires en temps réel ?">
+        <div>
+            <div class="kicker">Partie I · Fondements</div>
+            <h2 class="title">Le Constat & la <span class="gold">Problématique</span></h2>
+            <p class="lead-p">Répondre aux exigences contemporaines d'une école d'élite à Niamey.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">📁</span>
+                    <span><strong>Dispersion des dossiers papier :</strong> Multiplicité des cahiers, pertes de documents et lenteurs de traitement.</span>
+                </li>
+                <li>
+                    <span class="bullet">🧮</span>
+                    <span><strong>Risques d'erreurs humaines :</strong> Calcul manuel des moyennes, coefficients et classements de fin de trimestre.</span>
+                </li>
+                <li>
+                    <span class="bullet">⏳</span>
+                    <span><strong>Retard de transmission :</strong> Les parents n'étaient informés des difficultés ou des absences que tardivement.</span>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <div class="feature-card" style="margin-bottom: 24px; border-left: 6px solid var(--gold-400);">
+                <div class="icon-head">🎯</div>
+                <h3>La Problématique Centrale</h3>
+                <p>« Comment offrir à notre établissement un outil unique, moderne et sécurisé, garantissant à la fois la rigueur administrative, la sérénité des enseignants et la transparence totale envers les parents d'élèves ? »</p>
+            </div>
+            <div class="feature-card" style="border-left: 6px solid var(--purple-light);">
+                <div class="icon-head">💡</div>
+                <h3>La Réponse Stratégique</h3>
+                <p>Le déploiement de la plateforme sur mesure du <strong>Complexe Scolaire Privé Les Rois du Sahel</strong>, accessible en tout temps et conforme aux normes officielles.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PARTIE II : Objectifs Stratégiques & Bénéfices -->
+    <section class="slide stack"
+        data-section="II. Objectifs Stratégiques"
+        data-notes="Deuxième partie : quels sont les objectifs visés ? Nous avons articulé le projet autour de 3 piliers capitaux : libérer du temps pour nos éducateurs, garantir une exactitude mathématique totale dans les bulletins, et instaurer une relation de confiance continue avec les familles.">
+        <div>
+            <div class="kicker">Partie II · Vision & Valeur Ajoutée</div>
+            <h2 class="title">Trois Piliers <span class="gold">d'Excellence</span></h2>
+            <p class="lead-p">Une valeur ajoutée concrète pour chaque acteur de la communauté éducative :</p>
+        </div>
+        <div class="cards-grid cols-3">
+            <div class="feature-card">
+                <div class="icon-head">⚡</div>
+                <h3>Gain de Temps Majeur</h3>
+                <p>Fin des doubles saisies et des corvées de classement. Les enseignants et l'administration se consacrent pleinement à la réussite pédagogique de l'enfant.</p>
+                <span class="tag-pill">Efficacité Opérationnelle</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon-head">🛡️</div>
+                <h3>Fiabilité & Zéro Erreur</h3>
+                <p>Les moyennes, rangs et états financiers sont calculés par le système sans risque d'omission. Tout est standardisé et conforme aux directives académiques.</p>
+                <span class="tag-pill">Conformité Absolue</span>
+            </div>
+            <div class="feature-card">
+                <div class="icon-head">🤝</div>
+                <h3>Transparence & Proximité</h3>
+                <p>Les parents n'attendent plus la fin du trimestre dans l'angoisse : ils ont une visibilité régulière sur les efforts, les présences et les progrès de leurs enfants.</p>
+                <span class="tag-pill">Partenariat École-Famille</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. PARTIE III : 3.1 Tableau de Bord Général -->
+    <section class="slide"
+        data-section="III. Modules Opérationnels"
+        data-notes="Entrons maintenant dans le vif de la troisième partie avec la démonstration des modules. Voici l'écran d'accueil de la direction. En un clin d'œil, les responsables disposent des effectifs consolidés, des alertes du jour, des flux financiers et des indicateurs de vie scolaire.">
+        <div>
+            <div class="kicker">Partie III · Module 1</div>
+            <h2 class="title">Pilotage & <span class="gold">Tableau de Bord</span></h2>
+            <p class="lead-p">Une vue panoramique en temps réel pour l'équipe de direction.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">📊</span>
+                    <span><strong>Indicateurs consolidés :</strong> Effectifs globaux, taux de fréquentation et suivi de l'année scolaire en cours.</span>
+                </li>
+                <li>
+                    <span class="bullet">🔔</span>
+                    <span><strong>Alertes opérationnelles :</strong> Visualisation immédiate des tâches prioritaires et urgences administratives.</span>
+                </li>
+                <li>
+                    <span class="bullet">🔐</span>
+                    <span><strong>Accès sécurisé :</strong> Environnement strictement protégé par authentification forte.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Tableau de Bord de la Direction</em></div>
+            <img src="img/dashboard.png" alt="Tableau de bord de l'administration">
+        </div>
+    </section>
+
+    <!-- 6. PARTIE III : 3.2 Inscriptions & Dossier Numérique -->
+    <section class="slide"
+        data-section="III. Modules Opérationnels"
+        data-notes="Module 2 : les inscriptions. La plateforme permet aux familles d'effectuer des demandes de pré-inscription en ligne depuis chez elles. L'administration examine les pièces, valide la demande et crée le dossier définitif de l'élève en 1 clic.">
+        <div>
+            <div class="kicker">Partie III · Module 2</div>
+            <h2 class="title">Inscriptions & <span class="gold">Dossier Unique</span></h2>
+            <p class="lead-p">Simplification du recrutement et suivi administratif dès l'admission.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">🌐</span>
+                    <span><strong>Pré-inscriptions en ligne :</strong> Les parents soumettent facilement leur demande depuis le portail web.</span>
+                </li>
+                <li>
+                    <span class="bullet">📂</span>
+                    <span><strong>Dossier unique par élève :</strong> Filiation, antécédents scolaires et affectation dans la classe respective.</span>
+                </li>
+                <li>
+                    <span class="bullet">⚡</span>
+                    <span><strong>Validation sans papier :</strong> Traitement rapide des candidatures par le secrétariat.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Gestion des Demandes de Pré-inscription</em></div>
+            <img src="img/preinscriptions.png" alt="Préinscriptions en ligne">
+        </div>
+    </section>
+
+    <!-- 7. PARTIE III : 3.3 Notes & Évaluations -->
+    <section class="slide"
+        data-section="III. Modules Opérationnels"
+        data-notes="Module 3 : la saisie des notes. L'enseignant se connecte et renseigne les notes de sa classe sur une grille intuitive. Le système prend le relais : moyennes par matière, pondérations et classements sont calculés automatiquement. Plus aucun calcul manuel chronophage.">
+        <div>
+            <div class="kicker">Partie III · Module 3</div>
+            <h2 class="title">Notes & <span class="gold">Évaluations</span></h2>
+            <p class="lead-p">L'enseignant évalue, le système calcule et classe automatiquement.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">✍️</span>
+                    <span><strong>Saisie fluide :</strong> Interface intuitive pensée pour les enseignants, sur ordinateur ou tablette.</span>
+                </li>
+                <li>
+                    <span class="bullet">⚡</span>
+                    <span><strong>Calculs instantanés :</strong> Application stricte des coefficients et barèmes sans calculatrice.</span>
+                </li>
+                <li>
+                    <span class="bullet">🏅</span>
+                    <span><strong>Classement objectif :</strong> Rangs déterminés automatiquement selon l'ordre de mérite.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Module de Saisie des Notes & Devoirs</em></div>
+            <img src="img/notes.png" alt="Saisie des notes">
+        </div>
+    </section>
+
+    <!-- 8. PARTIE III : 3.4 Bulletins Officiels par Cycle -->
+    <section class="slide"
+        data-section="III. Modules Opérationnels"
+        data-notes="Module 4 : les bulletins scolaires. C'est le cœur de notre rigueur. La plateforme s'adapte à chaque cycle d'enseignement : en Maternelle et au Primaire, la note de composition est sur 10. Au Collège et au Lycée, la notation est sur 20 avec devoirs et examens. Le bulletin généré respecte fidèlement les maquettes officielles de la République du Niger, prêt à être imprimé ou téléchargé en PDF.">
+        <div>
+            <div class="kicker">Partie III · Module 4</div>
+            <h2 class="title">Bulletins Officiels <span class="gold">par Cycle</span></h2>
+            <p class="lead-p">Le respect scrupuleux des normes pédagogiques et ministérielles.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">🧒</span>
+                    <span><strong>Maternelle & Primaire :</strong> Notation de composition sur <strong>/10</strong>, valorisant les acquis fondamentaux.</span>
+                </li>
+                <li>
+                    <span class="bullet">🎓</span>
+                    <span><strong>Collège & Lycée :</strong> Devoirs et compositions sur <strong>/20</strong> avec coefficients officiels.</span>
+                </li>
+                <li>
+                    <span class="bullet">📄</span>
+                    <span><strong>Édition PDF Haute Définition :</strong> Mise en page officielle, en-tête de l'école, cachet et signatures.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Bulletin Scolaire Officiel (Format PDF)</em></div>
+            <img src="img/bulletin.png" alt="Bulletin officiel Les Rois du Sahel">
+        </div>
+    </section>
+
+    <!-- 9. PARTIE III : 3.5 Vie Scolaire & Présences -->
+    <section class="slide"
+        data-section="III. Modules Opérationnels"
+        data-notes="Module 5 : les présences et la vie scolaire. L'appel se fait numériquement en début d'heure. Le statut présent, absent ou en retard est consigné. Le bilan des absences est automatiquement intégré au bulletin de l'élève, sensibilisant chaque enfant à la ponctualité.">
+        <div>
+            <div class="kicker">Partie III · Module 5</div>
+            <h2 class="title">Vie Scolaire & <span class="gold">Assiduité</span></h2>
+            <p class="lead-p">Suivi rigoureux de la ponctualité et de la discipline au quotidien.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">⏱️</span>
+                    <span><strong>Feuille d'appel numérique :</strong> Pointage rapide des élèves en début de cours en quelques clics.</span>
+                </li>
+                <li>
+                    <span class="bullet">📋</span>
+                    <span><strong>Distinction claire :</strong> Suivi des retards, absences justifiées et non-justifiées.</span>
+                </li>
+                <li>
+                    <span class="bullet">📊</span>
+                    <span><strong>Répercussion sur le bulletin :</strong> Bilan d'assiduité imprimé automatiquement sur le relevé trimestriel.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Gestion des Présences & Feuilles d'Appel</em></div>
+            <img src="img/presences.png" alt="Gestion des présences">
+        </div>
+    </section>
+
+    <!-- 10. PARTIE III : 3.6 Finances & Scolarité -->
+    <section class="slide"
+        data-section="III. Modules Opérationnels"
+        data-notes="Module 6 : la gestion financière. Les frais d'inscription et mensualités de scolarité sont enregistrés avec précision. Chaque parent et l'économat peuvent vérifier en temps réel les versements effectués, le solde restant et obtenir un reçu formel, éliminant tout quiproquo.">
+        <div>
+            <div class="kicker">Partie III · Module 6</div>
+            <h2 class="title">Transparence <span class="gold">Financière</span></h2>
+            <p class="lead-p">Clarté absolue des règlements de scolarité pour les familles et l'école.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">💳</span>
+                    <span><strong>Enregistrement des versements :</strong> Historique complet de chaque tranche de scolarité payée.</span>
+                </li>
+                <li>
+                    <span class="bullet">🧾</span>
+                    <span><strong>Solde transparent :</strong> Visibilité instantanée de ce qui est réglé et de ce qui reste dû.</span>
+                </li>
+                <li>
+                    <span class="bullet">🤝</span>
+                    <span><strong>Clarté relationnelle :</strong> Suppression des malentendus grâce aux reçus numériques infalsifiables.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Gestion des Écolages & Versements</em></div>
+            <img src="img/paiements.png" alt="Gestion des paiements">
+        </div>
+    </section>
+
+    <!-- 11. PARTIE III : 3.7 Emplois du Temps -->
+    <section class="slide"
+        data-section="III. Modules Opérationnels"
+        data-notes="Module 7 : la planification. Chaque classe et chaque enseignant dispose d'un emploi du temps harmonisé. Les salles, créneaux horaires et matières sont agencés pour éviter tout conflit d'horaire, et le planning peut être imprimé pour affichage mural.">
+        <div>
+            <div class="kicker">Partie III · Module 7</div>
+            <h2 class="title">Planification & <span class="gold">Emploi du Temps</span></h2>
+            <p class="lead-p">Optimisation de l'organisation pédagogique par classe et par cycle.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">📅</span>
+                    <span><strong>Planning par classe :</strong> Visualisation nette des plages horaires de 8h à 18h.</span>
+                </li>
+                <li>
+                    <span class="bullet">👨‍🏫</span>
+                    <span><strong>Répartition des enseignants :</strong> Élimination des conflits de créneaux et de salles.</span>
+                </li>
+                <li>
+                    <span class="bullet">🖨️</span>
+                    <span><strong>Export prêt à afficher :</strong> Format standardisé pour affichage dans chaque salle de classe.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Gestion des Emplois du Temps & Plages Horaires</em></div>
+            <img src="img/emploi-du-temps.png" alt="Emplois du temps">
+        </div>
+    </section>
+
+    <!-- 12. PARTIE IV : 4.1 Portail Famille Web -->
+    <section class="slide"
+        data-section="IV. Portail Famille & Mobilité"
+        data-notes="Abordons la quatrième partie, particulièrement dédiée aux familles : le Portail Parents. Accessible depuis tout ordinateur ou tablette avec les identifiants personnels de la famille, il permet de consulter les résultats de ses propres enfants, leurs absences et de télécharger les bulletins officiels à tout moment.">
+        <div>
+            <div class="kicker">Partie IV · Axe Famille</div>
+            <h2 class="title">Le Portail Parents <br><span class="gold">en Ligne</span></h2>
+            <p class="lead-p">Un espace personnel et confidentiel pour chaque famille de l'établissement.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">👨‍👩‍👧</span>
+                    <span><strong>Espace dédié aux parents :</strong> Accès direct au profil de tous ses enfants scolarisés dans l'école.</span>
+                </li>
+                <li>
+                    <span class="bullet">📈</span>
+                    <span><strong>Suivi en temps réel :</strong> Consultation des dernières notes obtenues et de l'assiduité.</span>
+                </li>
+                <li>
+                    <span class="bullet">📥</span>
+                    <span><strong>Téléchargement instantané :</strong> Bulletins trimestriels et reçus disponibles sans déplacement.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="shot-window">
+            <div class="titlebar"><i></i><i></i><i></i><em>Portail Parents — Vue Famille Sécurisée</em></div>
+            <img src="img/espace-parents.png" alt="Portail Famille">
+        </div>
+    </section>
+
+    <!-- 13. PARTIE IV : 4.2 L'Innovation Mobile (Prévue) -->
+    <section class="slide"
+        data-section="IV. Portail Famille & Mobilité"
+        data-notes="Pour aller encore plus loin dans la proximité avec les parents, l'application mobile est déjà prévue ! Directement sur votre téléphone portable Android ou iPhone, vous recevrez les alertes immédiates en cas d'absence de votre enfant, ses notes du jour et les communications importantes de l'établissement.">
+        <div>
+            <div class="kicker">Partie IV · Innovation & Mobilité</div>
+            <h2 class="title">L'École dans la Poche : <span class="gold">L'App Mobile</span></h2>
+            <p class="lead-p">Une application pour smartphone déjà prévue afin de connecter les parents en continu.</p>
+            <ul class="points-list">
+                <li>
+                    <span class="bullet">🔔</span>
+                    <span><strong>Alertes instantanées :</strong> Notification push sur le téléphone dès qu'une absence ou un retard est constaté.</span>
+                </li>
+                <li>
+                    <span class="bullet">📊</span>
+                    <span><strong>Notes du jour :</strong> Suivi des devoirs et compositions sans attendre la remise des copies.</span>
+                </li>
+                <li>
+                    <span class="bullet">💬</span>
+                    <span><strong>Messages de l'école :</strong> Informations institutionnelles et convocations directement consultables.</span>
+                </li>
+            </ul>
+            <div style="margin-top: 36px;">
+                <span class="tag-pill" style="font-size: 20px; padding: 10px 26px; background: var(--gold-400); color: #120422; font-weight: 800;">
+                    📱 Application Mobile · Bientôt Disponible
+                </span>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <div class="mobile-showcase">
+                <div class="mobile-screen">
+                    <h4>Les Rois du Sahel</h4>
+                    <small>Application Mobile Parents</small>
+                    <div class="mobile-card">
+                        <span style="font-size: 26px;">🔔</span>
+                        <div><b>Alerte Présence</b><span>Absence signalée en cours</span></div>
+                    </div>
+                    <div class="mobile-card">
+                        <span style="font-size: 26px;">📝</span>
+                        <div><b>Nouvelle Note</b><span>Composition de Mathématiques</span></div>
+                    </div>
+                    <div class="mobile-card">
+                        <span style="font-size: 26px;">📄</span>
+                        <div><b>Bulletin Trimestriel</b><span>Disponible au format PDF</span></div>
+                    </div>
+                    <div class="mobile-card">
+                        <span style="font-size: 26px;">💳</span>
+                        <div><b>Frais Scolaires</b><span>Versement validé avec succès</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. PARTIE V : 5.1 Sécurité & Confidentialité -->
+    <section class="slide center"
+        data-section="V. Sécurité & Conclusion"
+        data-notes="Cinquième partie : la sécurité et la confidentialité des informations. C'est une question cruciale pour notre établissement. Chacun ne voit que ce qui lui est strictement réservé. Un parent ne peut voir aucun autre élève que son propre enfant. Un enseignant ne consulte que ses classes. L'administration supervise l'ensemble. Les données sont hébergées et protégées.">
+        <div style="max-width: 1560px;">
+            <div class="kicker">Partie V · Gouvernance & Confidentialité</div>
+            <h2 class="title" style="font-size: 64px;">Cloisonnement Strict & <span class="gold">Protection des Données</span></h2>
+            <p class="lead-p" style="max-width: 1200px; margin: 0 auto 46px;">
+                Chaque acteur accède uniquement aux données qui le concernent, dans le respect de la vie privée des familles.
+            </p>
+            <div class="cards-grid cols-3">
+                <div class="feature-card">
+                    <div class="icon-head">👨‍👩‍👧</div>
+                    <h3>Espace Parents</h3>
+                    <p>Accès exclusif et réservé aux enfants de la famille. Aucune donnée d'un autre élève n'est visible.</p>
+                    <span class="tag-pill">Cloisonnement Total</span>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-head">👨‍🏫</div>
+                    <h3>Espace Enseignants</h3>
+                    <p>Consultation et saisie strictement limitées aux classes et matières attribuées par la direction.</p>
+                    <span class="tag-pill">Périmètre Pédagogique</span>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-head">🏛️</div>
+                    <h3>Administration</h3>
+                    <p>Supervision générale, gestion des autorisations et audit sécurisé de l'ensemble de l'école.</p>
+                    <span class="tag-pill">Pilotage Centralisé</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. PARTIE V : 5.2 Bilan Comparatif (Synthèse) -->
+    <section class="slide stack"
+        data-section="V. Sécurité & Conclusion"
+        data-notes="Voici la synthèse comparative indispensable de notre exposé : que change concrètement la plateforme par rapport au fonctionnement traditionnel ? Sur le temps de calcul des bulletins, on passe de plusieurs jours à quelques secondes. Sur le suivi des absences, l'information passe d'un délai mensuel à un suivi immédiat. Sur les paiements, on élimine totalement les pertes de reçus.">
+        <div>
+            <div class="kicker">Synthèse Comparative de l'Exposé</div>
+            <h2 class="title">Bilan : Avant vs <span class="gold">Avec la Plateforme</span></h2>
+            <p class="lead-p">Une mesure objective du saut qualitatif accompli par l'établissement :</p>
+        </div>
+        <table class="table-compare">
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Domaine</th>
+                    <th style="width: 37%;">Gestion Scolaire Traditionnelle</th>
+                    <th style="width: 38%;">Plateforme « Les Rois du Sahel »</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Calcul des Bulletins</strong></td>
+                    <td class="bad">Calculs manuels longs, risque d'erreurs de moyenne</td>
+                    <td class="good">✅ Calcul instantané, automatisé et infaillible</td>
+                </tr>
+                <tr>
+                    <td><strong>Suivi des Absences</strong></td>
+                    <td class="bad">Signalement tardif en fin de mois par courrier</td>
+                    <td class="good">✅ Pointage journalier et alertes immédiates</td>
+                </tr>
+                <tr>
+                    <td><strong>Frais de Scolarité</strong></td>
+                    <td class="bad">Reçus papier égarés, risque de malentendus</td>
+                    <td class="good">✅ Suivi transparent du solde en temps réel</td>
+                </tr>
+                <tr>
+                    <td><strong>Accès aux Documents</strong></td>
+                    <td class="bad">Déplacement physique obligatoire à l'école</td>
+                    <td class="good">✅ Téléchargement en ligne 24h/24 en 1 clic</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 16. CONCLUSION GÉNÉRALE & DÉBAT -->
+    <section class="slide center"
+        data-section="Conclusion & Échanges"
+        data-notes="En conclusion, la plateforme du Complexe Scolaire Privé Les Rois du Sahel n'est pas qu'un outil informatique : c'est un véritable pacte d'excellence entre l'école, les enseignants et les parents d'élèves. Nous vous remercions pour votre attention et votre confiance. Nous ouvrons maintenant la séance pour la démonstration en direct et vos questions.">
+        <div style="max-width: 1400px;">
+            <div class="kicker">Conclusion & Perspectives</div>
+            <h1 style="font-family:'Playfair Display', Georgia, serif; font-size: 82px; font-weight: 900; line-height: 1.15; margin-bottom: 24px;">
+                L'Excellence Éducative au Cœur de <span class="gold">Notre Engagement.</span>
+            </h1>
+            <p class="lead-p" style="max-width: 1100px; margin: 0 auto 48px; font-size: 30px;">
+                Un outil au service de la réussite de nos enfants, de la sérénité des parents et du rayonnement du Complexe Scolaire Les Rois du Sahel.
+            </p>
+            <div style="display: flex; gap: 24px; justify-content: center; align-items: center; margin-bottom: 40px;">
+                <button class="btn-action" onclick="goToSlide(4)">
+                    🏛️ Démonstration en Direct
+                </button>
+                <button class="btn-action" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--border-gold);" onclick="goToSlide(1)">
+                    📋 Revoir le Sommaire
+                </button>
+            </div>
+            <div style="font-size: 26px; color: var(--gold-400); font-weight: 700; letter-spacing: 1px;">
+                Place à vos questions & échanges avec l'administration !
+            </div>
+        </div>
+    </section>
+
+    <!-- Pied de page : progression + raccourcis -->
+    <footer class="bottom-nav">
+        <div class="indicators" id="indicatorsBox"></div>
+        <div class="nav-shortcuts">
+            <kbd>←</kbd> <kbd>→</kbd> Naviguer &nbsp;|&nbsp; 
+            <kbd>S</kbd> Sommaire &nbsp;|&nbsp; 
+            <kbd>F</kbd> Plein Écran &nbsp;|&nbsp; 
+            <kbd>N</kbd> Notes Orateur
+        </div>
+    </footer>
+
+</div>
+</div>
+
+<!-- Zones cliquables gauche/droite pour avancer à la souris -->
+<div class="click-prev" id="clickPrev" title="Diapositive précédente"></div>
+<div class="click-next" id="clickNext" title="Diapositive suivante"></div>
+
+<!-- Pense-bête de l'orateur -->
+<div id="speaker-notes">
+    <h5>Notes de Présentation (Orateur)</h5>
+    <div id="notesBody"></div>
+</div>
+
+<script>
+(function() {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var currentIndex = 0;
+    var slideNum = document.getElementById('slideNum');
+    var slideTotal = document.getElementById('slideTotal');
+    var currentSectionTitle = document.getElementById('currentSectionTitle');
+    var indicatorsBox = document.getElementById('indicatorsBox');
+    var speakerNotes = document.getElementById('speaker-notes');
+    var notesBody = document.getElementById('notesBody');
+    var stage = document.getElementById('stage');
+
+    slideTotal.textContent = slides.length;
+
+    // Création des indicateurs de progression en bas
+    slides.forEach(function(_, i) {
+        var dot = document.createElement('b');
+        dot.addEventListener('click', function() { goToSlide(i); });
+        indicatorsBox.appendChild(dot);
+    });
+
+    window.goToSlide = function(n) {
+        currentIndex = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach(function(s, i) {
+            s.classList.toggle('active', i === currentIndex);
+        });
+        Array.prototype.forEach.call(indicatorsBox.children, function(d, i) {
+            d.classList.toggle('active', i === currentIndex);
+        });
+        slideNum.textContent = currentIndex + 1;
+        var section = slides[currentIndex].getAttribute('data-section') || 'Exposé';
+        currentSectionTitle.textContent = section;
+        notesBody.textContent = slides[currentIndex].getAttribute('data-notes') || '';
+        history.replaceState(null, '', '#' + (currentIndex + 1));
+    };
+
+    function nextSlide() { goToSlide(currentIndex + 1); }
+    function prevSlide() { goToSlide(currentIndex - 1); }
+
+    // Adaptation responsive plein écran / fenêtré
+    function fitStage() {
+        var vw = window.innerWidth || document.documentElement.clientWidth || 1920;
+        var vh = window.innerHeight || document.documentElement.clientHeight || 1080;
+        var isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        var factor = isFullscreen ? 1.0 : 0.96;
+        var scale = Math.min(vw / 1920, vh / 1080) * factor;
+        stage.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+    }
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+    }
+
+    // Gestion des touches du clavier pour l'orateur
+    document.addEventListener('keydown', function(e) {
+        var k = e.key;
+        if (k === 'ArrowRight' || k === 'PageDown' || k === ' ' || k === 'Enter') {
+            e.preventDefault();
+            nextSlide();
+        } else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace') {
+            e.preventDefault();
+            prevSlide();
+        } else if (k === 'Home') {
+            goToSlide(0);
+        } else if (k === 'End') {
+            goToSlide(slides.length - 1);
+        } else if (k === 's' || k === 'S') {
+            goToSlide(1); // Retour direct au Plan / Sommaire
+        } else if (k === 'f' || k === 'F') {
+            toggleFullscreen();
+        } else if (k === 'n' || k === 'N') {
+            speakerNotes.classList.toggle('open');
+        } else if (k === 'Escape') {
+            speakerNotes.classList.remove('open');
+        }
+    });
+
+    document.getElementById('clickNext').addEventListener('click', nextSlide);
+    document.getElementById('clickPrev').addEventListener('click', prevSlide);
+
+    window.addEventListener('resize', fitStage);
+    window.addEventListener('orientationchange', fitStage);
+    document.addEventListener('fullscreenchange', fitStage);
+    document.addEventListener('webkitfullscreenchange', fitStage);
+    window.addEventListener('load', fitStage);
+
+    fitStage();
+    setTimeout(fitStage, 80);
+
+    var initialSlide = parseInt((location.hash || '').replace('#', ''), 10);
+    goToSlide(isNaN(initialSlide) ? 0 : initialSlide - 1);
+})();
+</script>
+</body>
+</html>

@@ -188,7 +188,7 @@
                             @csrf
                             <div>
                                 <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">Jour Cible</label>
-                                <select name="target_day" required class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                <select name="target_day" required class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                                     @foreach (['LUNDI' => 'Lundi', 'MARDI' => 'Mardi', 'MERCREDI' => 'Mercredi', 'JEUDI' => 'Jeudi', 'VENDREDI' => 'Vendredi', 'SAMEDI' => 'Samedi'] as $val => $label)
                                         <option value="{{ $val }}" {{ $schedule->day_of_week === $val ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
@@ -199,12 +199,12 @@
                                 <div>
                                     <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">Début</label>
                                     <input type="time" name="start_time" required value="{{ substr($schedule->start_time, 0, 5) }}"
-                                           class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 </div>
                                 <div>
                                     <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">Fin</label>
                                     <input type="time" name="end_time" required value="{{ substr($schedule->end_time, 0, 5) }}"
-                                           class="w-full text-xs font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                           class="w-full text-xs font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                                 </div>
                             </div>
 

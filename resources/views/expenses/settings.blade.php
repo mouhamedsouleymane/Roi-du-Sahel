@@ -44,21 +44,21 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Code Unique <span class="text-red-500">*</span></label>
                             <input type="text" name="code" required placeholder="Ex: SALAIRES, FOURNITURES…"
-                                   class="w-full text-xs font-mono uppercase font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-mono uppercase font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nom <span class="text-red-500">*</span></label>
                             <input type="text" name="name" required placeholder="Ex: Salaires Enseignants"
-                                   class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                                   class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Description</label>
-                            <textarea name="description" rows="2" class="w-full text-xs rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
+                            <textarea name="description" rows="2" class="w-full text-xs rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Couleur d'affichage</label>
                             <input type="color" name="color" value="#6366f1"
-                                   class="h-9 w-full rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs cursor-pointer" />
+                                   class="h-9 w-full rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs cursor-pointer" />
                         </div>
                         <button type="submit"
                                 class="w-full py-2.5 bg-purple-950 hover:bg-purple-900 text-white font-black text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
@@ -155,22 +155,22 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Code</label>
                         <input type="text" name="code" x-model="selectedCat.code" required
-                               class="w-full text-xs font-mono uppercase font-black rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                               class="w-full text-xs font-mono uppercase font-black rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nom</label>
                         <input type="text" name="name" x-model="selectedCat.name" required
-                               class="w-full text-xs font-bold rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
+                               class="w-full text-xs font-bold rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs" />
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Description</label>
                         <textarea name="description" x-model="selectedCat.description" rows="2"
-                                  class="w-full text-xs rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
+                                  class="w-full text-xs rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs"></textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Couleur</label>
                         <input type="color" name="color" x-model="selectedCat.color"
-                               class="h-9 w-full rounded-xl border-slate-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs cursor-pointer" />
+                               class="h-9 w-full rounded-xl border-purple-300 focus:border-purple-900 focus:ring-purple-900 shadow-xs cursor-pointer" />
                     </div>
                     <div class="flex gap-3 pt-2">
                         <button type="submit"

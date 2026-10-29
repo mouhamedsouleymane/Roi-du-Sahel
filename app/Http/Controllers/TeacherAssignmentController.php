@@ -83,17 +83,27 @@ class TeacherAssignmentController extends Controller
 
         // Class coverage: assigned subjects count vs configured subjects count per class
         $classCoverage = $classes->mapWithKeys(function (SchoolClass $cls) use ($assignments) {
-            $configuredCount = DB::table('class_subject_coefficients')
+            $configuredSubjectIds = DB::table('class_subject_coefficients')
                 ->where('level_id', $cls->level_id)
-                ->count();
-            $assignedCount = $assignments->where('class_id', $cls->id)->count();
+                ->pluck('subject_id')
+                ->all();
+            $configuredCount = count($configuredSubjectIds);
+
+            $assignedSubjectIds = $assignments->where('class_id', $cls->id)
+                ->pluck('subject_id')
+                ->unique()
+                ->all();
+
+            $assignedCount = $configuredCount > 0
+                ? count(array_intersect($assignedSubjectIds, $configuredSubjectIds))
+                : count($assignedSubjectIds);
 
             return [$cls->id => [
                 'class' => $cls,
                 'configured' => $configuredCount,
                 'assigned' => $assignedCount,
                 'missing' => max(0, $configuredCount - $assignedCount),
-                'percent' => $configuredCount > 0 ? round(($assignedCount / $configuredCount) * 100) : 0,
+                'percent' => $configuredCount > 0 ? min(100, (int) round(($assignedCount / $configuredCount) * 100)) : 0,
             ]];
         });
 
@@ -117,110 +127,144 @@ class TeacherAssignmentController extends Controller
     /**
      * Show the form for creating a new teacher assignment.
      */
-    public function create(Request $request): View
+    /**
+     * Show the form for creating a new teacher assignment.
+     * Assignments MUST be initiated from the '⚡ Gérer' button of a specific class.
+     */
+    public function create(Request $request): View|RedirectResponse
     {
         $activeYear = AcademicYear::getActive();
-        $preselectedClassId = $request->query('class_id', '');
-        $preselectedTeacherId = $request->query('teacher_id', '');
-
-        // Level-Subject coefficients and weekly hours map
-        $coefficients = DB::table('class_subject_coefficients')
-            ->select('level_id', 'subject_id', 'coefficient', 'weekly_hours')
-            ->get()
-            ->keyBy(fn ($item) => "{$item->level_id}_{$item->subject_id}")
-            ->toArray();
-
-        // Existing assignments for active year
-        $existingAssignments = TeacherAssignment::with(['teacher.user', 'schoolClass.level'])
-            ->when($activeYear, fn ($q) => $q->where('academic_year_id', $activeYear->id))
-            ->get();
-
-        $existingAssignmentsMap = [];
-        foreach ($existingAssignments as $asn) {
-            $key = "{$asn->class_id}_{$asn->subject_id}";
-            $existingAssignmentsMap[$key] = [
-                'teacher_id' => $asn->teacher_id,
-                'teacher_name' => $asn->teacher?->user?->name ?? 'Autre enseignant',
-            ];
+        if (! $activeYear) {
+            return redirect()->route('assignments.index')
+                ->withErrors(['error' => 'Aucune année scolaire active configurée.']);
         }
 
-        $teachers = Teacher::with(['user', 'cycle', 'cycles', 'assignments.schoolClass.level'])
-            ->where('status', 'ACTIF')
+        // L'ajout doit obligatoirement se faire à partir du bouton "Gérer" d'une classe
+        $classId = $request->query('class_id');
+        if (! $classId) {
+            return redirect()->route('assignments.index')
+                ->with('warning', "L'affectation des cours doit obligatoirement se faire à partir du bouton '⚡ Gérer' de la classe concernée.");
+        }
+
+        $selectedClass = SchoolClass::with(['level.cycle'])->findOrFail($classId);
+
+        // Seules les matières du niveau auquel la classe est rattachée doivent apparaître
+        $levelCoefficients = DB::table('class_subject_coefficients')
+            ->join('subjects', 'class_subject_coefficients.subject_id', '=', 'subjects.id')
+            ->where('class_subject_coefficients.level_id', $selectedClass->level_id)
+            ->where('subjects.is_active', true)
+            ->select(
+                'subjects.id',
+                'subjects.code',
+                'subjects.name',
+                'subjects.category',
+                'class_subject_coefficients.coefficient',
+                'class_subject_coefficients.weekly_hours',
+                'class_subject_coefficients.is_optional'
+            )
+            ->orderBy('subjects.name')
+            ->get();
+
+        $subjects = $levelCoefficients->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'code' => $item->code,
+                'name' => $item->name,
+                'category' => $item->category,
+                'coefficient' => $item->coefficient,
+                'weekly_hours' => $item->weekly_hours,
+                'is_optional' => (bool) $item->is_optional,
+            ];
+        });
+
+        // Affectations existantes pour cette classe et cette année scolaire
+        $existingAssignments = TeacherAssignment::with(['teacher.user'])
+            ->where('academic_year_id', $activeYear->id)
+            ->where('class_id', $selectedClass->id)
             ->get()
-            ->map(function (Teacher $t) use ($activeYear, $coefficients) {
-                $cycleIds = $t->cycles->pluck('id')->toArray();
-                if ($t->cycle_id && ! in_array($t->cycle_id, $cycleIds)) {
-                    $cycleIds[] = $t->cycle_id;
-                }
+            ->keyBy('subject_id');
 
-                $yearAssignments = $t->assignments->where('academic_year_id', $activeYear?->id ?? 0);
-                $assignedClassNames = $yearAssignments->pluck('schoolClass.name')->filter()->unique()->values()->toArray();
-                $assignedClassIds = $yearAssignments->pluck('class_id')->filter()->unique()->values()->toArray();
+        $existingAssignmentsMap = [];
+        $existingTeacherIds = [];
+        foreach ($subjects as $sbj) {
+            $asn = $existingAssignments->get($sbj['id']);
+            $existingAssignmentsMap[$sbj['id']] = $asn ? [
+                'teacher_id' => $asn->teacher_id,
+                'teacher_name' => $asn->teacher?->user?->name ?? 'Non assigné',
+            ] : null;
 
-                // Compute weekly hours already assigned
-                $assignedHours = 0;
-                foreach ($yearAssignments as $asn) {
-                    $levelId = $asn->schoolClass?->level_id;
-                    $subjectId = $asn->subject_id;
-                    if ($levelId && $subjectId && isset($coefficients["{$levelId}_{$subjectId}"])) {
-                        $assignedHours += (int) $coefficients["{$levelId}_{$subjectId}"]->weekly_hours;
-                    }
-                }
+            if ($asn?->teacher_id) {
+                $existingTeacherIds[] = $asn->teacher_id;
+            }
+        }
 
-                return [
-                    'id' => $t->id,
-                    'name' => $t->user->name,
-                    'matricule' => $t->matricule,
-                    'speciality' => $t->speciality,
-                    'is_polyvalent' => (bool) $t->is_polyvalent,
-                    'cycle_id' => $t->cycle_id,
-                    'cycle_name' => $t->cycle?->name ?? '—',
-                    'cycle_ids' => $cycleIds,
-                    'assigned_classes' => $assignedClassNames,
-                    'assigned_class_ids' => $assignedClassIds,
-                    'assigned_hours' => $assignedHours,
-                    'assigned_count' => $yearAssignments->count(),
-                ];
+        // Cycle de la classe
+        $cycleName = strtolower(trim($selectedClass->level?->cycle?->name ?? ''));
+        $isPolyvalentCycle = in_array($cycleName, Teacher::polyvalentCycleNames(), true);
+
+        // Enseignants éligibles pour cette classe
+        $teachersQuery = Teacher::with(['user', 'cycle', 'cycles', 'levels', 'assignments.schoolClass.level'])
+            ->where('status', 'ACTIF');
+
+        if ($isPolyvalentCycle) {
+            // Pour Maternelle/Primaire : enseignants habilités sur ce cycle
+            $teachersQuery->where(function ($q) use ($selectedClass) {
+                $q->where('cycle_id', $selectedClass->level->cycle_id)
+                    ->orWhereHas('cycles', function ($cq) use ($selectedClass) {
+                        $cq->where('cycles.id', $selectedClass->level->cycle_id);
+                    });
             });
+        }
 
-        $classes = SchoolClass::with('level.cycle')
-            ->where('academic_year_id', $activeYear?->id ?? 0)
-            ->get()
-            ->map(fn (SchoolClass $c) => [
-                'id' => $c->id,
-                'name' => $c->name,
-                'level_id' => $c->level_id,
-                'level_name' => $c->level->name,
-                'cycle_id' => $c->level->cycle_id,
-                'cycle_name' => $c->level->cycle->name,
-            ]);
+        $allTeachers = $teachersQuery->get();
 
-        $subjects = Subject::with('levels')
-            ->where('is_active', true)
-            ->orderBy('name')
-            ->get()
-            ->map(fn (Subject $s) => [
-                'id' => $s->id,
-                'code' => $s->code,
-                'name' => $s->name,
-                'level_ids' => $s->levels->pluck('id')->toArray(),
-            ]);
+        $eligibleTeachers = $allTeachers->filter(function (Teacher $t) use ($selectedClass, $activeYear, $isPolyvalentCycle) {
+            if ($isPolyvalentCycle) {
+                // Règle stricte Maternelle/Primaire : un instituteur ne peut avoir qu'une et une seule classe
+                return $t->canBeAssignedToClass($selectedClass->id, (int) $activeYear->id);
+            }
+
+            return true;
+        })->values()->map(function (Teacher $t) use ($selectedClass, $activeYear) {
+            $yearAssignments = $t->assignments->where('academic_year_id', $activeYear->id);
+            $assignedClassIds = $yearAssignments->pluck('class_id')->unique()->all();
+            $isAssignedToThisClass = in_array($selectedClass->id, $assignedClassIds, true);
+
+            return [
+                'id' => $t->id,
+                'name' => $t->user->name,
+                'matricule' => $t->matricule,
+                'speciality' => $t->speciality,
+                'is_polyvalent' => (bool) $t->is_polyvalent,
+                'cycle_name' => $t->cycle?->name ?? '—',
+                'is_assigned_to_this_class' => $isAssignedToThisClass,
+                'assigned_count' => $yearAssignments->count(),
+            ];
+        });
+
+        // Détecter le titulaire pré-sélectionné
+        $uniqueExistingTeacherIds = array_unique(array_filter($existingTeacherIds));
+        $defaultTitulaireId = '';
+        if ($request->query('teacher_id')) {
+            $defaultTitulaireId = (int) $request->query('teacher_id');
+        } elseif (count($uniqueExistingTeacherIds) === 1) {
+            $defaultTitulaireId = reset($uniqueExistingTeacherIds);
+        }
 
         return view('assignments.create', compact(
-            'teachers',
-            'classes',
+            'selectedClass',
             'subjects',
-            'activeYear',
-            'coefficients',
+            'eligibleTeachers',
             'existingAssignmentsMap',
-            'preselectedClassId',
-            'preselectedTeacherId'
+            'activeYear',
+            'isPolyvalentCycle',
+            'defaultTitulaireId'
         ));
     }
 
     /**
      * Store one or many teacher assignments at once (bulk).
-     * Supports both By-Teacher and By-Class payloads.
+     * Supports both By-Class (Gérer flow) and By-Teacher payloads.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -230,7 +274,7 @@ class TeacherAssignmentController extends Controller
         }
 
         // ══════════════════════════════════════════════════════════
-        // CASE A : Saisie par Classe (Matrice de la classe)
+        // CASE A : Saisie par Classe (Bouton "⚡ Gérer" de la classe)
         // ══════════════════════════════════════════════════════════
         if ($request->has('class_assignments') && $request->filled('class_id')) {
             $request->validate([
@@ -241,6 +285,14 @@ class TeacherAssignmentController extends Controller
             ]);
 
             $classId = (int) $request->class_id;
+            $schoolClass = SchoolClass::with('level.cycle')->findOrFail($classId);
+
+            // Vérifier que chaque matière appartient strictement au niveau de la classe
+            $allowedSubjectIds = DB::table('class_subject_coefficients')
+                ->where('level_id', $schoolClass->level_id)
+                ->pluck('subject_id')
+                ->all();
+
             $classAssignments = $request->input('class_assignments');
             $savedCount = 0;
             $rowErrors = [];
@@ -249,8 +301,17 @@ class TeacherAssignmentController extends Controller
                 $subjectId = (int) $item['subject_id'];
                 $teacherId = ! empty($item['teacher_id']) ? (int) $item['teacher_id'] : null;
 
+                // Si des coefficients existent pour ce niveau, vérifier la conformité de la matière
+                if (! empty($allowedSubjectIds) && ! in_array($subjectId, $allowedSubjectIds, true)) {
+                    $subject = Subject::find($subjectId);
+                    $subjectName = $subject ? $subject->name : "#{$subjectId}";
+                    $rowErrors[] = "La matière {$subjectName} n'appartient pas au programme du niveau {$schoolClass->level->name}.";
+
+                    continue;
+                }
+
                 if ($teacherId) {
-                    $teacher = Teacher::with(['cycle', 'user'])->find($teacherId);
+                    $teacher = Teacher::with(['cycle', 'cycles', 'user'])->find($teacherId);
                     if ($teacher && ! $teacher->canBeAssignedToClass($classId, (int) $activeYear->id)) {
                         $existingClassId = $teacher->assignments()
                             ->where('academic_year_id', $activeYear->id)
@@ -258,7 +319,7 @@ class TeacherAssignmentController extends Controller
                             ->value('class_id');
                         $existingClass = SchoolClass::find($existingClassId);
                         $existingClassName = $existingClass ? $existingClass->name : 'une autre classe';
-                        $rowErrors[] = "{$teacher->full_name} est polyvalent et ne peut avoir qu'une seule classe (déjà titulaire de {$existingClassName}).";
+                        $rowErrors[] = "{$teacher->full_name} est rattaché au cycle Maternelle/Primaire et ne peut avoir qu'une seule classe (déjà titulaire de {$existingClassName}).";
 
                         continue;
                     }
@@ -272,6 +333,12 @@ class TeacherAssignmentController extends Controller
                         ['teacher_id' => $teacherId]
                     );
                     $savedCount++;
+                } else {
+                    // Si l'enseignant est retiré pour cette matière
+                    TeacherAssignment::where('academic_year_id', $activeYear->id)
+                        ->where('class_id', $classId)
+                        ->where('subject_id', $subjectId)
+                        ->delete();
                 }
             }
 
@@ -279,15 +346,13 @@ class TeacherAssignmentController extends Controller
                 return redirect()->back()->withInput()->withErrors(['rows' => implode(' | ', $rowErrors)]);
             }
 
-            $msg = $savedCount === 1
-                ? "L'affectation pour cette classe a été enregistrée avec succès."
-                : "{$savedCount} matières ont été affectées pour cette classe avec succès.";
+            $msg = "Les affectations pour la classe {$schoolClass->name} ont été enregistrées avec succès ({$savedCount} matière(s) assignée(s)).";
 
             return redirect()->route('assignments.index')->with('status', $msg);
         }
 
         // ══════════════════════════════════════════════════════════
-        // CASE B : Saisie par Enseignant (Défaut)
+        // CASE B : Saisie par Enseignant (Legacy / Direct)
         // ══════════════════════════════════════════════════════════
         $request->validate([
             'teacher_id' => 'required|exists:teachers,id',
@@ -296,14 +361,25 @@ class TeacherAssignmentController extends Controller
             'rows.*.subject_id' => 'required|exists:subjects,id',
         ]);
 
-        $teacher = Teacher::with(['cycle', 'user'])->findOrFail($request->teacher_id);
+        $teacher = Teacher::with(['cycle', 'cycles', 'user'])->findOrFail($request->teacher_id);
         $rows = $request->input('rows');
         $savedCount = 0;
         $rowErrors = [];
 
+        // Si l'enseignant est polyvalent ou Maternelle/Primaire, vérifier qu'il n'y a pas plusieurs classes dans la soumission
+        if ($teacher->isRestrictedToOneClass()) {
+            $submittedClasses = collect($rows)->pluck('class_id')->unique();
+            if ($submittedClasses->count() > 1) {
+                return redirect()->back()->withInput()->withErrors([
+                    'rows' => "L'enseignant {$teacher->full_name} est du cycle Maternelle/Primaire et ne peut pas être affecté à plusieurs classes différentes.",
+                ]);
+            }
+        }
+
         foreach ($rows as $idx => $row) {
             $classId = (int) $row['class_id'];
             $subjectId = (int) $row['subject_id'];
+            $schoolClass = SchoolClass::with('level')->find($classId);
 
             if (! $teacher->canBeAssignedToClass($classId, (int) $activeYear->id)) {
                 $existingClassId = $teacher->assignments()
@@ -313,6 +389,43 @@ class TeacherAssignmentController extends Controller
                 $existingClass = SchoolClass::find($existingClassId);
                 $existingClassName = $existingClass ? $existingClass->name : 'une autre classe';
                 $rowErrors[] = 'Ligne '.($idx + 1).": {$teacher->full_name} ne peut avoir qu'une seule classe (déjà affecté à {$existingClassName}).";
+
+                continue;
+            }
+
+            // Vérifier que la matière appartient au niveau de la classe
+            if ($schoolClass) {
+                $hasAnyCoeffs = DB::table('class_subject_coefficients')
+                    ->where('level_id', $schoolClass->level_id)
+                    ->exists();
+
+                if ($hasAnyCoeffs) {
+                    $isAllowed = DB::table('class_subject_coefficients')
+                        ->where('level_id', $schoolClass->level_id)
+                        ->where('subject_id', $subjectId)
+                        ->exists();
+
+                    if (! $isAllowed) {
+                        $rowErrors[] = 'Ligne '.($idx + 1).": La matière sélectionnée n'appartient pas au niveau {$schoolClass->level->name}.";
+
+                        continue;
+                    }
+                }
+            }
+
+            // Vérifier que la matière n'est pas déjà affectée à un autre enseignant pour cette classe
+            $alreadyAssignedOther = TeacherAssignment::where('academic_year_id', $activeYear->id)
+                ->where('class_id', $classId)
+                ->where('subject_id', $subjectId)
+                ->where('teacher_id', '!=', $teacher->id)
+                ->with(['teacher.user', 'subject', 'schoolClass'])
+                ->first();
+
+            if ($alreadyAssignedOther) {
+                $otherName = $alreadyAssignedOther->teacher?->user?->name ?? 'un autre enseignant';
+                $subjName = $alreadyAssignedOther->subject?->name ?? 'cette matière';
+                $clsName = $alreadyAssignedOther->schoolClass?->name ?? 'cette classe';
+                $rowErrors[] = 'Ligne '.($idx + 1).": La matière {$subjName} est déjà enseignée par {$otherName} dans la classe {$clsName}. Deux enseignants ne peuvent pas enseigner la même matière pour la même classe.";
 
                 continue;
             }
@@ -373,28 +486,64 @@ class TeacherAssignmentController extends Controller
             'subject_id' => 'required|exists:subjects,id',
         ]);
 
-        $teacher = Teacher::with(['cycle', 'user'])->findOrFail($validated['teacher_id']);
+        $teacher = Teacher::with(['cycle', 'cycles', 'user'])->findOrFail($validated['teacher_id']);
         $academicYearId = (int) $assignment->academic_year_id;
         $newClassId = (int) $validated['class_id'];
+        $subjectId = (int) $validated['subject_id'];
 
-        if ($teacher->isRestrictedToOneClass() && $newClassId !== (int) $assignment->class_id) {
-            $remainingInOldClass = $teacher->assignments()
-                ->where('academic_year_id', $academicYearId)
-                ->where('class_id', $assignment->class_id)
-                ->where('id', '!=', $assignment->id)
+        if (! $teacher->canBeAssignedToClass($newClassId, $academicYearId, $assignment->id)) {
+            $existingClass = SchoolClass::find($assignment->class_id);
+            $existingClassName = $existingClass ? $existingClass->name : 'une autre classe';
+            $cycleName = $teacher->cycle?->name ?? 'Maternelle / Primaire';
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    'teacher_id' => "L'enseignant {$teacher->full_name} est rattaché au cycle {$cycleName} et ne peut pas avoir plus d'une seule classe par année scolaire (déjà affecté à {$existingClassName}).",
+                ]);
+        }
+
+        // Vérifier que la matière appartient au niveau de la classe
+        $schoolClass = SchoolClass::with('level')->find($newClassId);
+        if ($schoolClass) {
+            $hasAnyCoeffs = DB::table('class_subject_coefficients')
+                ->where('level_id', $schoolClass->level_id)
                 ->exists();
 
-            if ($remainingInOldClass) {
-                $existingClass = SchoolClass::find($assignment->class_id);
-                $existingClassName = $existingClass ? $existingClass->name : 'une autre classe';
-                $cycleName = $teacher->cycle?->name ?? 'Maternelle / Primaire';
+            if ($hasAnyCoeffs) {
+                $isAllowed = DB::table('class_subject_coefficients')
+                    ->where('level_id', $schoolClass->level_id)
+                    ->where('subject_id', $subjectId)
+                    ->exists();
 
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors([
-                        'teacher_id' => "L'enseignant {$teacher->full_name} est rattaché au cycle {$cycleName} et ne peut pas avoir plus d'une seule classe par année scolaire (déjà affecté à {$existingClassName}).",
-                    ]);
+                if (! $isAllowed) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->withErrors([
+                            'subject_id' => "Cette matière n'appartient pas au programme du niveau {$schoolClass->level->name}.",
+                        ]);
+                }
             }
+        }
+
+        // Règle d'or : deux enseignants ne peuvent pas enseigner la même matière pour la même classe
+        $duplicate = TeacherAssignment::where('academic_year_id', $academicYearId)
+            ->where('class_id', $newClassId)
+            ->where('subject_id', $subjectId)
+            ->where('id', '!=', $assignment->id)
+            ->with(['teacher.user', 'subject', 'schoolClass'])
+            ->first();
+
+        if ($duplicate) {
+            $otherName = $duplicate->teacher?->user?->name ?? 'un autre enseignant';
+            $subjName = $duplicate->subject?->name ?? 'cette matière';
+            $clsName = $duplicate->schoolClass?->name ?? 'cette classe';
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors([
+                    'subject_id' => "Conflit d'attribution : La matière {$subjName} est déjà enseignée par {$otherName} dans la classe {$clsName}. Deux enseignants ne peuvent pas enseigner la même matière pour la même classe.",
+                ]);
         }
 
         $assignment->update($validated);

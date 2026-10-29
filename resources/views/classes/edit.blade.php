@@ -27,7 +27,7 @@
                             Niveau Pédagogique
                         </label>
                         <select name="level_id" required
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                             @foreach ($levels as $level)
                                 <option value="{{ $level->id }}" {{ old('level_id', $schoolClass->level_id) == $level->id ? 'selected' : '' }}>
                                     {{ $level->cycle->name }} — {{ $level->name }}
@@ -42,7 +42,7 @@
                             Nom de la Classe
                         </label>
                         <input type="text" name="name" required value="{{ old('name', $schoolClass->name) }}"
-                               class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                               class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         @error('name') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                     </div>
 
@@ -53,7 +53,7 @@
                             </label>
                             <input type="number" name="capacity" min="1" max="100"
                                    value="{{ old('capacity', $schoolClass->capacity ?? 40) }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                             @error('capacity') <span class="text-xs text-red-600 mt-1 block">{{ $message }}</span> @enderror
                         </div>
                         <div>
@@ -61,7 +61,7 @@
                                 Numéro / Salle
                             </label>
                             <input type="text" name="room_number" value="{{ old('room_number', $schoolClass->room_number) }}"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500" />
                         </div>
                     </div>
 
@@ -70,7 +70,7 @@
                             Professeur Principal
                         </label>
                         <select name="main_teacher_id"
-                                class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
+                                class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500">
                             <option value="">-- Aucun --</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}" {{ old('main_teacher_id', $schoolClass->main_teacher_id) == $teacher->id ? 'selected' : '' }}>

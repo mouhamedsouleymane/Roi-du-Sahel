@@ -90,4 +90,29 @@ class SchoolClass extends Model
     {
         return $this->expectedPeriodType() === 'SEMESTRE';
     }
+
+    public function isMaternelle(): bool
+    {
+        return $this->level?->cycle?->isMaternelle() ?? false;
+    }
+
+    public function isPrimaire(): bool
+    {
+        return $this->level?->cycle?->isPrimaire() ?? false;
+    }
+
+    public function isCollege(): bool
+    {
+        return $this->level?->cycle?->isCollege() ?? false;
+    }
+
+    public function isLycee(): bool
+    {
+        return $this->level?->cycle?->isLycee() ?? false;
+    }
+
+    public function signatureTitle(): string
+    {
+        return $this->level?->cycle?->signatureTitle() ?? 'Le Chef d\'Établissement';
+    }
 }

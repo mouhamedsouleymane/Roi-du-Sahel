@@ -31,7 +31,7 @@
                             </label>
                             <input type="text" id="display_name" name="display_name" required value="{{ old('display_name') }}"
                                    placeholder="ex: Responsable Cantine & Internat"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('display_name') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -41,7 +41,7 @@
                             </label>
                             <input type="text" id="name" name="name" required value="{{ old('name') }}"
                                    placeholder="ex: Responsable Cantine"
-                                   class="w-full text-sm font-bold border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
+                                   class="w-full text-sm font-bold border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4" />
                             @error('name') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
 
@@ -51,7 +51,7 @@
                             </label>
                             <textarea id="description" name="description" rows="2"
                                       placeholder="Précisez les prérogatives associées à ce rôle..."
-                                      class="w-full text-sm font-medium border-slate-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">{{ old('description') }}</textarea>
+                                      class="w-full text-sm font-medium border-purple-300 rounded-xl shadow-xs focus:ring-purple-500 focus:border-purple-500 py-3 px-4">{{ old('description') }}</textarea>
                             @error('description') <span class="text-xs text-red-600 font-bold mt-1 block">{{ $message }}</span> @enderror
                         </div>
                     </div>
